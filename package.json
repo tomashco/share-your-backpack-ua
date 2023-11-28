@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "vercel:install": "yarn set version 3.5 && yarn install",
+    "vercel:install": "yarn install",
     "native": "cd apps/expo && yarn start",
     "watch": "yarn workspaces foreach -pi run watch",
     "web": "yarn build && cd apps/next && yarn dev",
@@ -41,5 +41,5 @@
     "turbo": "^1.10.3",
     "typescript": "^4.9.4"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@3.5.1"
 }
