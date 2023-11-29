@@ -2,97 +2,126 @@ import {
   Anchor,
   Button,
   H1,
+  H3,
   Paragraph,
   Separator,
-  Sheet,
-  useToastController,
   XStack,
   YStack,
+  Image,
+  ScrollView,
 } from '@my/ui'
-import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
-import React, { useState } from 'react'
+import React from 'react'
 import { useLink } from 'solito/link'
+import { SignedIn, SignedOut, useAuth } from '../../utils/clerk'
 
 export function HomeScreen() {
-  const linkProps = useLink({
+  const { signOut, userId } = useAuth()
+  const userLinkProps = useLink({
     href: '/user/nate',
   })
+  const signInLinkProps = useLink({
+    href: '/signin',
+  })
+  const signInOAuthLinkProps = useLink({
+    href: '/signinoauth',
+  })
+  const signUpLinkProps = useLink({
+    href: '/signup',
+  })
+
+  // const { data, isLoading, error } = trpc.entry.all.useQuery()
+
+  // useEffect(() => {
+  //   console.log(data)
+  // }, [isLoading])
+  /* 
+  if (isLoading) {
+    return <Paragraph>Loading...</Paragraph>
+  } */
+
+  // if (error) {
+  //   return <Paragraph>{error.message}</Paragraph>
+  // }
 
   return (
-    <YStack f={1} jc="center" ai="center" p="$4" space>
-      <YStack space="$4" maw={600}>
-        <H1 ta="center">Welcome to Tamagui.</H1>
-        <Paragraph ta="center">
-          Here's a basic starter to show navigating from one screen to another. This screen uses the
-          same code on Next.js and React Native.
-        </Paragraph>
+    <ScrollView>
+      <YStack f={1} jc="center" ai="center" p="$4" space>
+        <YStack space="$4" maw={600} px="$3">
+          <XStack jc="center" ai="flex-end" fw="wrap" space="$2" mt="$-2">
+            <Image
+              source={{
+                width: 50,
+                height: 50,
+                uri: 'https://raw.githubusercontent.com/chen-rn/CUA/main/apps/nextjs/public/favicon.ico',
+              }}
+              accessibilityLabel="create-universal-app logo"
+              mt="$2"
+            />
+            <H1 ta="center" mt="$2">
+              create-universal-app
+            </H1>
+          </XStack>
+          <Paragraph ta="center">
+            This is a demo for create-universal-app. To read more about the philosophy behind it,
+            visit{' '}
+            <Anchor color="$color12" href="#" target="_blank">
+              Link-not-working
+            </Anchor>{' '}
+            (give it a ⭐️ if you like it!)
+          </Paragraph>
+          <Paragraph ta="center">
+            This template uses Expo, Next, Solito, tRPC, Tamagui, Clerk, and Prisma. If you&aposre a
+            beginner and is a little overwhelmed, I&aposve also made a{' '}
+            <Anchor color="$color12" href="https://youtu.be/aTEv0-ZBbWk" target="_blank">
+              video
+            </Anchor>{' '}
+            explanation on how this template works and how to get started!
+          </Paragraph>
+          <Separator />
+        </YStack>
 
-        <Separator />
-        <Paragraph ta="center">
-          Made by{' '}
-          <Anchor color="$color12" href="https://twitter.com/natebirdman" target="_blank">
-            @natebirdman
-          </Anchor>
-          ,{' '}
-          <Anchor
-            color="$color12"
-            href="https://github.com/tamagui/tamagui"
-            target="_blank"
-            rel="noreferrer"
-          >
-            give it a ⭐️
-          </Anchor>
-        </Paragraph>
-      </YStack>
+        <H3 ta="center">Some Demos</H3>
+        <YStack p="$2">
+          <Paragraph>tRPC Query Demo</Paragraph>
+          {/* {data?.map((entry) => (
+          <Paragraph opacity={0.5} key={entry.id}>
+            {entry.id}
+          </Paragraph>
+        ))} */}
+        </YStack>
 
-      <XStack>
-        <Button {...linkProps}>Link to user</Button>
-      </XStack>
+        <XStack space>
+          <Button {...userLinkProps} theme={'red'}>
+            User Page (Routing)
+          </Button>
+        </XStack>
 
-      <SheetDemo />
-    </YStack>
-  )
-}
+        <SignedOut>
+          <XStack space ai="center">
+            <Button {...signInLinkProps} theme={'red'}>
+              Sign In
+            </Button>
+            <Button {...signInOAuthLinkProps} theme={'red'}>
+              Sign In with OAuth
+            </Button>
+            <Button {...signUpLinkProps} theme={'red'}>
+              Sign Up
+            </Button>
+          </XStack>
+        </SignedOut>
 
-function SheetDemo() {
-  const [open, setOpen] = useState(false)
-  const [position, setPosition] = useState(0)
-  const toast = useToastController()
-
-  return (
-    <>
-      <Button
-        size="$6"
-        icon={open ? ChevronDown : ChevronUp}
-        circular
-        onPress={() => setOpen((x) => !x)}
-      />
-      <Sheet
-        modal
-        animation="medium"
-        open={open}
-        onOpenChange={setOpen}
-        snapPoints={[80]}
-        position={position}
-        onPositionChange={setPosition}
-        dismissOnSnapToBottom
-      >
-        <Sheet.Overlay animation="lazy" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} />
-        <Sheet.Frame ai="center" jc="center">
-          <Sheet.Handle />
+        <SignedIn>
+          <Paragraph mb="$4">{userId}</Paragraph>
           <Button
-            size="$6"
-            circular
-            icon={ChevronDown}
             onPress={() => {
-              setOpen(false)
-              toast.show('Sheet closed!', {
-                message: 'Just showing how toast works...',
-              })
+              signOut()
             }}
-          />
-        </Sheet.Frame>
-      </Sheet>
-    </>
+            theme={'red'}
+          >
+            Sign Out
+          </Button>
+        </SignedIn>
+      </YStack>
+    </ScrollView>
   )
 }
