@@ -10,23 +10,14 @@ import {
   Image,
   ScrollView,
 } from '@my/ui'
+import { Header } from 'app/components/header'
 import React from 'react'
-import { Platform } from 'react-native'
 import { useLink } from 'solito/link'
-import { SignedIn, SignedOut, useAuth } from '../../utils/clerk'
 
 export function HomeScreen() {
-  const { signOut, userId } = useAuth()
   const userLinkProps = useLink({
     href: '/user/nate',
   })
-  const signInOAuthLinkProps = useLink({
-    href: '/signin',
-  })
-  const signUpLinkProps = useLink({
-    href: '/signup',
-  })
-
   // const { data, isLoading, error } = trpc.entry.all.useQuery()
 
   // useEffect(() => {
@@ -43,7 +34,8 @@ export function HomeScreen() {
 
   return (
     <ScrollView>
-      <YStack f={1} jc="center" ai="center" p="$4" space>
+      <YStack f={1} jc="center" w={'100%'} ai="center" p="$4" space>
+        <Header />
         <YStack space="$4" maw={600} px="$3">
           <XStack jc="center" ai="flex-end" fw="wrap" space="$2" mt="$-2">
             <Image
@@ -93,31 +85,6 @@ export function HomeScreen() {
             User Page (Routing)
           </Button>
         </XStack>
-
-        <SignedOut>
-          <XStack space ai="center">
-            <Button {...signInOAuthLinkProps} theme={'red'}>
-              Sign In
-            </Button>
-            {Platform.OS === 'web' && (
-              <Button {...signUpLinkProps} theme={'red'}>
-                Sign Up
-              </Button>
-            )}
-          </XStack>
-        </SignedOut>
-
-        <SignedIn>
-          <Paragraph mb="$4">{userId}</Paragraph>
-          <Button
-            onPress={() => {
-              signOut()
-            }}
-            theme={'red'}
-          >
-            Sign Out
-          </Button>
-        </SignedIn>
       </YStack>
     </ScrollView>
   )
