@@ -1,11 +1,11 @@
 import React from 'react'
 import { YStack } from '@my/ui'
-import { SignIn } from '@clerk/nextjs'
+import { SignUp } from '@clerk/nextjs'
 
-export function SignInWithOAuthScreen() {
+export function SignUpScreen() {
   return (
     <YStack f={1} jc="center" ai="center" p="$4" space>
-      <SignIn />
+      <SignUp />
     </YStack>
   )
 }

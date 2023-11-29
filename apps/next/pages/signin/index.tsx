@@ -1,4 +1,4 @@
-import SignInScreen from 'app/features/signin/screen'
+import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
 import Head from 'next/head'
 
 export default function Page() {
@@ -7,7 +7,7 @@ export default function Page() {
       <Head>
         <title>Sign In</title>
       </Head>
-      <SignInScreen />
+      <SignInWithOAuthScreen />
     </>
   )
 }

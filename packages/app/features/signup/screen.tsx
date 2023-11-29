@@ -1,9 +1,8 @@
 import { Button, Input, XStack, YStack } from '@my/ui'
 import * as React from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useSignUp } from '../../utils/clerk'
 
-export default function SignUpScreen() {
+export function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp()
 
   const [firstName, setFirstName] = React.useState('')

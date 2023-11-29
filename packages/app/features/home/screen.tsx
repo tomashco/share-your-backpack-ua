@@ -11,6 +11,7 @@ import {
   ScrollView,
 } from '@my/ui'
 import React from 'react'
+import { Platform } from 'react-native'
 import { useLink } from 'solito/link'
 import { SignedIn, SignedOut, useAuth } from '../../utils/clerk'
 
@@ -19,11 +20,8 @@ export function HomeScreen() {
   const userLinkProps = useLink({
     href: '/user/nate',
   })
-  const signInLinkProps = useLink({
-    href: '/signin',
-  })
   const signInOAuthLinkProps = useLink({
-    href: '/signinoauth',
+    href: '/signin',
   })
   const signUpLinkProps = useLink({
     href: '/signup',
@@ -98,15 +96,14 @@ export function HomeScreen() {
 
         <SignedOut>
           <XStack space ai="center">
-            <Button {...signInLinkProps} theme={'red'}>
+            <Button {...signInOAuthLinkProps} theme={'red'}>
               Sign In
             </Button>
-            <Button {...signInOAuthLinkProps} theme={'red'}>
-              Sign In with OAuth
-            </Button>
-            <Button {...signUpLinkProps} theme={'red'}>
-              Sign Up
-            </Button>
+            {Platform.OS === 'web' && (
+              <Button {...signUpLinkProps} theme={'red'}>
+                Sign Up
+              </Button>
+            )}
           </XStack>
         </SignedOut>
 

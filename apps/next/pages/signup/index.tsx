@@ -1,4 +1,4 @@
-import SignUpScreen from 'app/features/signup/screen'
+import { SignUpScreen } from 'app/features/signup/screen'
 import Head from 'next/head'
 
 export default function Page() {

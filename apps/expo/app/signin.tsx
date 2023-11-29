@@ -1,5 +1,5 @@
-import SignInScreen from 'app/features/signin/screen'
+import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
 
 export default function () {
-  return <SignInScreen />
+  return <SignInWithOAuthScreen />
 }
