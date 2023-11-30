@@ -20,11 +20,6 @@ export function Header() {
           <Button {...signInOAuthLinkProps} theme={'active'}>
             Sign In
           </Button>
-          {Platform.OS === 'web' && (
-            <Button {...signUpLinkProps} themeInverse>
-              Sign Up
-            </Button>
-          )}
         </XStack>
       </SignedOut>
 
