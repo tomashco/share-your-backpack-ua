@@ -11,26 +11,23 @@ import {
   ScrollView,
 } from '@my/ui'
 import { Header } from 'app/components/header'
-import React from 'react'
+import { trpc } from '../../utils/trpc'
+import React, { useEffect } from 'react'
 import { useLink } from 'solito/link'
 
 export function HomeScreen() {
   const userLinkProps = useLink({
     href: '/user/nate',
   })
-  // const { data, isLoading, error } = trpc.entry.all.useQuery()
+  const { data: posts, isLoading, error } = trpc.posts.getAll.useQuery()
 
-  // useEffect(() => {
-  //   console.log(data)
-  // }, [isLoading])
-  /* 
   if (isLoading) {
     return <Paragraph>Loading...</Paragraph>
-  } */
+  }
 
-  // if (error) {
-  //   return <Paragraph>{error.message}</Paragraph>
-  // }
+  if (error) {
+    return <Paragraph>{error.message}</Paragraph>
+  }
 
   return (
     <ScrollView>
@@ -73,11 +70,11 @@ export function HomeScreen() {
         <H3 ta="center">Some Demos</H3>
         <YStack p="$2">
           <Paragraph>tRPC Query Demo</Paragraph>
-          {/* {data?.map((entry) => (
-          <Paragraph opacity={0.5} key={entry.id}>
-            {entry.id}
-          </Paragraph>
-        ))} */}
+          {posts?.map((post) => (
+            <Paragraph opacity={0.5} key={post.id}>
+              {post.content}
+            </Paragraph>
+          ))}
         </YStack>
 
         <XStack space>
