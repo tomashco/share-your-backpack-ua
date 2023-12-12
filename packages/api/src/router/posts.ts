@@ -1,41 +1,40 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 import {
   // createTRPCRouter,
-  // privateProcedure,
-  publicProcedure, router,
-} from "../trpc";
+  privateProcedure,
+  publicProcedure,
+  router,
+} from '../trpc'
 // import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 // import { Redis } from "@upstash/redis";
-import { TRPCError } from "@trpc/server";
-import { clerkClient } from "@clerk/nextjs";
+import { TRPCError } from '@trpc/server'
+import { clerkClient } from '@clerk/nextjs'
 // import { filterUserForClient } from "@/server/helpers/filterUserForClient";
-import { type Post } from "@prisma/client";
+import { type Post } from '@prisma/client'
 
 const addUserDataToPosts = async (posts: Post[]) => {
-  const users = (
-    await clerkClient.users.getUserList({
-      userId: posts.map((post) => post.authorId),
-      limit: 100,
-    })
-  )
+  const users = await clerkClient.users.getUserList({
+    userId: posts.map((post) => post.authorId),
+    limit: 100,
+  })
   // .map(filterUserForClient);
 
   return posts.map((post) => {
-    const author = users.find((user) => user.id === post.authorId);
+    const author = users.find((user) => user.id === post.authorId)
 
     if (!author?.id) {
       throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Author for post not found",
-      });
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Author for post not found',
+      })
     }
     return {
       post,
       author,
-    };
-  });
-};
+    }
+  })
+}
 // Create a new ratelimiter, that allows 10 requests per 10 seconds
 // const ratelimit = new Ratelimit({
 //   redis: Redis.fromEnv(),
@@ -46,15 +45,18 @@ const addUserDataToPosts = async (posts: Post[]) => {
 
 export const postsRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany();
+    const posts = await ctx.prisma.post.findMany()
     return posts
     // return addUserDataToPosts(posts);
+  }),
+  getPrivate: privateProcedure.query(async ({ ctx }) => {
+    return [{ id: 'test', content: 'isAuthenticated content', authorId: 'test' }]
   }),
   // create: privateProcedure
   //   .input(
   //     z.object({
   //       content: z.string().min(1).max(200),
-  //     }),
+  //     })
   //   )
   //   .mutation(async ({ ctx, input }) => {
   //     const authorId = ctx.userId;
@@ -118,4 +120,4 @@ export const postsRouter = router({
   //     }
   //     return "ok";
   //   }),
-});
+})

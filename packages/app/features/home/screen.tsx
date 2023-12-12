@@ -19,15 +19,8 @@ export function HomeScreen() {
   const userLinkProps = useLink({
     href: '/user/nate',
   })
-  const { data: posts, isLoading, error } = trpc.posts.getAll.useQuery()
-
-  if (isLoading) {
-    return <Paragraph>Loading...</Paragraph>
-  }
-
-  if (error) {
-    return <Paragraph>{error.message}</Paragraph>
-  }
+  // const { data: posts, isLoading, error } = trpc.posts.getAll.useQuery()
+  const { data: posts, isLoading, error } = trpc.posts.getPrivate.useQuery()
 
   return (
     <ScrollView>
@@ -70,11 +63,17 @@ export function HomeScreen() {
         <H3 ta="center">Some Demos</H3>
         <YStack p="$2">
           <Paragraph>tRPC Query Demo</Paragraph>
-          {posts?.map((post) => (
-            <Paragraph opacity={0.5} key={post.id}>
-              {post.content}
-            </Paragraph>
-          ))}
+          {isLoading ? (
+            <Paragraph>Loading...</Paragraph>
+          ) : error ? (
+            <Paragraph>{error.message}</Paragraph>
+          ) : (
+            posts?.map((post) => (
+              <Paragraph opacity={0.5} key={post.id}>
+                {post.content}
+              </Paragraph>
+            ))
+          )}
         </YStack>
 
         <XStack space>

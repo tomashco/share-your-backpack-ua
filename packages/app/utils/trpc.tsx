@@ -33,14 +33,15 @@ const getBaseUrl = () => {
    * will not be available in production.
    */
   if (!__DEV__) {
-    const productionApiUrl = Constants.manifest?.extra?.productionApiUrl as string
+    const productionApiUrl = Constants.expoConfig?.extra?.productionApiUrl as string
     if (!productionApiUrl)
       throw new Error('failed to get productionApiUrl, missing in extra section of app.config.ts')
     return productionApiUrl
   }
 
-  // const localhost = Constants.manifest?.debuggerHost?.split(':')[0]
-  // if (!localhost) throw new Error('failed to get localhost, configure it manually')
+  const localhost = Constants.expoConfig?.hostUri
+
+  if (!localhost) return `https://${process.env.VERCEL_URL}`
   return `http://localhost:3000`
 }
 
