@@ -1,11 +1,6 @@
 import { z } from 'zod'
 
-import {
-  // createTRPCRouter,
-  privateProcedure,
-  publicProcedure,
-  router,
-} from '../trpc'
+import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc'
 // import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 // import { Redis } from "@upstash/redis";
 import { TRPCError } from '@trpc/server'
@@ -43,7 +38,7 @@ const addUserDataToPosts = async (posts: Post[]) => {
 //   prefix: "@upstash/ratelimit",
 // });
 
-export const postsRouter = router({
+export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany()
     return posts

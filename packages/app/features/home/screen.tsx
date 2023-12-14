@@ -12,7 +12,9 @@ import {
 } from '@my/ui'
 import { Header } from 'app/components/header'
 import { trpc } from '../../utils/trpc'
+import { useUser } from '../../utils/clerk'
 import React, { useEffect } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLink } from 'solito/link'
 
 export function HomeScreen() {
@@ -20,7 +22,9 @@ export function HomeScreen() {
     href: '/user/nate',
   })
   // const { data: posts, isLoading, error } = trpc.posts.getAll.useQuery()
-  const { data: posts, isLoading, error } = trpc.posts.getPrivate.useQuery()
+  const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
+  const user = useUser()
+  const isEditable = !!user?.user?.id
 
   return (
     <ScrollView>
@@ -68,9 +72,9 @@ export function HomeScreen() {
           ) : error ? (
             <Paragraph>{error.message}</Paragraph>
           ) : (
-            posts?.map((post) => (
-              <Paragraph opacity={0.5} key={post.id}>
-                {post.content}
+            packs?.map(({ pack, author }) => (
+              <Paragraph opacity={0.5} key={pack.id}>
+                {pack.name}
               </Paragraph>
             ))
           )}
