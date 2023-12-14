@@ -13,16 +13,18 @@ import {
 import { Header } from 'app/components/header'
 import { trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
-import React, { useEffect } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import React from 'react'
 import { useLink } from 'solito/link'
+import { useRouter } from 'solito/router'
+import { getBaseUrl } from 'app/utils/trpc'
 
 export function HomeScreen() {
   const userLinkProps = useLink({
-    href: '/user/nate',
+    href: '/pack/asdfasdfasdf',
   })
   // const { data: posts, isLoading, error } = trpc.posts.getAll.useQuery()
   const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
+  const { push } = useRouter()
   const user = useUser()
   const isEditable = !!user?.user?.id
 
@@ -34,18 +36,20 @@ export function HomeScreen() {
           <XStack jc="center" ai="flex-end" fw="wrap" space="$2" mt="$-2">
             <Image
               source={{
+                uri: `${getBaseUrl()}/backpack.png`,
                 width: 50,
                 height: 50,
-                uri: 'https://raw.githubusercontent.com/chen-rn/CUA/main/apps/nextjs/public/favicon.ico',
               }}
               accessibilityLabel="create-universal-app logo"
               mt="$2"
             />
+          </XStack>
+          <XStack jc="center" ai="flex-end" fw="wrap" space="$2" mt="$-2">
             <H1 ta="center" mt="$2">
-              create-universal-app
+              Share Your Backpack
             </H1>
           </XStack>
-          <Paragraph ta="center">
+          {/* <Paragraph ta="center">
             This is a demo for create-universal-app. To read more about the philosophy behind it,
             visit{' '}
             <Anchor color="$color12" href="#" target="_blank">
@@ -60,31 +64,31 @@ export function HomeScreen() {
               video
             </Anchor>{' '}
             explanation on how this template works and how to get started!
-          </Paragraph>
+          </Paragraph> */}
           <Separator />
         </YStack>
 
-        <H3 ta="center">Some Demos</H3>
+        <H3 ta="center">List of packs</H3>
         <YStack p="$2">
-          <Paragraph>tRPC Query Demo</Paragraph>
           {isLoading ? (
             <Paragraph>Loading...</Paragraph>
           ) : error ? (
             <Paragraph>{error.message}</Paragraph>
           ) : (
             packs?.map(({ pack, author }) => (
-              <Paragraph opacity={0.5} key={pack.id}>
-                {pack.name}
-              </Paragraph>
+              <YStack p="$2" key={pack.id}>
+                <Button
+                  accessibilityRole="link"
+                  onPress={() => {
+                    push(`/pack/${pack.id}`)
+                  }}
+                >
+                  {pack.name}
+                </Button>
+              </YStack>
             ))
           )}
         </YStack>
-
-        <XStack space>
-          <Button {...userLinkProps} theme={'red'}>
-            User Page (Routing)
-          </Button>
-        </XStack>
       </YStack>
     </ScrollView>
   )

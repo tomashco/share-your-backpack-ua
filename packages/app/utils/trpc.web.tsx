@@ -5,7 +5,7 @@ import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import type { AppRouter } from '@my/api'
 import { transformer } from '@my/api/transformer'
 
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   if (typeof window !== 'undefined') return '' // browser should use relative url
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}` // SSR should use vercel url
 

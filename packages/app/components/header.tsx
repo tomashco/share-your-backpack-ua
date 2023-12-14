@@ -1,10 +1,12 @@
-import { Button, Paragraph, XStack, YStack } from '@my/ui'
+import { Button, Image, Paragraph, XStack, YStack } from '@my/ui'
 import { useQueryClient } from '@tanstack/react-query'
 import { useLink } from 'solito/link'
-import { SignedIn, SignedOut, useAuth } from '../utils/clerk'
+import { SignedIn, SignedOut, useAuth, useUser } from '../utils/clerk'
 
 export function Header() {
-  const { signOut, userId } = useAuth()
+  const { signOut } = useAuth()
+  const { user } = useUser()
+  const isEditable = !!user?.id
   const queryClient = useQueryClient()
 
   const signInOAuthLinkProps = useLink({
@@ -26,7 +28,16 @@ export function Header() {
 
       <SignedIn>
         <XStack space width={'100%'} ai="center" jc="flex-end">
-          <Paragraph>{userId}</Paragraph>
+          <Image
+            source={{
+              uri: user?.imageUrl,
+              width: 40,
+              height: 40,
+            }}
+            accessibilityLabel="create-universal-app logo"
+            mt="$2"
+            style={{ borderRadius: 40 }}
+          />
           <Button
             onPress={() => {
               signOut()

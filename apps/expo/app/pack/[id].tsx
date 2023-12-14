@@ -1,4 +1,4 @@
-import { UserDetailScreen } from 'app/features/user/detail-screen'
+import { UserDetailScreen } from 'app/features/pack/detail-screen'
 import { Stack } from 'expo-router'
 
 export default function Screen() {
@@ -6,7 +6,7 @@ export default function Screen() {
     <>
       <Stack.Screen
         options={{
-          title: 'User',
+          title: 'Pack',
         }}
       />
       <UserDetailScreen />

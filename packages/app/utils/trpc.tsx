@@ -20,7 +20,7 @@ import { useAuth } from '@clerk/clerk-expo'
  */
 export const trpc = createTRPCReact<AppRouter>()
 
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   /**
    * Gets the IP address of your host-machine. If it cannot automatically find it,
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
