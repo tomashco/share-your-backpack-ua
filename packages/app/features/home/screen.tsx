@@ -9,6 +9,8 @@ import {
   YStack,
   Image,
   ScrollView,
+  Form,
+  Input,
 } from '@my/ui'
 import { Header } from 'app/components/header'
 import { trpc } from '../../utils/trpc'
@@ -17,12 +19,9 @@ import React from 'react'
 import { useLink } from 'solito/link'
 import { useRouter } from 'solito/router'
 import { getBaseUrl } from 'app/utils/trpc'
+import { CreatePackForm } from '@my/ui/src/packForm'
 
 export function HomeScreen() {
-  const userLinkProps = useLink({
-    href: '/pack/asdfasdfasdf',
-  })
-  // const { data: posts, isLoading, error } = trpc.posts.getAll.useQuery()
   const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
   const { push } = useRouter()
   const user = useUser()
@@ -49,25 +48,14 @@ export function HomeScreen() {
               Share Your Backpack
             </H1>
           </XStack>
-          {/* <Paragraph ta="center">
-            This is a demo for create-universal-app. To read more about the philosophy behind it,
-            visit{' '}
-            <Anchor color="$color12" href="#" target="_blank">
-              Link-not-working
-            </Anchor>{' '}
-            (give it a ⭐️ if you like it!)
-          </Paragraph>
-          <Paragraph ta="center">
-            This template uses Expo, Next, Solito, tRPC, Tamagui, Clerk, and Prisma. If you&aposre a
-            beginner and is a little overwhelmed, I&aposve also made a{' '}
-            <Anchor color="$color12" href="https://youtu.be/aTEv0-ZBbWk" target="_blank">
-              video
-            </Anchor>{' '}
-            explanation on how this template works and how to get started!
-          </Paragraph> */}
           <Separator />
         </YStack>
-
+        {isEditable && (
+          <YStack space="$4" maw={600} px="$3">
+            <CreatePackForm />
+          </YStack>
+        )}
+        <Separator />
         <H3 ta="center">List of packs</H3>
         <YStack p="$2">
           {isLoading ? (

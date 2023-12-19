@@ -6,6 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.473.0",
+    "@aws-sdk/s3-request-presigner": "^3.474.0",
     "@clerk/nextjs": "^4.27.2",
     "@my/db": "*",
     "@trpc/client": "10.9.0",

@@ -489,6 +489,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/middleware-sdk-s3@npm:3.474.0":
+  version: 3.474.0
+  resolution: "@aws-sdk/middleware-sdk-s3@npm:3.474.0"
+  dependencies:
+    "@aws-sdk/types": 3.468.0
+    "@aws-sdk/util-arn-parser": 3.465.0
+    "@smithy/node-config-provider": ^2.1.8
+    "@smithy/protocol-http": ^3.0.11
+    "@smithy/signature-v4": ^2.0.0
+    "@smithy/smithy-client": ^2.1.18
+    "@smithy/types": ^2.7.0
+    "@smithy/util-config-provider": ^2.0.0
+    tslib: ^2.5.0
+  checksum: 363ebb5c6276377cd58f50802a245b1be4e8c425e34469e706bb01376828d63653b9f553eb6e05a514aac78d32f43d2ba7175e15337ab8def73125b4af364c9b
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/middleware-sdk-sts@npm:3.468.0":
   version: 3.468.0
   resolution: "@aws-sdk/middleware-sdk-sts@npm:3.468.0"
@@ -553,6 +570,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/s3-request-presigner@npm:^3.474.0":
+  version: 3.474.0
+  resolution: "@aws-sdk/s3-request-presigner@npm:3.474.0"
+  dependencies:
+    "@aws-sdk/signature-v4-multi-region": 3.474.0
+    "@aws-sdk/types": 3.468.0
+    "@aws-sdk/util-format-url": 3.468.0
+    "@smithy/middleware-endpoint": ^2.2.3
+    "@smithy/protocol-http": ^3.0.11
+    "@smithy/smithy-client": ^2.1.18
+    "@smithy/types": ^2.7.0
+    tslib: ^2.5.0
+  checksum: 6b9cf580c75a594d38b47cd51965244d6c01889f7e1b05c75133cd4c4debffd7b804f2a7cac8ba71b29f1f291cd90439e31c563af44e07533d1e74ed0bddffa0
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/signature-v4-multi-region@npm:3.470.0":
   version: 3.470.0
   resolution: "@aws-sdk/signature-v4-multi-region@npm:3.470.0"
@@ -564,6 +597,20 @@ __metadata:
     "@smithy/types": ^2.7.0
     tslib: ^2.5.0
   checksum: e9ddc65c8f0d104c11ed7f468e18cbc6411819202452e10e42834a4634e933f3e25fcac503d752a9e97dd82174fefff6a047221e385683a8674cac6fe6093779
+  languageName: node
+  linkType: hard
+
+"@aws-sdk/signature-v4-multi-region@npm:3.474.0":
+  version: 3.474.0
+  resolution: "@aws-sdk/signature-v4-multi-region@npm:3.474.0"
+  dependencies:
+    "@aws-sdk/middleware-sdk-s3": 3.474.0
+    "@aws-sdk/types": 3.468.0
+    "@smithy/protocol-http": ^3.0.11
+    "@smithy/signature-v4": ^2.0.0
+    "@smithy/types": ^2.7.0
+    tslib: ^2.5.0
+  checksum: d52f9a2632b517c0243099a8e7351ed627e9fa9292fa034bcd355b0360e4982388174e187ea395779b20445ea7453200827cc2365398137678b2ed03899e5ec3
   languageName: node
   linkType: hard
 
@@ -639,6 +686,18 @@ __metadata:
     "@smithy/util-endpoints": ^1.0.7
     tslib: ^2.5.0
   checksum: 3c1fb01db4d2ddd3429e50b9660f3f3729f5a73404f86642aa07f44fb84c253311a32eca74a2ec7e1940d7b4d63decf7e330497187813980af841645c71f88c3
+  languageName: node
+  linkType: hard
+
+"@aws-sdk/util-format-url@npm:3.468.0":
+  version: 3.468.0
+  resolution: "@aws-sdk/util-format-url@npm:3.468.0"
+  dependencies:
+    "@aws-sdk/types": 3.468.0
+    "@smithy/querystring-builder": ^2.0.15
+    "@smithy/types": ^2.7.0
+    tslib: ^2.5.0
+  checksum: b8b469eaa32c0d680de067690363a982d37968a6e547a6201439e53165af2972a891ab2aff336de360ab6ced8c2b4204c40116e5893370b84c2e8c929295bb66
   languageName: node
   linkType: hard
 
@@ -3738,6 +3797,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@hookform/resolvers@npm:3.3.2"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: bcaefe2a8a212b015b3ea99c93d7ecb5c8f475606d83be9d82dc6cc0cbb3cda03f7fd7a4426688c2de29b6800b93adbf9abb932a1dafee1d053dcaa69ec13f3f
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.13":
   version: 0.11.13
   resolution: "@humanwhocodes/config-array@npm:0.11.13"
@@ -4085,6 +4153,7 @@ __metadata:
   resolution: "@my/api@workspace:packages/api"
   dependencies:
     "@aws-sdk/client-s3": ^3.473.0
+    "@aws-sdk/s3-request-presigner": ^3.474.0
     "@clerk/nextjs": ^4.27.2
     "@my/db": "*"
     "@trpc/client": 10.9.0
@@ -4113,6 +4182,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@my/ui@workspace:packages/ui"
   dependencies:
+    "@hookform/resolvers": ^3.3.2
     "@tamagui/animations-react-native": latest
     "@tamagui/build": latest
     "@tamagui/font-inter": latest
@@ -4120,6 +4190,7 @@ __metadata:
     "@tamagui/shorthands": latest
     "@tamagui/themes": latest
     "@tamagui/toast": latest
+    react-hook-form: ^7.49.2
     tamagui: latest
   languageName: unknown
   linkType: soft
@@ -17747,6 +17818,15 @@ __metadata:
     react: ^16.6.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.6.0 || ^17.0.0 || ^18.0.0
   checksum: 7ca7e47f8af14ea186688b512a87ab912bf6041312b297f92516341b140b3f0f8aedf5a44d226d99e69ed067b0cc106e38aeb9c9b738ffcc63d10721c844db90
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.49.2":
+  version: 7.49.2
+  resolution: "react-hook-form@npm:7.49.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: e982a4638d474bfd156a7d4ebb098065944895f62d8e0098195a2e0030106debea7262ddd58f920797f3b651fdc2a47831f89be0c7e0338c9cb8430fd3b202f1
   languageName: node
   linkType: hard
 

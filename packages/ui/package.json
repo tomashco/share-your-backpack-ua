@@ -17,12 +17,14 @@
     "watch": "tamagui-build --watch"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.2",
     "@tamagui/animations-react-native": "latest",
     "@tamagui/font-inter": "latest",
     "@tamagui/react-native-media-driver": "latest",
     "@tamagui/shorthands": "latest",
     "@tamagui/themes": "latest",
     "@tamagui/toast": "latest",
+    "react-hook-form": "^7.49.2",
     "tamagui": "latest"
   },
   "devDependencies": {
