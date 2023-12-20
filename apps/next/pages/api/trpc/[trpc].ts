@@ -1,10 +1,16 @@
-import { appRouter, createContext } from '@my/api'
+import { appRouter, createTRPCContext } from '@my/api'
 import { createNextApiHandler } from '@trpc/server/adapters/next'
 
 // export API handler
 export default createNextApiHandler({
   router: appRouter,
-  createContext,
+  createContext: createTRPCContext,
+  onError:
+    process.env.NODE_ENV === 'development'
+      ? ({ path, error }) => {
+          console.error(`❌ tRPC failed on ${path ?? '<no-path>'}: ${error.message}`)
+        }
+      : undefined,
 })
 
 // If you need to enable cors, you can do so like this:
