@@ -1,5 +1,5 @@
 import { useController } from 'react-hook-form'
-import { Input, TextArea } from '@my/ui'
+import { Input, TextArea } from 'tamagui'
 
 export default function FormTextInput({ name, control, variant, ...props }) {
   const {
