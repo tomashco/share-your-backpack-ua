@@ -11,6 +11,7 @@ export const getBaseUrl = () => {
 
   return `http://localhost:${process.env.PORT ?? 3000}` // dev SSR should use localhost
 }
+export const onAppStateChange = (_state) => null
 
 export const trpc = createTRPCNext<AppRouter>({
   config() {

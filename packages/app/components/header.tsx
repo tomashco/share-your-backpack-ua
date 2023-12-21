@@ -1,4 +1,4 @@
-import { Button, Image, Paragraph, XStack, YStack } from '@my/ui'
+import { Button, Image, XStack, YStack } from '@my/ui'
 import { useQueryClient } from '@tanstack/react-query'
 import { useLink } from 'solito/link'
 import { SignedIn, SignedOut, useAuth, useUser } from '../utils/clerk'
@@ -35,7 +35,6 @@ export function Header() {
               height: 40,
             }}
             accessibilityLabel="create-universal-app logo"
-            mt="$2"
             style={{ borderRadius: 40 }}
           />
           <Button

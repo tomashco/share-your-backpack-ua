@@ -10,10 +10,12 @@ import Constants from 'expo-constants'
  * Use only in _app.tsx
  */
 import React from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { transformer } from '@my/api/transformer'
 import { useAuth } from '@clerk/clerk-expo'
+import { Platform, AppStateStatus } from 'react-native'
+import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+// import { View } from '@tamagui/web'
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -45,6 +47,12 @@ export const getBaseUrl = () => {
   return `http://localhost:3000`
 }
 
+export function onAppStateChange(status: AppStateStatus) {
+  if (Platform.OS !== 'web') {
+    focusManager.setFocused(status === 'active')
+  }
+}
+
 export const TRPCProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
@@ -66,6 +74,12 @@ export const TRPCProvider: React.FC<{
       ],
     })
   )
+
+  // useEffect(() => {
+  //   const subscription = AppState.addEventListener('focus', onAppStateChange)
+
+  //   return () => subscription.remove()
+  // }, [])
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
