@@ -19,6 +19,31 @@
     "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL"
 ],
   "pipeline": {
+    "db-generate": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "db-push": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "dev": {
+      "dependsOn": ["^db-generate"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:tauri": {
+      "dependsOn": ["^db-generate"],
+      "cache": false
+    },
+    "build:tauri": {
+      "dependsOn": ["^db-generate"],
+      "cache": false
+    },
+    "studio": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
     "build": {
       "env": [
         "DISABLE_EXTRACTION",
@@ -39,12 +64,8 @@
         "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL",
         "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL"
       ],
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "build/**", "node_modules/.cache/metro/**"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
+        "dependsOn": ["^db-generate","^build"],
+      "outputs": [".next/**", ".expo/**", "!.next/cache/**", "build/**", "node_modules/.cache/metro/**"]
     }
   }
 }

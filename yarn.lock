@@ -4167,7 +4167,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@my/db@*, @my/db@workspace:packages/db":
+"@my/db@*, @my/db@0.1.0, @my/db@workspace:packages/db":
   version: 0.0.0-use.local
   resolution: "@my/db@workspace:packages/db"
   dependencies:
@@ -11393,6 +11393,7 @@ __metadata:
     "@clerk/clerk-expo": ^0.19.21
     "@expo/config-plugins": ~7.2.2
     "@expo/metro-config": ~0.10.0
+    "@my/db": 0.1.0
     "@my/ui": 0.0.1
     "@react-native-async-storage/async-storage": ^1.19.8
     "@react-navigation/native": ^6.1.6
@@ -19033,6 +19034,7 @@ __metadata:
     "@babel/runtime": ^7.18.9
     "@clerk/nextjs": ^4.27.2
     "@manypkg/cli": ^0.19.1
+    "@my/db": 0.1.0
     check-dependency-version-consistency: ^3.0.3
     dotenv: ^16.3.1
     dotenv-cli: ^7.3.0

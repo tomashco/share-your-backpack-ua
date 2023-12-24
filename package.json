@@ -5,8 +5,12 @@
     "apps/*",
     "packages/*"
   ],
+  "prisma": {
+    "schema": "./packages/db/prisma/schema.prisma"
+  },
   "scripts": {
     "vercel:install": "yarn install",
+    "build": "turbo build",
     "native": "cd apps/expo && yarn start",
     "watch": "yarn workspaces foreach -pi run watch",
     "web": "yarn build && cd apps/next && yarn dev",
@@ -19,7 +23,6 @@
     "generate": "cd packages/db && yarn prisma generate",
     "prisma:studio": "cd packages/db && yarn prisma:studio",
     "fix": "manypkg fix",
-    "build": "turbo build",
     "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
     "check-deps": "check-dependency-version-consistency ."
@@ -36,6 +39,7 @@
     "@babel/runtime": "^7.18.9",
     "@clerk/nextjs": "^4.27.2",
     "@manypkg/cli": "^0.19.1",
+    "@my/db": "0.1.0",
     "check-dependency-version-consistency": "^3.0.3",
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.3.0",

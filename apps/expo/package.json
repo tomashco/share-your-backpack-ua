@@ -14,6 +14,7 @@
     "@babel/runtime": "^7.18.9",
     "@clerk/clerk-expo": "^0.19.21",
     "@expo/config-plugins": "~7.2.2",
+    "@my/db": "0.1.0",
     "@my/ui": "0.0.1",
     "@react-native-async-storage/async-storage": "^1.19.8",
     "@react-navigation/native": "^6.1.6",
