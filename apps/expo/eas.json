@@ -5,7 +5,7 @@
       "developmentClient": true,
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleDebug"
+        "gradleCommand": ":app:assembleRelease"
       },
       "ios": {
         "simulator": true,
@@ -15,9 +15,9 @@
     "production": {
       "distribution": "store",
       "developmentClient": false,
-      "android": {
+            "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleDebug"
+        "gradleCommand": ":app:assembleRelease"
       }
     }
   }
