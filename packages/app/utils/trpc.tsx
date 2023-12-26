@@ -35,7 +35,7 @@ export const getBaseUrl = () => {
    * will not be available in production.
    */
   if (!__DEV__) {
-    const productionApiUrl = Constants.expoConfig?.extra?.productionApiUrl as string
+    const productionApiUrl = `https://${process.env.VERCEL_URL}`
     if (!productionApiUrl)
       throw new Error('failed to get productionApiUrl, missing in extra section of app.config.ts')
     return productionApiUrl

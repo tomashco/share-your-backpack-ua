@@ -8,6 +8,8 @@
     "android": "npx expo run:android",
     "pod-install": "npx pod-install",
     "ios": "npx expo run:ios",
+    "prebuild": "npx expo prebuild --clean",
+    "build:android:release": "eas build --local --platform android --profile production --clear-cache",
     "eject": "npx expo eject"
   },
   "dependencies": {

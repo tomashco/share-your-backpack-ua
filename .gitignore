@@ -9,6 +9,10 @@
 # expo
 **/.expo/*
 
+# android and ios
+apps/expo/android/*
+apps/expo/ios/*
+
 # next.js
 **/.next/*
 /out/

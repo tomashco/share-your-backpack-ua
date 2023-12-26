@@ -18,6 +18,14 @@
             "android": {
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
+      },
+      "env":{
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY":"pk_test_YWJsZS1zbHVnLTE0LmNsZXJrLmFjY291bnRzLmRldiQ",
+        "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL":"/",
+        "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL":"/",
+        "NEXT_PUBLIC_CLERK_SIGN_UP_URL":"/signup",
+        "NEXT_PUBLIC_CLERK_SIGN_IN_URL":"/signin",
+        "VERCEL_URL":"share-your-backpack-ua-next.vercel.app"
       }
     }
   }
