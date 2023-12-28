@@ -15,6 +15,7 @@
     "@tamagui/shorthands": "latest",
     "@tamagui/themes": "latest",
     "@tanstack/react-query": "^4.35.3",
+    "@tanstack/react-table": "^8.11.2",
     "@trpc/next": "^10.44.1",
     "@trpc/react-query": "^10.44.1",
     "burnt": "^0.12.1",
