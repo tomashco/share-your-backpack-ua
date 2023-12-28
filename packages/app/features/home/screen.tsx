@@ -6,6 +6,7 @@ import React from 'react'
 import { useRouter } from 'solito/router'
 import { getBaseUrl } from 'app/utils/trpc'
 import { CreatePackForm } from '@my/ui/src/packForm'
+import { PageLayout } from '@my/ui/src'
 
 export function HomeScreen() {
   const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
@@ -18,7 +19,7 @@ export function HomeScreen() {
       onScrollBeginDrag={() => onAppStateChange('active')}
       onScrollEndDrag={() => onAppStateChange('inactive')}
     >
-      <YStack f={1} jc="center" w={'100%'} ai="center" p="$4" space>
+      <PageLayout>
         <Header />
         <YStack px="$3">
           <XStack jc="center" ai="flex-end" fw="wrap" space="$2" mt="$-2">
@@ -79,7 +80,7 @@ export function HomeScreen() {
             </XStack>
           )}
         </YStack>
-      </YStack>
+      </PageLayout>
     </ScrollView>
   )
 }
