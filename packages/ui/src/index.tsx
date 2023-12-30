@@ -1,6 +1,7 @@
 export * from 'tamagui'
 export * from '@tamagui/toast'
 export * from './MyComponent'
+export * from './Table'
 export * from './PageLayout'
 export { config } from './tamagui.config'
 export * from './CustomToast'
