@@ -1,5 +1,16 @@
 import { Pack, PackItem } from '@my/db/index'
-import { Button, H1, H3, Paragraph, ScrollView, ToggleGroup, YStack, XStack, View } from '@my/ui'
+import {
+  Button,
+  H1,
+  H3,
+  Paragraph,
+  ScrollView,
+  ToggleGroup,
+  YStack,
+  XStack,
+  View,
+  Stack,
+} from '@my/ui'
 import { PageLayout, Table } from '@my/ui/src'
 import { CreatePackForm } from '@my/ui/src/packForm'
 import { ChevronLeft, View as ViewIcon } from '@tamagui/lucide-icons'

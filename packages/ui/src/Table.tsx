@@ -31,7 +31,7 @@ const Table = ({ data }) => {
           <XStack id="tableHeader" backgroundColor={'lightgray'}>
             {headers.map((header) => (
               <XStack
-                key={header}
+                key={'head' + header}
                 h={ROW_HEIGHT}
                 w={HEADER_SIZE}
                 borderColor={'darkgray'}
@@ -51,10 +51,10 @@ const Table = ({ data }) => {
                     key={viewDetailsId}
                     borderColor={'gray'}
                     flexDirection="column"
-                    borderWidth={'$1'}
+                    borderBottomWidth={'$1'}
                   >
                     {headers.map((key) => (
-                      <XStack ai={'center'}>
+                      <XStack key={'body' + key} ai={'center'}>
                         <H4>{key}: </H4>
                         <Paragraph>{row[key]}</Paragraph>
                       </XStack>
@@ -83,21 +83,31 @@ const Table = ({ data }) => {
       </ScrollView>
       <YStack id="stickyTable" borderColor="$black" borderWidth="$1">
         <XStack id="stickyTableHeader" h={ROW_HEIGHT} backgroundColor={'lightgray'} />
-        <YStack id="stickyTableBody">
-          {data.packItems.map((row) => (
-            <XStack
-              key={row.id}
-              onPress={() =>
-                viewDetailsId === row.id ? setViewDetailsId('') : setViewDetailsId(row.id)
-              }
-              h={viewDetailsId === row.id ? ROW_HEIGHT_EXPANDED : ROW_HEIGHT}
-              w={40}
-              borderColor={'gray'}
-              borderWidth={'$1'}
-            >
-              {viewDetailsId === row.id ? <X /> : <ArrowUpRight />}
-            </XStack>
-          ))}
+        <YStack
+          id="stickyTableBody"
+          shadowColor={'gray'}
+          shadowRadius={10}
+          shadowOffset={{ width: -5, height: 5 }}
+          backgroundColor="white"
+        >
+          {data.packItems.map((row) => {
+            const isSelected = viewDetailsId === row.id
+            return (
+              <XStack
+                key={row.id}
+                onPress={() => (isSelected ? setViewDetailsId('') : setViewDetailsId(row.id))}
+                h={isSelected ? ROW_HEIGHT_EXPANDED : ROW_HEIGHT}
+                w={ROW_HEIGHT}
+                justifyContent="center"
+                alignItems={isSelected ? 'flex-start' : 'center'}
+                padding="$2"
+                borderBottomWidth={'$1'}
+                borderColor={'gray'}
+              >
+                {isSelected ? <X /> : <ArrowUpRight />}
+              </XStack>
+            )
+          })}
         </YStack>
       </YStack>
     </XStack>
