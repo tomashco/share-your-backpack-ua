@@ -27,15 +27,16 @@ const Table = ({ data }) => {
       }}
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <YStack id="table" borderColor="$black" borderWidth="$1">
+        <YStack id="table">
           <XStack id="tableHeader" backgroundColor={'lightgray'}>
             {headers.map((header) => (
               <XStack
                 key={'head' + header}
                 h={ROW_HEIGHT}
                 w={HEADER_SIZE}
-                borderColor={'darkgray'}
-                borderWidth={'$1'}
+                alignItems="center"
+                paddingLeft="$2"
+                paddingRight="$2"
               >
                 <Paragraph>{header}</Paragraph>
               </XStack>
@@ -67,9 +68,12 @@ const Table = ({ data }) => {
                         onPress={() => setViewDetailsId('')}
                         w={HEADER_SIZE}
                         h={ROW_HEIGHT}
+                        alignItems="center"
+                        paddingLeft="$2"
+                        paddingRight="$2"
                         key={key}
                         borderColor={'gray'}
-                        borderWidth={'$1'}
+                        borderBottomWidth={'$1'}
                       >
                         <Paragraph>{row[key]}</Paragraph>
                       </XStack>
@@ -81,11 +85,12 @@ const Table = ({ data }) => {
           </YStack>
         </YStack>
       </ScrollView>
-      <YStack id="stickyTable" borderColor="$black" borderWidth="$1">
+      <YStack id="stickyTable">
         <XStack id="stickyTableHeader" h={ROW_HEIGHT} backgroundColor={'lightgray'} />
         <YStack
           id="stickyTableBody"
           shadowColor={'gray'}
+          elevation={10}
           shadowRadius={10}
           shadowOffset={{ width: -5, height: 5 }}
           backgroundColor="white"
