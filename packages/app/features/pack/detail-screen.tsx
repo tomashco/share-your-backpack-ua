@@ -3,6 +3,7 @@ import { Button, H1, H3, Paragraph, ScrollView, ToggleGroup, YStack, XStack } fr
 import { PageLayout } from '@my/ui/src'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 import { Header } from 'app/components/header'
+import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React, { useState } from 'react'
 import { createParam } from 'solito'
@@ -27,6 +28,8 @@ export function UserDetailScreen() {
     category: categories,
     location: locations,
   }
+  const user = useUser()
+  const isEditable = user?.user?.id === data?.authorId
 
   const ItemData = ({ item }: { item: PackItem }) => (
     <XStack>
@@ -89,17 +92,19 @@ export function UserDetailScreen() {
     >
       <PageLayout>
         <Header />
-        <XStack w="100%" jc={'flex-end'}>
-          <Button
-            accessibilityRole="link"
-            theme={'active'}
-            onPress={() => {
-              push(`/pack/${id}/edit`)
-            }}
-          >
-            Edit Pack
-          </Button>
-        </XStack>
+        {isEditable && (
+          <XStack w="100%" jc={'flex-end'}>
+            <Button
+              accessibilityRole="link"
+              theme={'active'}
+              onPress={() => {
+                push(`/pack/${id}/edit`)
+              }}
+            >
+              Edit Pack
+            </Button>
+          </XStack>
+        )}
         <YStack w="100%" $gtSm={{ width: '35rem' }}>
           {isLoading ? (
             <Paragraph>Loading...</Paragraph>

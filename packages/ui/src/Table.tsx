@@ -44,12 +44,11 @@ const Table = ({ data }) => {
           </XStack>
           <YStack id="tableBody">
             {data.packItems.map((row) => (
-              <XStack>
+              <XStack key={row.id}>
                 {viewDetailsId === row.id ? (
                   <XStack
                     h={ROW_HEIGHT_EXPANDED}
                     w={'100%'}
-                    key={viewDetailsId}
                     borderColor={'gray'}
                     flexDirection="column"
                     borderBottomWidth={'$1'}
@@ -71,7 +70,7 @@ const Table = ({ data }) => {
                         alignItems="center"
                         paddingLeft="$2"
                         paddingRight="$2"
-                        key={key}
+                        key={'body' + key}
                         borderColor={'gray'}
                         borderBottomWidth={'$1'}
                       >

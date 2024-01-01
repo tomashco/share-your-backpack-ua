@@ -1,50 +1,34 @@
-import { Pack, PackItem } from '@my/db/index'
-import {
-  Button,
-  H1,
-  H3,
-  Paragraph,
-  ScrollView,
-  ToggleGroup,
-  YStack,
-  XStack,
-  View,
-  Stack,
-} from '@my/ui'
+import { Paragraph, ScrollView, YStack, Spinner } from '@my/ui'
 import { PageLayout, Table } from '@my/ui/src'
 import { CreatePackForm } from '@my/ui/src/packForm'
-import { ChevronLeft, View as ViewIcon } from '@tamagui/lucide-icons'
 import { Header } from 'app/components/header'
+import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import { createParam } from 'solito'
-import { useLink } from 'solito/link'
+import { useRouter } from 'solito/router'
 
 const { useParam } = createParam<{ id: string }>()
 
 export function EditPackScreen() {
   const [id] = useParam('id')
   const { data, isLoading, error } = trpc.packs.getById.useQuery({ id: id || '' })
+  const { isLoaded: userIsLoaded, user } = useUser()
+  const { push } = useRouter()
+  const isEditable = user?.id === data?.authorId
 
-  if (isLoading || error)
+  if (isLoading || !userIsLoaded || error)
     return (
-      <YStack w="100%" $gtSm={{ width: '35rem' }}>
-        {isLoading ? (
-          <Paragraph>Loading...</Paragraph>
-        ) : error ? (
-          <Paragraph>{error.message}</Paragraph>
+      <YStack padding="$3" space="$4" fullscreen alignItems="center" justifyContent="center">
+        {isLoading || !userIsLoaded ? (
+          <Spinner size="large" color="$gray10" />
         ) : (
-          <YStack
-            $gtSm={{
-              width: '25rem',
-            }}
-            w="100%"
-          >
-            {/* <CreatePackForm /> */}
-          </YStack>
+          <Paragraph>{error?.message}</Paragraph>
         )}
       </YStack>
     )
+
+  if (!isEditable) return push('/')
 
   return (
     <ScrollView
@@ -60,12 +44,14 @@ export function EditPackScreen() {
             }}
             w="100%"
           >
-            {/* <CreatePackForm /> */}
+            <CreatePackForm
+              packId={data.id}
+              packName={data.name ?? ''}
+              packDescription={data.description ?? ''}
+            />
           </YStack>
         </YStack>
         <Table data={data} />
-        {/* <Table /> */}
-        {/* <TableNew /> */}
       </PageLayout>
     </ScrollView>
   )

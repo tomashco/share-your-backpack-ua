@@ -23,7 +23,7 @@ const packSchema = z.object({
   packItems: z.array(itemSchema).optional(),
 })
 
-export function CreatePackForm() {
+export function CreatePackForm({ packId = '', packName = '', packDescription = '' }) {
   const ctx = trpc.useUtils()
   const { push } = useRouter()
   const router = useRouter()
@@ -35,31 +35,44 @@ export function CreatePackForm() {
     },
     onError: (e) => console.log('ERROR: ', e),
   })
+  const { data: editData, mutate: editPack } = trpc.packs.editPack.useMutation({
+    onSuccess: () => {
+      void ctx.packs.getById.invalidate()
+      // form.reset()
+    },
+    onError: (e) => console.log('ERROR: ', e),
+  })
 
   useEffect(() => {
     if (packData?.id) {
       push(`/pack/${packData.id}`)
+    } else if (editData === 'ok') {
+      push(`/pack/${packId}`)
     }
-  }, [packData, router])
+  }, [packData, editData, router])
 
   const form = useForm<z.infer<typeof packSchema>>({
     resolver: zodResolver(packSchema),
     defaultValues: {
-      name: '',
-      description: '',
+      name: packName,
+      description: packDescription,
     },
     mode: 'onChange',
   })
 
   function onSubmit(values: z.infer<typeof packSchema>) {
-    createPack({ ...values })
+    if (packId) {
+      editPack({ id: packId, ...values })
+    } else {
+      createPack({ ...values })
+    }
   }
 
   return (
     <YStack w="100%">
       <Form onSubmit={form.handleSubmit(onSubmit)} {...form}>
         <YStack marginBottom="$3" alignItems="center">
-          <H2>Add a new pack</H2>
+          <H2>{packId ? 'Edit pack information' : 'Add a new pack'}</H2>
         </YStack>
         <YStack space="$3">
           <FormTextInput
@@ -82,7 +95,7 @@ export function CreatePackForm() {
           )}
           <Form.Trigger asChild>
             <Button theme={'blue'} accessibilityRole="link">
-              create Pack
+              {packId ? 'Edit pack' : 'Create pack'}
             </Button>
           </Form.Trigger>
         </YStack>
