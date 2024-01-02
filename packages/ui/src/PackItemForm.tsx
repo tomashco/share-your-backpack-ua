@@ -24,14 +24,14 @@ type PackItemFormProps = {
   onLayout?: (event: any) => void
 }
 
-export function PackItemForm({
+const PackItemForm = ({
   packId = '',
   itemId = '',
   itemName = '',
   itemCategory = '',
   itemLocation = '',
   onLayout,
-}: PackItemFormProps) {
+}: PackItemFormProps) => {
   const ctx = trpc.useUtils()
   const { push } = useRouter()
   const router = useRouter()
@@ -119,3 +119,5 @@ export function PackItemForm({
     </YStack>
   )
 }
+
+export { PackItemForm }
