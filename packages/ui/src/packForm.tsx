@@ -23,7 +23,7 @@ const packSchema = z.object({
   packItems: z.array(itemSchema).optional(),
 })
 
-function PackForm({ packId = '', packName = '', packDescription = '' }) {
+export function PackForm({ packId = '', packName = '', packDescription = '' }) {
   const ctx = trpc.useUtils()
   const { push } = useRouter()
   const router = useRouter()
@@ -103,5 +103,3 @@ function PackForm({ packId = '', packName = '', packDescription = '' }) {
     </YStack>
   )
 }
-
-export { PackForm }

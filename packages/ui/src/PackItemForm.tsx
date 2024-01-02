@@ -24,7 +24,7 @@ type PackItemFormProps = {
   onLayout?: (event: any) => void
 }
 
-function PackItemForm({
+export function PackItemForm({
   packId = '',
   itemId = '',
   itemName = '',
@@ -119,5 +119,3 @@ function PackItemForm({
     </YStack>
   )
 }
-
-export { PackItemForm }
