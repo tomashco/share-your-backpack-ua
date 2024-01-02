@@ -45,6 +45,7 @@ export const getBaseUrl = () => {
 
   if (!localhost) return `https://${process.env.VERCEL_URL}`
   return `http://localhost:3000`
+  // return 'https://share-your-backpack-ua-next.vercel.app'
 }
 
 export function onAppStateChange(status: AppStateStatus) {

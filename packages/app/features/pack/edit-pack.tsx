@@ -8,6 +8,7 @@ import React, { useState } from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
 import { ChevronDown, ChevronUp, X } from '@tamagui/lucide-icons'
+import { TRPCProvider } from 'app/provider/trpc'
 
 const { useParam } = createParam<{ id: string }>()
 
@@ -103,7 +104,8 @@ function Modal({ packId }) {
         dismissOnSnapToBottom
       >
         <Sheet.Overlay animation="lazy" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} />
-        <Sheet.Frame alignSelf="center" ai="center" jc="flex-start" p="$4">
+        <Sheet.Frame alignSelf="center" ai="center" jc="flex-start" w={'100%'} p="$4">
+          <Sheet.Handle />
           <YStack
             $gtSm={{
               width: '25rem',
@@ -120,9 +122,11 @@ function Modal({ packId }) {
               //   message: 'Just showing how toast works...',
               // })
             />
-            <PackItemForm packId={packId} action={() => setOpen(false)} />
+            <TRPCProvider>
+              {/* if modal is defined, set TRPCProvider, otherwise will crash on Android */}
+              <PackItemForm packId={packId} action={() => setOpen(false)} />
+            </TRPCProvider>
           </YStack>
-          <Sheet.Handle />
         </Sheet.Frame>
       </Sheet>
     </>
