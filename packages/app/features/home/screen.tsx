@@ -5,8 +5,7 @@ import { useUser } from '../../utils/clerk'
 import React from 'react'
 import { useRouter } from 'solito/router'
 import { getBaseUrl } from 'app/utils/trpc'
-import { CreatePackForm } from '@my/ui/src/packForm'
-import { PageLayout } from '@my/ui/src'
+import { PackForm, PageLayout } from '@my/ui/src'
 
 export function HomeScreen() {
   const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
@@ -45,7 +44,7 @@ export function HomeScreen() {
             }}
             w="100%"
           >
-            <CreatePackForm />
+            <PackForm />
           </YStack>
         )}
         <Separator />

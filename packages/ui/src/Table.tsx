@@ -1,21 +1,20 @@
-import { H3, H4, Paragraph, ScrollView, XStack, YStack } from 'tamagui'
-import react, { useState, useRef } from 'react'
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import { PackItem } from '@my/db'
+import { Paragraph, ScrollView, XStack, YStack } from 'tamagui'
+import { useState, useRef } from 'react'
 import { ArrowUpRight, X } from '@tamagui/lucide-icons'
+import { PackItemForm } from './PackItemForm'
 
 const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
-const ROW_HEIGHT_EXPANDED = 200
 
 const Table = ({ data }) => {
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
+  const [cellContainer, setCellContainer] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  })
   const headers = ['name', 'category', 'location']
   return (
     <XStack
@@ -47,18 +46,22 @@ const Table = ({ data }) => {
               <XStack key={row.id}>
                 {viewDetailsId === row.id ? (
                   <XStack
-                    h={ROW_HEIGHT_EXPANDED}
+                    h={cellContainer.height}
                     w={'100%'}
                     borderColor={'gray'}
                     flexDirection="column"
                     borderBottomWidth={'$1'}
                   >
-                    {headers.map((key) => (
-                      <XStack key={'body' + key} ai={'center'}>
-                        <H4>{key}: </H4>
-                        <Paragraph>{row[key]}</Paragraph>
-                      </XStack>
-                    ))}
+                    <PackItemForm
+                      packId={data.id}
+                      itemId={row.id}
+                      itemName={row.name}
+                      itemLocation={row.location}
+                      itemCategory={row.category}
+                      onLayout={(event) => {
+                        setCellContainer(event.nativeEvent.layout)
+                      }}
+                    />
                   </XStack>
                 ) : (
                   <>
@@ -100,7 +103,7 @@ const Table = ({ data }) => {
               <XStack
                 key={row.id}
                 onPress={() => (isSelected ? setViewDetailsId('') : setViewDetailsId(row.id))}
-                h={isSelected ? ROW_HEIGHT_EXPANDED : ROW_HEIGHT}
+                h={isSelected ? cellContainer.height : ROW_HEIGHT}
                 w={ROW_HEIGHT}
                 justifyContent="center"
                 alignItems={isSelected ? 'flex-start' : 'center'}

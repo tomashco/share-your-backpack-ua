@@ -1,10 +1,10 @@
-import { Paragraph, ScrollView, YStack, Spinner } from '@my/ui'
+import { Paragraph, ScrollView, YStack, Spinner, Button } from '@my/ui'
 import { PageLayout, Table } from '@my/ui/src'
-import { CreatePackForm } from '@my/ui/src/packForm'
+import { PackForm, PackItemForm } from '@my/ui/src'
 import { Header } from 'app/components/header'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
-import React from 'react'
+import React, { useState } from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
 
@@ -13,6 +13,7 @@ const { useParam } = createParam<{ id: string }>()
 export function EditPackScreen() {
   const [id] = useParam('id')
   const { data, isLoading, error } = trpc.packs.getById.useQuery({ id: id || '' })
+  const [showPackItemForm, setShowPackItemForm] = useState(false)
   const { isLoaded: userIsLoaded, user } = useUser()
   const { push } = useRouter()
   const isEditable = user?.id === data?.authorId
@@ -44,7 +45,7 @@ export function EditPackScreen() {
             }}
             w="100%"
           >
-            <CreatePackForm
+            <PackForm
               packId={data.id}
               packName={data.name ?? ''}
               packDescription={data.description ?? ''}
@@ -52,6 +53,8 @@ export function EditPackScreen() {
           </YStack>
         </YStack>
         <Table data={data} />
+        <Button onPress={() => setShowPackItemForm(true)}>Add new item</Button>
+        {showPackItemForm && <PackItemForm packId={data.id} />}
       </PageLayout>
     </ScrollView>
   )

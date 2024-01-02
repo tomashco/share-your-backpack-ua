@@ -15,27 +15,35 @@ const itemSchema = z.object({
   location: z.string().optional(),
 })
 
-const packSchema = z.object({
-  name: z.string().min(2, {
-    message: 'pack name must be at least 2 characters.',
-  }),
-  description: z.string().optional(),
-  packItems: z.array(itemSchema).optional(),
-})
+type PackItemFormProps = {
+  packId: string
+  itemId?: string
+  itemName?: string
+  itemCategory?: string
+  itemLocation?: string
+  onLayout?: (event: any) => void
+}
 
-function PackForm({ packId = '', packName = '', packDescription = '' }) {
+function PackItemForm({
+  packId = '',
+  itemId = '',
+  itemName = '',
+  itemCategory = '',
+  itemLocation = '',
+  onLayout,
+}: PackItemFormProps) {
   const ctx = trpc.useUtils()
   const { push } = useRouter()
   const router = useRouter()
 
-  const { data: packData, mutate: createPack } = trpc.packs.createPack.useMutation({
+  const { data: packData, mutate: addPackItem } = trpc.packs.addPackItems.useMutation({
     onSuccess: () => {
-      void ctx.packs.getAll.invalidate()
+      void ctx.packs.getById.invalidate()
       form.reset()
     },
     onError: (e) => console.log('ERROR: ', e),
   })
-  const { data: editData, mutate: editPack } = trpc.packs.editPack.useMutation({
+  const { data: editData, mutate: editPackItem } = trpc.packs.editPackItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
       // form.reset()
@@ -43,41 +51,42 @@ function PackForm({ packId = '', packName = '', packDescription = '' }) {
     onError: (e) => console.log('ERROR: ', e),
   })
 
-  useEffect(() => {
-    if (packData?.id) {
-      push(`/pack/${packData.id}`)
-    } else if (editData === 'ok') {
-      push(`/pack/${packId}`)
-    }
-  }, [packData, editData, router])
+  // useEffect(() => {
+  //   if (packData?.id) {
+  //     push(`/pack/${packData.id}`)
+  //   } else if (editData === 'ok') {
+  //     push(`/pack/${packId}`)
+  //   }
+  // }, [packData, editData, router])
 
-  const form = useForm<z.infer<typeof packSchema>>({
-    resolver: zodResolver(packSchema),
+  const form = useForm<z.infer<typeof itemSchema>>({
+    resolver: zodResolver(itemSchema),
     defaultValues: {
-      name: packName,
-      description: packDescription,
+      name: itemName,
+      category: itemCategory,
+      location: itemLocation,
     },
     mode: 'onChange',
   })
 
-  function onSubmit(values: z.infer<typeof packSchema>) {
-    if (packId) {
-      editPack({ id: packId, ...values })
+  function onSubmit(values: z.infer<typeof itemSchema>) {
+    if (itemId) {
+      editPackItem({ packId, id: itemId, ...values })
     } else {
-      createPack({ ...values })
+      addPackItem({ id: packId, packItems: [{ ...values }] })
     }
   }
 
   return (
-    <YStack w="100%">
+    <YStack w="100%" onLayout={onLayout}>
       <Form onSubmit={form.handleSubmit(onSubmit)} {...form}>
         <YStack marginBottom="$3" alignItems="center">
-          <H2>{packId ? 'Edit pack information' : 'Add a new pack'}</H2>
+          <H2>{itemId ? 'Edit pack item' : 'Add a new pack item'}</H2>
         </YStack>
         <YStack space="$3">
           <FormTextInput
             variant="input"
-            placeholder="Pack Name"
+            placeholder="Name"
             control={form.control}
             name="name"
             label="Name"
@@ -85,17 +94,24 @@ function PackForm({ packId = '', packName = '', packDescription = '' }) {
 
           <FormTextInput
             variant="textarea"
-            placeholder="Pack Description"
+            placeholder="Category"
             control={form.control}
-            name="description"
-            label="Name"
+            name="category"
+            label="Category"
+          />
+          <FormTextInput
+            variant="textarea"
+            placeholder="Location"
+            control={form.control}
+            name="location"
+            label="Location"
           />
           {form.formState.errors.name?.message != null && (
             <Text>{form.formState.errors.name?.message}</Text>
           )}
           <Form.Trigger asChild>
             <Button theme={'blue'} accessibilityRole="link">
-              {packId ? 'Edit pack' : 'Create pack'}
+              {itemId ? 'Edit pack item' : 'Add pack item'}
             </Button>
           </Form.Trigger>
         </YStack>
@@ -104,4 +120,4 @@ function PackForm({ packId = '', packName = '', packDescription = '' }) {
   )
 }
 
-export { PackForm }
+export { PackItemForm }
