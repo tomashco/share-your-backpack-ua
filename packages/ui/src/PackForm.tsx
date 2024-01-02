@@ -88,7 +88,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
             placeholder="Pack Description"
             control={form.control}
             name="description"
-            label="Name"
+            label="Description"
           />
           {form.formState.errors.name?.message != null && (
             <Text>{form.formState.errors.name?.message}</Text>

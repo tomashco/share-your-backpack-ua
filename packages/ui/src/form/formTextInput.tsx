@@ -1,7 +1,7 @@
 import { useController } from 'react-hook-form'
-import { Input, TextArea } from 'tamagui'
+import { Input, Label, TextArea } from 'tamagui'
 
-export default function FormTextInput({ name, control, variant, ...props }) {
+export default function FormTextInput({ name, control, label, variant, ...props }) {
   const {
     field,
     fieldState: { invalid, isTouched, isDirty },
@@ -14,21 +14,27 @@ export default function FormTextInput({ name, control, variant, ...props }) {
 
   if (variant === 'textarea')
     return (
-      <TextArea
+      <>
+        {label && <Label>{label}</Label>}
+        <TextArea
+          {...props}
+          ref={field.ref}
+          value={field.value}
+          onChangeText={field.onChange}
+          onBlur={field.onBlur}
+        />
+      </>
+    )
+  return (
+    <>
+      {label && <Label>{label}</Label>}
+      <Input
         {...props}
         ref={field.ref}
         value={field.value}
         onChangeText={field.onChange}
         onBlur={field.onBlur}
       />
-    )
-  return (
-    <Input
-      {...props}
-      ref={field.ref}
-      value={field.value}
-      onChangeText={field.onChange}
-      onBlur={field.onBlur}
-    />
+    </>
   )
 }

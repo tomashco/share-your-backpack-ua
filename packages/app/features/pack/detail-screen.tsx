@@ -69,7 +69,7 @@ export function UserDetailScreen() {
           <ToggleGroup
             type="single"
             size={'$0.5'}
-            onValueChange={(value: sortCriteria) => setSelectedSort(value)}
+            onValueChange={(value: sortCriteria | '') => value !== '' && setSelectedSort(value)}
             value={selectedSort}
           >
             <ToggleGroup.Item value={sortCriteria.category}>

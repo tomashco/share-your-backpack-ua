@@ -5,15 +5,17 @@ import { PackItemForm } from './PackItemForm'
 
 const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
+const ROW_HEIGHT_EXPANDED = 200
 
 const Table = ({ data }) => {
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
+  console.log('🚀 ~ file: table.tsx:13 ~ Table ~ tableContainerRef:', tableContainerRef)
   const [cellContainer, setCellContainer] = useState({
     x: 0,
     y: 0,
     width: 0,
-    height: 0,
+    height: ROW_HEIGHT_EXPANDED,
   })
   const headers = ['name', 'category', 'location']
   return (

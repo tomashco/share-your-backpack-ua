@@ -22,6 +22,7 @@ type PackItemFormProps = {
   itemCategory?: string
   itemLocation?: string
   onLayout?: (event: any) => void
+  action?: () => void
 }
 
 const PackItemForm = ({
@@ -30,7 +31,8 @@ const PackItemForm = ({
   itemName = '',
   itemCategory = '',
   itemLocation = '',
-  onLayout,
+  onLayout = () => {},
+  action,
 }: PackItemFormProps) => {
   const ctx = trpc.useUtils()
   const { push } = useRouter()
@@ -39,11 +41,22 @@ const PackItemForm = ({
   const { data: packData, mutate: addPackItem } = trpc.packs.addPackItems.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
+      if (action) action()
       form.reset()
     },
     onError: (e) => console.log('ERROR: ', e),
   })
-  const { data: editData, mutate: editPackItem } = trpc.packs.editPackItem.useMutation({
+
+  const { data: editResponse, mutate: editPackItem } = trpc.packs.editPackItem.useMutation({
+    onSuccess: () => {
+      void ctx.packs.getById.invalidate()
+      if (action) action()
+      // form.reset()
+    },
+    onError: (e) => console.log('ERROR: ', e),
+  })
+
+  const { data: deleteResponse, mutate: DeletePackItem } = trpc.packs.deletePackItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
       // form.reset()
@@ -78,12 +91,14 @@ const PackItemForm = ({
   }
 
   return (
-    <YStack w="100%" onLayout={onLayout}>
+    <YStack w={itemId ? '$20' : '100%'} onLayout={onLayout}>
       <Form onSubmit={form.handleSubmit(onSubmit)} {...form}>
-        <YStack marginBottom="$3" alignItems="center">
-          <H2>{itemId ? 'Edit pack item' : 'Add a new pack item'}</H2>
-        </YStack>
-        <YStack space="$3">
+        {!itemId && (
+          <YStack marginBottom="$3" alignItems="center">
+            <H2>{'Add a new pack item'}</H2>
+          </YStack>
+        )}
+        <YStack space="$3" marginBottom="$3">
           <FormTextInput
             variant="input"
             placeholder="Name"
@@ -93,14 +108,14 @@ const PackItemForm = ({
           />
 
           <FormTextInput
-            variant="textarea"
+            variant="input"
             placeholder="Category"
             control={form.control}
             name="category"
             label="Category"
           />
           <FormTextInput
-            variant="textarea"
+            variant="input"
             placeholder="Location"
             control={form.control}
             name="location"
@@ -114,6 +129,15 @@ const PackItemForm = ({
               {itemId ? 'Edit pack item' : 'Add pack item'}
             </Button>
           </Form.Trigger>
+          {itemId && (
+            <Button
+              theme={'red'}
+              onPress={() => DeletePackItem({ id: itemId, packId })}
+              accessibilityRole="link"
+            >
+              Delete Item
+            </Button>
+          )}
         </YStack>
       </Form>
     </YStack>
