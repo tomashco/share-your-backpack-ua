@@ -7,7 +7,7 @@ import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React, { useState } from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
-import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
+import { ChevronDown, ChevronUp, X } from '@tamagui/lucide-icons'
 
 const { useParam } = createParam<{ id: string }>()
 
@@ -16,7 +16,16 @@ export function EditPackScreen() {
   const { data, isLoading, error } = trpc.packs.getById.useQuery({ id: id || '' })
   const { isLoaded: userIsLoaded, user } = useUser()
   const { push } = useRouter()
+  const ctx = trpc.useUtils()
   const isEditable = user?.id === data?.authorId
+
+  const { data: _deletePackResponse, mutate: DeletePack } = trpc.packs.deletePack.useMutation({
+    onSuccess: () => {
+      void ctx.packs.getAll.invalidate()
+      push('/')
+    },
+    onError: (e) => console.log('ERROR: ', e),
+  })
 
   if (isLoading || !userIsLoaded || error)
     return (
@@ -47,6 +56,19 @@ export function EditPackScreen() {
         </YStack>
         <Table data={data} />
         <Modal packId={data.id} />
+        <Button
+          icon={X}
+          direction="rtl"
+          theme={'red'}
+          onPress={() => DeletePack({ id: data.id })}
+          accessibilityRole="link"
+          w="100%"
+          $gtSm={{
+            width: '15rem',
+          }}
+        >
+          Delete Pack
+        </Button>
       </PageLayout>
     </ScrollView>
   )
@@ -63,6 +85,10 @@ function Modal({ packId }) {
         direction="rtl"
         icon={open ? ChevronDown : ChevronUp}
         onPress={() => setOpen((x) => !x)}
+        w="100%"
+        $gtSm={{
+          width: '15rem',
+        }}
       >
         Add a new item
       </Button>

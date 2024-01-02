@@ -21,6 +21,7 @@ type PackItemFormProps = {
   itemName?: string
   itemCategory?: string
   itemLocation?: string
+  tableContainerWidth?: number
   onLayout?: (event: any) => void
   action?: () => void
 }
@@ -31,6 +32,7 @@ const PackItemForm = ({
   itemName = '',
   itemCategory = '',
   itemLocation = '',
+  tableContainerWidth,
   onLayout = () => {},
   action,
 }: PackItemFormProps) => {
@@ -91,7 +93,7 @@ const PackItemForm = ({
   }
 
   return (
-    <YStack w={itemId ? '$20' : '100%'} onLayout={onLayout}>
+    <YStack w={tableContainerWidth ? tableContainerWidth : '100%'} onLayout={onLayout}>
       <Form onSubmit={form.handleSubmit(onSubmit)} {...form}>
         {!itemId && (
           <YStack marginBottom="$3" alignItems="center">
@@ -126,7 +128,7 @@ const PackItemForm = ({
           )}
           <Form.Trigger asChild>
             <Button theme={'blue'} accessibilityRole="link">
-              {itemId ? 'Edit pack item' : 'Add pack item'}
+              Save changes
             </Button>
           </Form.Trigger>
           {itemId && (

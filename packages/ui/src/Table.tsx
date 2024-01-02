@@ -10,7 +10,6 @@ const ROW_HEIGHT_EXPANDED = 200
 const Table = ({ data }) => {
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  console.log('🚀 ~ file: table.tsx:13 ~ Table ~ tableContainerRef:', tableContainerRef)
   const [cellContainer, setCellContainer] = useState({
     x: 0,
     y: 0,
@@ -29,7 +28,7 @@ const Table = ({ data }) => {
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <YStack id="table">
-          <XStack id="tableHeader" backgroundColor={'lightgray'}>
+          <XStack borderTopLeftRadius={10} id="tableHeader" backgroundColor={'lightgray'}>
             {headers.map((header) => (
               <XStack
                 key={'head' + header}
@@ -60,9 +59,11 @@ const Table = ({ data }) => {
                       itemName={row.name}
                       itemLocation={row.location}
                       itemCategory={row.category}
+                      tableContainerWidth={tableContainerRef.current.width - 50}
                       onLayout={(event) => {
                         setCellContainer(event.nativeEvent.layout)
                       }}
+                      action={() => setViewDetailsId('')}
                     />
                   </XStack>
                 ) : (
@@ -90,7 +91,12 @@ const Table = ({ data }) => {
         </YStack>
       </ScrollView>
       <YStack id="stickyTable">
-        <XStack id="stickyTableHeader" h={ROW_HEIGHT} backgroundColor={'lightgray'} />
+        <XStack
+          id="stickyTableHeader"
+          h={ROW_HEIGHT}
+          borderTopRightRadius={10}
+          backgroundColor={'lightgray'}
+        />
         <YStack
           id="stickyTableBody"
           shadowColor={'gray'}

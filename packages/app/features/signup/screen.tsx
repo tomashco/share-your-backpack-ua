@@ -25,7 +25,6 @@ export function SignUpScreen() {
         emailAddress,
         password,
       })
-      console.log('signUp', res)
 
       // send the email.
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })

@@ -1,13 +1,10 @@
 import { Button, Image, XStack, YStack } from '@my/ui'
-import { useQueryClient } from '@tanstack/react-query'
 import { useLink } from 'solito/link'
 import { SignedIn, SignedOut, useAuth, useUser } from '../utils/clerk'
 
 export function Header() {
   const { signOut } = useAuth()
   const { user } = useUser()
-  const isEditable = !!user?.id
-  const queryClient = useQueryClient()
 
   const signInOAuthLinkProps = useLink({
     href: '/signin',
@@ -40,9 +37,6 @@ export function Header() {
           <Button
             onPress={() => {
               signOut()
-
-              queryClient.invalidateQueries(['posts'])
-              console.log('🚀 ~ file: header.tsx:35 ~ Header ~ queryClient')
             }}
             theme={'active'}
           >
