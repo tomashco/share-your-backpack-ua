@@ -8,6 +8,7 @@ import NextDocument, {
 } from 'next/document'
 import { Children } from 'react'
 import { AppRegistry } from 'react-native'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import Tamagui from '../tamagui.config'
 
@@ -45,6 +46,7 @@ export default class Document extends NextDocument {
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         </Head>
         <body>
+          <SpeedInsights />
           <Main />
           <NextScript />
         </body>

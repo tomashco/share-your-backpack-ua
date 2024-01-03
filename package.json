@@ -40,6 +40,7 @@
     "@clerk/nextjs": "^4.27.2",
     "@manypkg/cli": "^0.19.1",
     "@my/db": "0.1.0",
+    "@vercel/speed-insights": "^1.0.2",
     "check-dependency-version-consistency": "^3.0.3",
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.3.0",
