@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   ScrollView,
   Input,
-  Text,
   XStack,
   YStack,
   Button,
@@ -12,6 +11,7 @@ import {
   Label,
 } from 'tamagui'
 import { ChevronDown } from '@tamagui/lucide-icons'
+import { useController } from 'react-hook-form'
 
 export const FilterInputAccordionItem = ({
   accordionId,
@@ -20,13 +20,18 @@ export const FilterInputAccordionItem = ({
   headerPlaceholder,
   inputPlaceholder,
   label,
+  name,
+  control,
 }) => {
+  const { field } = useController({
+    name: name,
+    control: control,
+  })
   const [filterList, setFilterList] = useState<{ name: string }[]>(items)
-  const [selectedItem, setSelectedItem] = useState('')
-  const [inputValue, setInputValue] = useState('')
+  const [selectedItem, setSelectedItem] = useState(field.value)
 
   const filterItems = (value) => {
-    setInputValue(value)
+    field.onChange(value)
     let filterData =
       items && items?.length > 0
         ? items?.filter((data) => data?.name?.toLowerCase()?.includes(value?.toLowerCase()))
@@ -35,7 +40,7 @@ export const FilterInputAccordionItem = ({
   }
 
   const onSelected = (value) => {
-    setInputValue(value)
+    field.onChange(value)
     setSelectedItem(value)
     setFilterList([])
     setAccordionOpen([])
@@ -68,10 +73,12 @@ export const FilterInputAccordionItem = ({
               placeholder={inputPlaceholder}
               flexGrow={1}
               size="$4"
-              value={inputValue}
+              value={field.value}
               onChangeText={filterItems}
+              ref={field.ref}
+              onBlur={field.onBlur}
             />
-            <Button size="$4" onPress={() => onSelected(inputValue)}>
+            <Button size="$4" onPress={() => onSelected(field.value)}>
               Add
             </Button>
           </XStack>

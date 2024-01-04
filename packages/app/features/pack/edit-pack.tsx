@@ -9,6 +9,7 @@ import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
 import { ChevronDown, ChevronUp, X } from '@tamagui/lucide-icons'
 import { TRPCProvider } from 'app/provider/trpc'
+import { getSelectItems } from 'app/utils/utils'
 
 const { useParam } = createParam<{ id: string }>()
 
@@ -55,8 +56,12 @@ export function EditPackScreen() {
             packDescription={data.description ?? ''}
           />
         </YStack>
-        <Table data={data} />
-        <Modal packId={data.id} />
+        <Table
+          data={data}
+          categoryItems={getSelectItems(data.packItems, 'category')}
+          locationItems={getSelectItems(data.packItems, 'location')}
+        />
+        <Modal data={data} />
         <Button
           icon={X}
           direction="rtl"
@@ -75,10 +80,12 @@ export function EditPackScreen() {
   )
 }
 
-function Modal({ packId }) {
+function Modal({ data }) {
   const [open, setOpen] = useState(false)
   const [position, setPosition] = useState(0)
   const toast = useToastController()
+  const categoryItems = getSelectItems(data.packItems, 'category')
+  const locationItems = getSelectItems(data.packItems, 'location')
 
   return (
     <>
@@ -124,7 +131,12 @@ function Modal({ packId }) {
             />
             <TRPCProvider>
               {/* if modal is defined, set TRPCProvider, otherwise will crash on Android */}
-              <PackItemForm packId={packId} action={() => setOpen(false)} />
+              <PackItemForm
+                categoryItems={categoryItems}
+                locationItems={locationItems}
+                packId={data.id}
+                action={() => setOpen(false)}
+              />
             </TRPCProvider>
           </YStack>
         </Sheet.Frame>

@@ -2,10 +2,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { trpc } from 'app/utils/trpc'
 import { z } from 'zod'
-import { useRouter } from 'solito/router'
-import { useEffect } from 'react'
-import { Button, Form, H2, Text, YStack } from 'tamagui'
+import { useState } from 'react'
+import { Button, Form, H2, YStack, Accordion, Label } from 'tamagui'
 import FormTextInput from './form/formTextInput'
+import { FilterInputAccordionItem } from './FilterInputAccordionItem'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
@@ -21,6 +21,8 @@ type PackItemFormProps = {
   itemName?: string
   itemCategory?: string
   itemLocation?: string
+  categoryItems?: { name: string }[]
+  locationItems?: { name: string }[]
   tableContainerWidth?: number
   onLayout?: (event: any) => void
   action?: () => void
@@ -32,15 +34,16 @@ const PackItemForm = ({
   itemName = '',
   itemCategory = '',
   itemLocation = '',
+  categoryItems = [],
+  locationItems = [],
   tableContainerWidth,
   onLayout = () => {},
   action,
 }: PackItemFormProps) => {
   const ctx = trpc.useUtils()
-  const { push } = useRouter()
-  const router = useRouter()
+  const [accordionOpen, setAccordionOpen] = useState<string[]>([])
 
-  const { data: packData, mutate: addPackItem } = trpc.packs.addPackItems.useMutation({
+  const { mutate: addPackItem } = trpc.packs.addPackItems.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
       if (action) action()
@@ -49,30 +52,20 @@ const PackItemForm = ({
     onError: (e) => console.log('ERROR: ', e),
   })
 
-  const { data: editResponse, mutate: editPackItem } = trpc.packs.editPackItem.useMutation({
+  const { mutate: editPackItem } = trpc.packs.editPackItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
       if (action) action()
-      // form.reset()
     },
     onError: (e) => console.log('ERROR: ', e),
   })
 
-  const { data: deleteResponse, mutate: DeletePackItem } = trpc.packs.deletePackItem.useMutation({
+  const { mutate: DeletePackItem } = trpc.packs.deletePackItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
-      // form.reset()
     },
     onError: (e) => console.log('ERROR: ', e),
   })
-
-  // useEffect(() => {
-  //   if (packData?.id) {
-  //     push(`/pack/${packData.id}`)
-  //   } else if (editData === 'ok') {
-  //     push(`/pack/${packId}`)
-  //   }
-  // }, [packData, editData, router])
 
   const form = useForm<z.infer<typeof itemSchema>>({
     resolver: zodResolver(itemSchema),
@@ -108,24 +101,39 @@ const PackItemForm = ({
             name="name"
             label="Name"
           />
-
-          <FormTextInput
-            variant="input"
-            placeholder="Category"
-            control={form.control}
-            name="category"
-            label="Category"
-          />
-          <FormTextInput
-            variant="input"
-            placeholder="Location"
-            control={form.control}
-            name="location"
-            label="Location"
-          />
           {form.formState.errors.name?.message != null && (
-            <Text>{form.formState.errors.name?.message}</Text>
+            <Label size={'$1'} color="red">
+              {form.formState.errors.name?.message}
+            </Label>
           )}
+          <Accordion
+            overflow="hidden"
+            width="100%"
+            type="multiple"
+            value={accordionOpen}
+            onValueChange={setAccordionOpen}
+          >
+            <FilterInputAccordionItem
+              label={'Category'}
+              accordionId={'categoryAccordion'}
+              headerPlaceholder="Select category"
+              inputPlaceholder="search or add new"
+              items={categoryItems}
+              setAccordionOpen={setAccordionOpen}
+              name="category"
+              control={form.control}
+            />
+            <FilterInputAccordionItem
+              label={'Location'}
+              accordionId={'locationAccordion'}
+              headerPlaceholder="Select location"
+              inputPlaceholder="search or add new"
+              items={locationItems}
+              setAccordionOpen={setAccordionOpen}
+              name="location"
+              control={form.control}
+            />
+          </Accordion>
           <Form.Trigger asChild>
             <Button theme={'blue'} accessibilityRole="link">
               Save changes

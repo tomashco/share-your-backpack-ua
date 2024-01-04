@@ -7,7 +7,7 @@ const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
 const ROW_HEIGHT_EXPANDED = 200
 
-const Table = ({ data }) => {
+const Table = ({ data, categoryItems, locationItems }) => {
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
   const [cellContainer, setCellContainer] = useState({
@@ -59,6 +59,8 @@ const Table = ({ data }) => {
                       itemName={row.name}
                       itemLocation={row.location}
                       itemCategory={row.category}
+                      categoryItems={categoryItems}
+                      locationItems={locationItems}
                       tableContainerWidth={tableContainerRef.current.width - 50}
                       onLayout={(event) => {
                         setCellContainer(event.nativeEvent.layout)
