@@ -1,18 +1,32 @@
-import { Button, H1, H3, Paragraph, Separator, XStack, YStack, Image, ScrollView } from '@my/ui'
+import {
+  Button,
+  H1,
+  H3,
+  Paragraph,
+  Separator,
+  XStack,
+  YStack,
+  Image,
+  ScrollView,
+  Accordion,
+} from '@my/ui'
 import { Header } from 'app/components/header'
 import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'solito/router'
 import { getBaseUrl } from 'app/utils/trpc'
-import { PackForm, PageLayout } from '@my/ui/src'
+import { FilterInputAccordionItem, PackForm, PageLayout } from '@my/ui/src'
 
 export function HomeScreen() {
   const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
+
   const { push } = useRouter()
   const user = useUser()
   const isEditable = !!user?.user?.id
-
+  const categoryItems = [{ name: 'Food' }, { name: 'Sleep' }]
+  const locationItems = [{ name: 'front' }, { name: 'rear' }]
+  const [accordionOpen, setAccordionOpen] = useState<string[]>([])
   return (
     <ScrollView
       onScrollBeginDrag={() => onAppStateChange('active')}
@@ -44,6 +58,30 @@ export function HomeScreen() {
             }}
             w="100%"
           >
+            <Accordion
+              overflow="hidden"
+              width="100%"
+              type="multiple"
+              value={accordionOpen}
+              onValueChange={setAccordionOpen}
+            >
+              <FilterInputAccordionItem
+                label={'Category'}
+                accordionId={'categoryAccordion'}
+                headerPlaceholder="Select category"
+                inputPlaceholder="search or add new"
+                items={categoryItems}
+                setAccordionOpen={setAccordionOpen}
+              />
+              <FilterInputAccordionItem
+                label={'Location'}
+                accordionId={'locationAccordion'}
+                headerPlaceholder="Select location"
+                inputPlaceholder="search or add new"
+                items={locationItems}
+                setAccordionOpen={setAccordionOpen}
+              />
+            </Accordion>
             <PackForm />
           </YStack>
         )}
