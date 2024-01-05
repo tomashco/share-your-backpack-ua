@@ -2,17 +2,17 @@ import { Button, H1, H3, Paragraph, Separator, XStack, YStack, Image, ScrollView
 import { Header } from 'app/components/header'
 import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
-import React, { useState } from 'react'
+import React from 'react'
 import { useRouter } from 'solito/router'
 import { getBaseUrl } from 'app/utils/trpc'
-import { FilterInputAccordionItem, PackForm, PageLayout } from '@my/ui/src'
+import { PackForm, PageLayout } from '@my/ui/src'
 
 export function HomeScreen() {
   const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
-
   const { push } = useRouter()
   const user = useUser()
   const isEditable = !!user?.user?.id
+
   return (
     <ScrollView
       onScrollBeginDrag={() => onAppStateChange('active')}
