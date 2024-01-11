@@ -92,7 +92,6 @@ export function UserDetailScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
-      <Header />
       {isEditable && (
         <XStack w="100%" jc={'flex-end'}>
           <Button

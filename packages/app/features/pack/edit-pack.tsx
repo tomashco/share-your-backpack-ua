@@ -49,7 +49,6 @@ export function EditPackScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
-      <Header />
       <YStack w="100%" $gtSm={{ width: '35rem' }}>
         <PackForm
           packId={data.id}

@@ -9,6 +9,7 @@ import Head from 'next/head'
 import React from 'react'
 import type { SolitoAppProps } from 'solito'
 import { trpc } from 'app/utils/trpc.web'
+import { Header } from 'app/components/header'
 
 if (process.env.NODE_ENV === 'production') {
   require('../public/tamagui.css')
@@ -23,6 +24,7 @@ function MyApp({ Component, pageProps }: SolitoAppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThemeProvider>
+        <Header />
         <Component {...pageProps} />
       </ThemeProvider>
     </>

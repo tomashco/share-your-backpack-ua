@@ -34,6 +34,16 @@ export function Header() {
 
       <SignedIn>
         <XStack space width={'100%'} ai="center" jc="flex-end">
+          <Image
+            source={{
+              uri: user?.imageUrl,
+              width: 40,
+              height: 40,
+            }}
+            accessibilityLabel="create-universal-app logo"
+            style={{ borderRadius: 40 }}
+          />
+
           <Button
             onPress={() => {
               signOut()
@@ -43,18 +53,6 @@ export function Header() {
             Log Out
           </Button>
         </XStack>
-        <YStack ai={'center'}>
-          <Image
-            source={{
-              uri: user?.imageUrl,
-              width: 120,
-              height: 120,
-            }}
-            accessibilityLabel="create-universal-app logo"
-            style={{ borderRadius: 120 }}
-          />
-          <H3>{user?.fullName}</H3>
-        </YStack>
       </SignedIn>
       <XStack width={200} alignItems="center" space="$4">
         <Paragraph>Change Color Scheme</Paragraph>

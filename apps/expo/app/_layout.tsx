@@ -1,8 +1,9 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { Button, Image, Paragraph } from '@my/ui'
 import { Provider } from 'app/provider'
 import { useFonts } from 'expo-font'
-import { Stack } from 'expo-router'
+import { Stack, Tabs } from 'expo-router'
 import { useColorScheme } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function HomeLayout() {
   const [loaded] = useFonts({
@@ -14,11 +15,14 @@ export default function HomeLayout() {
   if (!loaded) {
     return null
   }
+
   return (
     <Provider>
-      <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack />
-      </ThemeProvider>
+      <Tabs>
+        {['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index'].map((routeToHide) => (
+          <Tabs.Screen key={routeToHide} name={routeToHide} options={{ href: null }} />
+        ))}
+      </Tabs>
     </Provider>
   )
 }

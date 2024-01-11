@@ -1,13 +1,25 @@
-import { CustomToast, TamaguiProvider, TamaguiProviderProps, ToastProvider } from '@my/ui'
+import {
+  CustomToast,
+  TamaguiProvider,
+  TamaguiProviderProps,
+  Theme,
+  ThemeName,
+  ToastProvider,
+} from '@my/ui'
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useColorScheme } from 'react-native'
 import { AuthProvider } from './auth'
 import { ToastViewport } from './ToastViewport'
 import { TRPCProvider } from './trpc' //mobile only
 
 import config from '../tamagui.config'
+import { ThemeContext } from '@my/ui/src/ThemeProvider'
+import { useState } from 'react'
 
 export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'config'>) {
   const scheme = useColorScheme()
+  const [colorTheme, setColorTheme] = useState('green')
+  const [mainTheme, setMainTheme] = useState('light')
 
   return (
     <AuthProvider>
@@ -27,8 +39,13 @@ export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'conf
             ]
           }
         >
-          <TRPCProvider>{children}</TRPCProvider>
-
+          <ThemeContext.Provider value={{ colorTheme, setColorTheme, mainTheme, setMainTheme }}>
+            <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Theme name={mainTheme as ThemeName}>
+                <TRPCProvider>{children}</TRPCProvider>
+              </Theme>
+            </ThemeProvider>
+          </ThemeContext.Provider>
           <CustomToast />
           <ToastViewport />
         </ToastProvider>

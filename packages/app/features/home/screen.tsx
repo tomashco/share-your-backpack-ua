@@ -1,4 +1,15 @@
-import { Button, H1, H3, Paragraph, Separator, XStack, YStack, Image, useTheme } from '@my/ui'
+import {
+  Button,
+  H1,
+  H3,
+  Paragraph,
+  Separator,
+  XStack,
+  YStack,
+  Image,
+  useTheme,
+  isWeb,
+} from '@my/ui'
 import { Header } from 'app/components/header'
 import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
@@ -6,12 +17,13 @@ import React from 'react'
 import { useRouter } from 'solito/router'
 import { getBaseUrl } from 'app/utils/trpc'
 import { PackForm, PageLayout } from '@my/ui/src'
+import { Platform } from 'react-native'
 
 export function HomeScreen() {
   const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
   const { push } = useRouter()
-  const user = useUser()
-  const isEditable = !!user?.user?.id
+  const { user } = useUser()
+  const isEditable = !!user?.id
 
   return (
     <PageLayout
@@ -20,24 +32,20 @@ export function HomeScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
-      <Header />
-      <YStack px="$3">
-        <XStack jc="center" ai="flex-end" fw="wrap" space="$2" mt="$-2">
+      <XStack w="100%" justifyContent="flex-end">
+        {isEditable && !isWeb && (
           <Image
+            onPress={() => push('/profile')}
             source={{
-              uri: `${getBaseUrl()}/backpack.png`,
-              width: 50,
-              height: 50,
+              uri: user?.imageUrl,
+              width: 40,
+              height: 40,
             }}
             accessibilityLabel="create-universal-app logo"
-            mt="$2"
+            style={{ borderRadius: 40 }}
           />
-          <H1 ta="center" mt="$2">
-            SharePack
-          </H1>
-        </XStack>
-        <Separator />
-      </YStack>
+        )}
+      </XStack>
       {isEditable && (
         <YStack
           $gtSm={{
