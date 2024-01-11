@@ -86,36 +86,36 @@ export function UserDetailScreen() {
   )
 
   return (
-    <ScrollView
-      onScrollBeginDrag={() => onAppStateChange('active')}
-      onScrollEndDrag={() => onAppStateChange('inactive')}
+    <PageLayout
+      scrollViewProps={{
+        onScrollBeginDrag: () => onAppStateChange('active'),
+        onScrollEndDrag: () => onAppStateChange('inactive'),
+      }}
     >
-      <PageLayout>
-        <Header />
-        {isEditable && (
-          <XStack w="100%" jc={'flex-end'}>
-            <Button
-              accessibilityRole="link"
-              theme={'active'}
-              onPress={() => {
-                push(`/pack/${id}/edit`)
-              }}
-            >
-              Edit Pack
-            </Button>
-          </XStack>
+      <Header />
+      {isEditable && (
+        <XStack w="100%" jc={'flex-end'}>
+          <Button
+            accessibilityRole="link"
+            theme={'active'}
+            onPress={() => {
+              push(`/pack/${id}/edit`)
+            }}
+          >
+            Edit Pack
+          </Button>
+        </XStack>
+      )}
+      <YStack w="100%" $gtSm={{ width: '35rem' }}>
+        {isLoading ? (
+          <Paragraph>Loading...</Paragraph>
+        ) : error ? (
+          <Paragraph>{error.message}</Paragraph>
+        ) : (
+          <PackDetails />
+          // <Paragraph ta="center" fow="700">{`pack name: ${data.name}`}</Paragraph>
         )}
-        <YStack w="100%" $gtSm={{ width: '35rem' }}>
-          {isLoading ? (
-            <Paragraph>Loading...</Paragraph>
-          ) : error ? (
-            <Paragraph>{error.message}</Paragraph>
-          ) : (
-            <PackDetails />
-            // <Paragraph ta="center" fow="700">{`pack name: ${data.name}`}</Paragraph>
-          )}
-        </YStack>
-      </PageLayout>
-    </ScrollView>
+      </YStack>
+    </PageLayout>
   )
 }

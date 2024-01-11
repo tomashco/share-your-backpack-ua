@@ -28,7 +28,7 @@ const Table = ({ data, categoryItems, locationItems }) => {
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <YStack id="table">
-          <XStack borderTopLeftRadius={10} id="tableHeader" backgroundColor={'lightgray'}>
+          <XStack borderTopLeftRadius={10} id="tableHeader" backgroundColor={'$background'}>
             {headers.map((header) => (
               <XStack
                 key={'head' + header}

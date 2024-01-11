@@ -135,7 +135,7 @@ const PackItemForm = ({
             />
           </Accordion>
           <Form.Trigger asChild>
-            <Button theme={'blue'} accessibilityRole="link">
+            <Button theme={'active'} accessibilityRole="link">
               Save changes
             </Button>
           </Form.Trigger>

@@ -4,7 +4,7 @@ import { trpc } from 'app/utils/trpc'
 import { z } from 'zod'
 import { useRouter } from 'solito/router'
 import { useEffect } from 'react'
-import { Button, Form, H2, Text, YStack } from 'tamagui'
+import { Button, Form, H2, Text, useTheme, YStack } from 'tamagui'
 import FormTextInput from './form/formTextInput'
 
 const itemSchema = z.object({
@@ -27,6 +27,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
   const ctx = trpc.useUtils()
   const { push } = useRouter()
   const router = useRouter()
+  const theme = useTheme()
 
   const { data: packData, mutate: createPack } = trpc.packs.createPack.useMutation({
     onSuccess: () => {
@@ -76,6 +77,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
         </YStack>
         <YStack space="$3">
           <FormTextInput
+            bc={theme.color1}
             variant="input"
             placeholder="Pack Name"
             control={form.control}
@@ -85,6 +87,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
 
           <FormTextInput
             variant="textarea"
+            bc={theme.color1}
             placeholder="Pack Description"
             control={form.control}
             name="description"
@@ -94,7 +97,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
             <Text>{form.formState.errors.name?.message}</Text>
           )}
           <Form.Trigger asChild>
-            <Button theme={'blue'} accessibilityRole="link">
+            <Button theme={'red'} accessibilityRole="link">
               {packId ? 'Edit pack' : 'Create pack'}
             </Button>
           </Form.Trigger>

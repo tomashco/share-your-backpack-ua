@@ -43,40 +43,40 @@ export function EditPackScreen() {
   if (!isEditable) return push('/')
 
   return (
-    <ScrollView
-      onScrollBeginDrag={() => onAppStateChange('active')}
-      onScrollEndDrag={() => onAppStateChange('inactive')}
+    <PageLayout
+      scrollViewProps={{
+        onScrollBeginDrag: () => onAppStateChange('active'),
+        onScrollEndDrag: () => onAppStateChange('inactive'),
+      }}
     >
-      <PageLayout>
-        <Header />
-        <YStack w="100%" $gtSm={{ width: '35rem' }}>
-          <PackForm
-            packId={data.id}
-            packName={data.name ?? ''}
-            packDescription={data.description ?? ''}
-          />
-        </YStack>
-        <Table
-          data={data}
-          categoryItems={getSelectItems(data.packItems, 'category')}
-          locationItems={getSelectItems(data.packItems, 'location')}
+      <Header />
+      <YStack w="100%" $gtSm={{ width: '35rem' }}>
+        <PackForm
+          packId={data.id}
+          packName={data.name ?? ''}
+          packDescription={data.description ?? ''}
         />
-        <Modal data={data} />
-        <Button
-          icon={X}
-          direction="rtl"
-          theme={'red'}
-          onPress={() => DeletePack({ id: data.id })}
-          accessibilityRole="link"
-          w="100%"
-          $gtSm={{
-            width: '15rem',
-          }}
-        >
-          Delete Pack
-        </Button>
-      </PageLayout>
-    </ScrollView>
+      </YStack>
+      <Table
+        data={data}
+        categoryItems={getSelectItems(data.packItems, 'category')}
+        locationItems={getSelectItems(data.packItems, 'location')}
+      />
+      <Modal data={data} />
+      <Button
+        icon={X}
+        direction="rtl"
+        theme={'red'}
+        onPress={() => DeletePack({ id: data.id })}
+        accessibilityRole="link"
+        w="100%"
+        $gtSm={{
+          width: '15rem',
+        }}
+      >
+        Delete Pack
+      </Button>
+    </PageLayout>
   )
 }
 
