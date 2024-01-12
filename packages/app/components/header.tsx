@@ -1,6 +1,6 @@
-import { Button, H3, Image, Paragraph, Switch, ToggleGroup, XStack, YStack } from '@my/ui'
+import { Button, H3, Image, ToggleGroup, View, XStack, YStack } from '@my/ui'
 import { ThemeContext } from '@my/ui/src/ThemeProvider'
-import { SunMedium, Moon, LogOut } from '@tamagui/lucide-icons'
+import { SunMedium, Moon } from '@tamagui/lucide-icons'
 import { useTheme } from 'app/utils/useTheme'
 import { useContext } from 'react'
 import { useLink } from 'solito/link'
@@ -13,10 +13,6 @@ export function Header() {
   const { toggleTheme } = useTheme()
   const { setColorTheme, mainTheme, setMainTheme } = useContext(ThemeContext)
   const themeColors = ['orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'red']
-  const lightDark = {
-    white: 'light',
-    black: 'dark',
-  }
 
   const signInOAuthLinkProps = useLink({
     href: '/signin',
@@ -56,39 +52,53 @@ export function Header() {
           <H3>{user?.fullName}</H3>
         </YStack>
       </SignedIn>
-      <XStack width={200} alignItems="center" space="$4">
-        <Paragraph>Change Color Scheme</Paragraph>
-        <XStack flexDirection="row" alignItems="center" justifyContent="center" space="$4">
-          <ToggleGroup
-            orientation="horizontal"
-            type="single"
-            size="$3"
-            onValueChange={(val) => {
-              toggleTheme(val)
-              setMainTheme(val)
-            }}
-            defaultValue={mainTheme as string}
-            disableDeactivation
-          >
-            <ToggleGroup.Item value="light" aria-label="Left aligned">
-              <SunMedium />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item value="dark" aria-label="Right aligned">
-              <Moon />
-            </ToggleGroup.Item>
-          </ToggleGroup>
-        </XStack>
+      <XStack flexDirection="row" alignItems="center" justifyContent="center" space="$4">
+        <ToggleGroup
+          orientation="horizontal"
+          type="single"
+          size="$3"
+          onValueChange={(val) => {
+            toggleTheme(val)
+            setMainTheme(val)
+          }}
+          defaultValue={mainTheme as string}
+          disableDeactivation
+        >
+          <ToggleGroup.Item value="light" aria-label="Left aligned">
+            <SunMedium />
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="dark" aria-label="Right aligned">
+            <Moon />
+          </ToggleGroup.Item>
+        </ToggleGroup>
       </XStack>
-      <XStack>
-        {themeColors.map((col) => (
-          <Button
-            circular
-            size={'$1'}
-            key={col}
-            backgroundColor={col}
-            onPress={() => setColorTheme(col)}
-          />
-        ))}
+      <XStack flexDirection="row" alignItems="center" justifyContent="center" space="$4">
+        <ToggleGroup
+          orientation="horizontal"
+          type="single"
+          size="$2"
+          onValueChange={(val) => {
+            setColorTheme(val)
+          }}
+          defaultValue={mainTheme as string}
+          disableDeactivation
+        >
+          {themeColors.map((color, index) => (
+            <ToggleGroup.Item
+              key={color}
+              value={color}
+              aria-label={
+                index === 0
+                  ? 'left aligned'
+                  : index === themeColors.length - 1
+                  ? 'right aligned'
+                  : 'center aligned'
+              }
+            >
+              <View w={'$1'} h={'$1'} br="$5" backgroundColor={color} />
+            </ToggleGroup.Item>
+          ))}
+        </ToggleGroup>
       </XStack>
     </YStack>
   )

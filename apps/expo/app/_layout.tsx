@@ -1,9 +1,10 @@
-import { Button, Image, Paragraph } from '@my/ui'
 import { Provider } from 'app/provider'
+import { Home, User } from '@tamagui/lucide-icons'
 import { useFonts } from 'expo-font'
-import { Stack, Tabs } from 'expo-router'
+import { Tabs } from 'expo-router'
 import { useColorScheme } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useContext } from 'react'
+import { ThemeContext } from '@my/ui/src/ThemeProvider'
 
 export default function HomeLayout() {
   const [loaded] = useFonts({
@@ -18,7 +19,23 @@ export default function HomeLayout() {
 
   return (
     <Provider>
-      <Tabs>
+      <Tabs
+        screenOptions={({ route }) => ({
+          headerStyle: {
+            height: 80, // Specify the height of your custom header
+          },
+          tabBarIcon: ({ focused, color, size }) => {
+            if (route.name === 'index') {
+              return <Home color={focused ? '$color10' : color} />
+            } else if (route.name === 'profile') {
+              return <User color={focused ? '$color10' : color} />
+            }
+          },
+          // tabBarLabel
+          tabBarActiveTintColor: 'gray',
+          tabBarInactiveTintColor: 'gray',
+        })}
+      >
         {['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index'].map((routeToHide) => (
           <Tabs.Screen key={routeToHide} name={routeToHide} options={{ href: null }} />
         ))}

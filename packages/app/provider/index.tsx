@@ -23,12 +23,7 @@ export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'conf
 
   return (
     <AuthProvider>
-      <TamaguiProvider
-        config={config}
-        disableInjectCSS
-        defaultTheme={scheme === 'dark' ? 'dark' : 'light'}
-        {...rest}
-      >
+      <TamaguiProvider config={config} disableInjectCSS defaultTheme={mainTheme} {...rest}>
         <ToastProvider
           swipeDirection="horizontal"
           duration={6000}
@@ -40,8 +35,8 @@ export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'conf
           }
         >
           <ThemeContext.Provider value={{ colorTheme, setColorTheme, mainTheme, setMainTheme }}>
-            <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <Theme name={mainTheme as ThemeName}>
+            <ThemeProvider value={mainTheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Theme name={colorTheme as ThemeName}>
                 <TRPCProvider>{children}</TRPCProvider>
               </Theme>
             </ThemeProvider>
