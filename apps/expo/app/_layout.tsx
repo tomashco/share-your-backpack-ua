@@ -1,17 +1,21 @@
 import { Provider } from 'app/provider'
-import { Home, User } from '@tamagui/lucide-icons'
 import { useFonts } from 'expo-font'
-import { Tabs } from 'expo-router'
-import { useColorScheme } from 'react-native'
-import { useContext } from 'react'
-import { ThemeContext } from '@my/ui/src/ThemeProvider'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { HomeScreen } from 'app/features/home/screen'
+import { ProfileScreen } from 'app/features/profile/screen'
+import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
+import { EditPackScreen } from 'app/features/pack/edit-pack'
+import { UserDetailScreen } from 'app/features/pack/detail-screen'
+import { TabBar } from '@my/ui/src'
 
 export default function HomeLayout() {
   const [loaded] = useFonts({
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
   })
-  const scheme = useColorScheme()
+  const BottomTab = createBottomTabNavigator()
+
+  const excludedRoutes = ['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index']
 
   if (!loaded) {
     return null
@@ -19,7 +23,17 @@ export default function HomeLayout() {
 
   return (
     <Provider>
-      <Tabs
+      <BottomTab.Navigator
+        tabBar={(props) => <TabBar excludedRoutes={excludedRoutes} {...props} />}
+      >
+        <BottomTab.Screen name="index" component={HomeScreen} />
+        <BottomTab.Screen name="profile" component={ProfileScreen} />
+        <BottomTab.Screen name={'signin'} component={SignInWithOAuthScreen} />
+        <BottomTab.Screen name={'signup'} component={SignInWithOAuthScreen} />
+        <BottomTab.Screen name={'pack/[id]/edit'} component={EditPackScreen} />
+        <BottomTab.Screen name={'pack/[id]/index'} component={UserDetailScreen} />
+      </BottomTab.Navigator>
+      {/* <Tabs
         screenOptions={({ route }) => ({
           headerStyle: {
             height: 80, // Specify the height of your custom header
@@ -39,7 +53,7 @@ export default function HomeLayout() {
         {['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index'].map((routeToHide) => (
           <Tabs.Screen key={routeToHide} name={routeToHide} options={{ href: null }} />
         ))}
-      </Tabs>
+      </Tabs> */}
     </Provider>
   )
 }
