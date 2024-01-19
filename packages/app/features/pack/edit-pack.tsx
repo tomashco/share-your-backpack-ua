@@ -40,7 +40,10 @@ export function EditPackScreen() {
       </YStack>
     )
 
-  if (!isEditable) return push('/')
+  if (!isEditable) {
+    push('/')
+    return <></>
+  }
 
   return (
     <PageLayout
@@ -65,7 +68,7 @@ export function EditPackScreen() {
       <Button
         icon={X}
         direction="rtl"
-        theme={'red'}
+        theme={'active'}
         onPress={() => DeletePack({ id: data.id })}
         accessibilityRole="link"
         w="100%"

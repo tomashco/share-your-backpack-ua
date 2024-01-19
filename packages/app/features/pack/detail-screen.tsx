@@ -41,9 +41,7 @@ export function UserDetailScreen() {
     <YStack space="$3">
       {allSorts[selSort]?.map((sortName) => (
         <YStack key={sortName}>
-          <H3 className="drop-shadow-l text-xl font-extrabold text-primary">
-            {sortName ? sortName : 'TBD'}
-          </H3>
+          <H3>{sortName ? sortName : 'TBD'}</H3>
           {data?.packItems
             .filter((el) => el[selSort] === sortName)
             .map((item) => (

@@ -97,7 +97,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
             <Text>{form.formState.errors.name?.message}</Text>
           )}
           <Form.Trigger asChild>
-            <Button theme={'red'} accessibilityRole="link">
+            <Button theme={'active'} accessibilityRole="link">
               {packId ? 'Edit pack' : 'Create pack'}
             </Button>
           </Form.Trigger>

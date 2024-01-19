@@ -13,7 +13,10 @@ const TabBar = ({
   const theme = useTheme()
   const { top, bottom } = useSafeAreaInsets()
   return (
-    <YStack bottom={bottom} style={{ ...styles.tabBarStyle, backgroundColor: theme.color1.get() }}>
+    <YStack
+      bottom={bottom ? bottom : 10}
+      style={{ ...styles.tabBarStyle, backgroundColor: theme.color1.get() }}
+    >
       <TabBarComponent
         excludedRoutes={excludedRoutes}
         state={state}
@@ -33,7 +36,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    bottom: 40, // here you can use the bottom inset for more flexbility
     left: 20,
     right: 20,
     height: 60,

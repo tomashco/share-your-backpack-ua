@@ -94,7 +94,7 @@ const TabBarComponent = ({ excludedRoutes, state, navigation, descriptors }: Pro
         if (excludedRoutes.includes(routeName)) return <></>
         return (
           <Pressable
-            key={`route-${index}`}
+            key={`route-${route.name}`}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}

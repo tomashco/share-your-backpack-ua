@@ -26,12 +26,32 @@ export default function HomeLayout() {
       <BottomTab.Navigator
         tabBar={(props) => <TabBar excludedRoutes={excludedRoutes} {...props} />}
       >
-        <BottomTab.Screen name="index" component={HomeScreen} />
-        <BottomTab.Screen name="profile" component={ProfileScreen} />
-        <BottomTab.Screen name={'signin'} component={SignInWithOAuthScreen} />
-        <BottomTab.Screen name={'signup'} component={SignInWithOAuthScreen} />
-        <BottomTab.Screen name={'pack/[id]/edit'} component={EditPackScreen} />
-        <BottomTab.Screen name={'pack/[id]/index'} component={UserDetailScreen} />
+        <BottomTab.Screen options={{ headerTitle: 'Home' }} name="index" component={HomeScreen} />
+        <BottomTab.Screen
+          name="profile"
+          options={{ headerTitle: 'Profile' }}
+          component={ProfileScreen}
+        />
+        <BottomTab.Screen
+          name={'signin'}
+          options={{ headerTitle: 'Sign in' }}
+          component={SignInWithOAuthScreen}
+        />
+        <BottomTab.Screen
+          name={'signup'}
+          options={{ headerTitle: 'Sign up' }}
+          component={SignInWithOAuthScreen}
+        />
+        <BottomTab.Screen
+          name={'pack/[id]/edit'}
+          options={{ headerTitle: 'Edit' }}
+          component={EditPackScreen}
+        />
+        <BottomTab.Screen
+          name={'pack/[id]/index'}
+          options={{ headerTitle: 'Details' }}
+          component={UserDetailScreen}
+        />
       </BottomTab.Navigator>
       {/* <Tabs
         screenOptions={({ route }) => ({

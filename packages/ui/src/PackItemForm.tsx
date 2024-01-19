@@ -140,11 +140,7 @@ const PackItemForm = ({
             </Button>
           </Form.Trigger>
           {itemId && (
-            <Button
-              theme={'red'}
-              onPress={() => DeletePackItem({ id: itemId, packId })}
-              accessibilityRole="link"
-            >
+            <Button onPress={() => DeletePackItem({ id: itemId, packId })} accessibilityRole="link">
               Delete Item
             </Button>
           )}
