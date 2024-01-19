@@ -97,7 +97,7 @@ const Table = ({ data, categoryItems, locationItems }) => {
           id="stickyTableHeader"
           h={ROW_HEIGHT}
           borderTopRightRadius={10}
-          backgroundColor={'lightgray'}
+          backgroundColor={'$color12'}
         />
         <YStack
           id="stickyTableBody"
@@ -105,7 +105,7 @@ const Table = ({ data, categoryItems, locationItems }) => {
           elevation={10}
           shadowRadius={10}
           shadowOffset={{ width: -5, height: 5 }}
-          backgroundColor="white"
+          backgroundColor="$color1"
         >
           {data.packItems.map((row) => {
             const isSelected = viewDetailsId === row.id
@@ -121,7 +121,7 @@ const Table = ({ data, categoryItems, locationItems }) => {
                 borderBottomWidth={'$1'}
                 borderColor={'gray'}
               >
-                {isSelected ? <X /> : <ArrowUpRight />}
+                {isSelected ? <X color={'$color10'} /> : <ArrowUpRight color={'$color10'} />}
               </XStack>
             )
           })}

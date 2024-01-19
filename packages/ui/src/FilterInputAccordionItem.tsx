@@ -60,7 +60,8 @@ export const FilterInputAccordionItem = ({
         >
           {({ open }) => (
             <>
-              <Paragraph color={field.value ? 'black' : 'gray'}>
+              <Paragraph>
+                {/* color={field.value ? '$black1' : '$gray'} */}
                 {field.value || headerPlaceholder}
               </Paragraph>
               <Square animation="quick" rotate={open ? '180deg' : '0deg'}>
@@ -88,7 +89,7 @@ export const FilterInputAccordionItem = ({
               }}
               size="$4"
             >
-              asdfasdf
+              add
             </Button>
           </XStack>
           <YStack h={filterList.length > 0 ? '$15' : '$0'}>

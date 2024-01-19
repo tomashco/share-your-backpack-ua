@@ -53,8 +53,30 @@ const PackItemForm = ({
   })
 
   const { mutate: editPackItem } = trpc.packs.editPackItem.useMutation({
+    onMutate: async (editedPackItem) => {
+      // optimistic update
+      await ctx.packs.getById.cancel()
+      const previousPack = ctx.packs.getById.getData({ id: packId })
+      if (!previousPack) return
+      ctx.packs.getById.setData({ id: packId }, (oldPack) => {
+        if (oldPack) {
+          const newPackItems = oldPack.packItems.map((packItem) =>
+            packItem.id === itemId
+              ? {
+                  id: editedPackItem.id,
+                  name: editedPackItem.name,
+                  category: editedPackItem.category || '',
+                  location: editedPackItem.location || '',
+                }
+              : packItem
+          )
+          const newPack = { ...oldPack, packItems: newPackItems }
+          return newPack
+        }
+      })
+    },
     onSuccess: () => {
-      void ctx.packs.getById.invalidate()
+      // void ctx.packs.getById.invalidate()
       if (action) action()
     },
     onError: (e) => console.log('ERROR: ', e),
