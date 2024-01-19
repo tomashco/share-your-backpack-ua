@@ -59,12 +59,18 @@ export function EditPackScreen() {
           packDescription={data.description ?? ''}
         />
       </YStack>
+      <PackItemForm
+        categoryItems={getSelectItems(data.packItems, 'category')}
+        locationItems={getSelectItems(data.packItems, 'location')}
+        packId={data.id}
+        // action={() => setOpen(false)}
+      />
+      {/* <Modal data={data} /> */}
       <Table
         data={data}
         categoryItems={getSelectItems(data.packItems, 'category')}
         locationItems={getSelectItems(data.packItems, 'location')}
       />
-      <Modal data={data} />
       <Button
         icon={X}
         direction="rtl"

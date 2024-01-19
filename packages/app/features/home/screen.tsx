@@ -57,7 +57,7 @@ export function HomeScreen() {
         </YStack>
       )}
       <Separator />
-      <H3 ta="center">List of packs hello woeld</H3>
+      <H3 ta="center">List of packs</H3>
       <YStack w="100%" $gtSm={{ width: '35rem' }}>
         {isLoading ? (
           <Paragraph>Loading...</Paragraph>

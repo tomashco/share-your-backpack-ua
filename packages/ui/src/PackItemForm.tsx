@@ -90,7 +90,7 @@ const PackItemForm = ({
       <Form onSubmit={form.handleSubmit(onSubmit)} {...form}>
         {!itemId && (
           <YStack marginBottom="$3" alignItems="center">
-            <H2>{'Add a new pack item'}</H2>
+            <H2>{'Add a new item'}</H2>
           </YStack>
         )}
         <YStack space="$3" marginBottom="$3">
@@ -136,7 +136,7 @@ const PackItemForm = ({
           </Accordion>
           <Form.Trigger asChild>
             <Button theme={'active'} accessibilityRole="link">
-              Save changes
+              {itemId ? 'Edit' : 'Add'}
             </Button>
           </Form.Trigger>
           {itemId && (

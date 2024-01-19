@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import {
   ScrollView,
   Input,
@@ -28,7 +29,7 @@ export const FilterInputAccordionItem = ({
     control: control,
   })
   const [filterList, setFilterList] = useState<{ name: string }[]>(items)
-  const [selectedItem, setSelectedItem] = useState(field.value)
+  // const [selectedItem, setSelectedItem] = useState(field.value)
 
   const filterItems = (value) => {
     field.onChange(value)
@@ -41,7 +42,8 @@ export const FilterInputAccordionItem = ({
 
   const onSelected = (value) => {
     field.onChange(value)
-    setSelectedItem(value)
+    field.value = value
+    // setSelectedItem(value)
     setFilterList([])
     setAccordionOpen([])
   }
@@ -58,8 +60,8 @@ export const FilterInputAccordionItem = ({
         >
           {({ open }) => (
             <>
-              <Paragraph color={selectedItem ? 'black' : 'gray'}>
-                {selectedItem || headerPlaceholder}
+              <Paragraph color={field.value ? 'black' : 'gray'}>
+                {field.value || headerPlaceholder}
               </Paragraph>
               <Square animation="quick" rotate={open ? '180deg' : '0deg'}>
                 <ChevronDown color={'gray'} size="$1" />
@@ -78,15 +80,22 @@ export const FilterInputAccordionItem = ({
               ref={field.ref}
               onBlur={field.onBlur}
             />
-            <Button size="$4" onPress={() => onSelected(field.value)}>
-              Add
+            <Button
+              onPress={() => {
+                // Keyboard.dismiss()
+                console.log('🚀 ~ Keyboard.dismiss:')
+                onSelected(field.value)
+              }}
+              size="$4"
+            >
+              asdfasdf
             </Button>
           </XStack>
           <YStack h={filterList.length > 0 ? '$15' : '$0'}>
             <ScrollView>
               {filterList.map((item, index) => (
                 <XStack key={item.name + index} borderBottomWidth={1} borderColor="lightgray">
-                  <Paragraph p="$2" w="100%" onPress={() => onSelected(item?.name)}>
+                  <Paragraph p="$2" w="100%" onPressIn={() => onSelected(item?.name)}>
                     {item?.name || ''}
                   </Paragraph>
                 </XStack>
