@@ -24,7 +24,6 @@ function MyApp({ Component, pageProps }: SolitoAppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThemeProvider>
-        <Header />
         <Component {...pageProps} />
       </ThemeProvider>
     </>

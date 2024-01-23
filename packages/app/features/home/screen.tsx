@@ -1,23 +1,9 @@
-import {
-  Button,
-  H1,
-  H3,
-  Paragraph,
-  Separator,
-  XStack,
-  YStack,
-  Image,
-  useTheme,
-  isWeb,
-} from '@my/ui'
-import { Header } from 'app/components/header'
+import { Button, H3, Paragraph, Separator, XStack, YStack, Image, isWeb } from '@my/ui'
 import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import React from 'react'
 import { useRouter } from 'solito/router'
-import { getBaseUrl } from 'app/utils/trpc'
 import { PackForm, PageLayout } from '@my/ui/src'
-import { Platform } from 'react-native'
 
 export function HomeScreen() {
   const { data: packsByUser, isLoading, error } = trpc.packs.getAll.useQuery()
