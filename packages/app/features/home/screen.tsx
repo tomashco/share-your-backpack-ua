@@ -20,7 +20,7 @@ import { PackForm, PageLayout } from '@my/ui/src'
 import { Platform } from 'react-native'
 
 export function HomeScreen() {
-  const { data: packs, isLoading, error } = trpc.packs.getAll.useQuery()
+  const { data: packsByUser, isLoading, error } = trpc.packs.getAll.useQuery()
   const { push } = useRouter()
   const { user } = useUser()
   const isEditable = !!user?.id
@@ -65,25 +65,29 @@ export function HomeScreen() {
           <Paragraph>{error.message}</Paragraph>
         ) : (
           <XStack flexWrap="wrap" jc="space-between">
-            {packs?.map(({ pack, author }) => (
-              <XStack p="$2" ai="center" key={pack.id}>
-                <Image
-                  source={{
-                    uri: author?.profileImageUrl,
-                    width: 30,
-                    height: 30,
-                  }}
-                  style={{ borderRadius: 40 }}
-                />
-                <Button
-                  theme="active"
-                  accessibilityRole="link"
-                  onPress={() => {
-                    push(`/pack/${pack.id}`)
-                  }}
-                >
-                  {pack.name}
-                </Button>
+            {packsByUser.map(({ author, authorInfo }) => (
+              <XStack key={author.authorId}>
+                {author.packs.map((pack) => (
+                  <XStack p="$2" ai="center" key={pack.id}>
+                    <Image
+                      source={{
+                        uri: authorInfo?.profileImageUrl,
+                        width: 30,
+                        height: 30,
+                      }}
+                      style={{ borderRadius: 40 }}
+                    />
+                    <Button
+                      theme="active"
+                      accessibilityRole="link"
+                      onPress={() => {
+                        push(`/pack/${pack.id}`)
+                      }}
+                    >
+                      {pack.name}
+                    </Button>
+                  </XStack>
+                ))}
               </XStack>
             ))}
           </XStack>

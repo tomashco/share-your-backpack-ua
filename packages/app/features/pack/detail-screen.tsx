@@ -29,7 +29,7 @@ export function UserDetailScreen() {
     location: locations,
   }
   const user = useUser()
-  const isEditable = user?.user?.id === data?.authorId
+  const isEditable = data?.author.find((author) => author.authorId === user?.user?.id)
 
   const ItemData = ({ item }: { item: PackItem }) => (
     <XStack>

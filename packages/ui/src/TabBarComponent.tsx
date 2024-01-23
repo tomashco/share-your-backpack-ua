@@ -104,7 +104,6 @@ const TabBarComponent = ({ excludedRoutes, state, navigation, descriptors }: Pro
             style={styles.item}
           >
             <Icon size={24} color={isFocused ? '$color6' : '$color8'} />
-            {/* <AntDesign name={icon as 'home'} size={24} color={isFocused ? '#A9A9A9' : 'black'} /> */}
           </Pressable>
         )
       })}

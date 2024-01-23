@@ -18,22 +18,40 @@ model Post {
   @@index([authorId])
 }
 
+model Author {
+  authorId  String @id @unique @default(cuid())
+  packs     Pack[]
+  unit      String? @default("g")
+}
+
 model Pack {
   id          String     @id @unique @default(cuid())
   createdAt   DateTime   @default(now())
   name        String     @db.VarChar(255)
-  authorId    String
+  author      Author[]
   description String?    @db.Text
-  // activityType String?    @default("Other") @db.VarChar(255)
-  // gpxFile      String?    @default("") @db.VarChar(255)
+  activityType String?    @default("Other") @db.VarChar(255)
   packItems   PackItem[]
 
   @@fulltext([name, description])
 }
 
+model Item {
+  // primary entity, belonged by multiple packs and possibly multiple users if shared
+  id        String @id @unique @default(cuid())
+  item      PackItem[]
+  name      String
+  brand     String?
+  imageUrl  String?
+  itemUrl   String?
+  weight    Int?    // weight in grams, can be converted reviewing author specific scale
+  @@fulltext([name, brand])
+}
+
 model PackItem {
+  // Item metadata related to specific pack
   id       String @id @unique @default(cuid())
-  name     String
+  item     Item[]
   pack     Pack[]
   category String @default("uncategorized")
   location String @default("unlocated")
