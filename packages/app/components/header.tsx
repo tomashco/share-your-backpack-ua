@@ -56,27 +56,6 @@ export function Header() {
         <ToggleGroup
           orientation="horizontal"
           type="single"
-          size="$3"
-          onValueChange={(val) => {
-            toggleTheme(val)
-            setMainTheme(val)
-          }}
-          defaultValue={mainTheme as string}
-          disableDeactivation
-        >
-          <ToggleGroup.Item value="light" aria-label="Left aligned">
-            <SunMedium />
-          </ToggleGroup.Item>
-          <ToggleGroup.Item value="dark" aria-label="Right aligned">
-            <Moon />
-          </ToggleGroup.Item>
-        </ToggleGroup>
-      </XStack>
-      <XStack flexDirection="row" alignItems="center" justifyContent="center" space="$4">
-        <ToggleGroup
-          orientation="horizontal"
-          type="single"
-          size="$2"
           onValueChange={(val) => {
             setColorTheme(val)
           }}
@@ -99,6 +78,25 @@ export function Header() {
             </ToggleGroup.Item>
           ))}
         </ToggleGroup>
+        <ToggleGroup
+          orientation="horizontal"
+          type="single"
+          onValueChange={(val) => {
+            toggleTheme(val)
+            setMainTheme(val)
+          }}
+          defaultValue={mainTheme as string}
+          disableDeactivation
+        >
+          <ToggleGroup.Item value="light" aria-label="Left aligned">
+            <SunMedium />
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="dark" aria-label="Right aligned">
+            <Moon />
+          </ToggleGroup.Item>
+        </ToggleGroup>
+        {/* </XStack> */}
+        {/* <XStack flexDirection="row" alignItems="center" justifyContent="center" space="$4"> */}
       </XStack>
     </YStack>
   )

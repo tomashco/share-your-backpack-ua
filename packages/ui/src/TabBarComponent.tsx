@@ -88,7 +88,7 @@ const TabBarComponent = ({ excludedRoutes, state, navigation, descriptors }: Pro
             target: route.key,
           })
         }
-        const routeName = route.name.toLowerCase() as keyof typeof routes
+        const routeName = route.name as keyof typeof routes
 
         const Icon = routes[routeName]?.icon
         if (excludedRoutes.includes(routeName)) return <></>

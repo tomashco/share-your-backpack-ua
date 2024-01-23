@@ -6,7 +6,10 @@ import { ProfileScreen } from 'app/features/profile/screen'
 import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
 import { EditPackScreen } from 'app/features/pack/edit-pack'
 import { UserDetailScreen } from 'app/features/pack/detail-screen'
-import { TabBar } from '@my/ui/src'
+import { TabBar, Text, XStack } from '@my/ui/src'
+import { MyItemsScreen } from 'app/features/my-items/screen'
+import { ChevronLeft } from '@tamagui/lucide-icons'
+import { useNavigation } from 'expo-router'
 
 export default function HomeLayout() {
   const [loaded] = useFonts({
@@ -14,16 +17,29 @@ export default function HomeLayout() {
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
   })
   const BottomTab = createBottomTabNavigator()
+  const { goBack } = useNavigation()
 
-  const excludedRoutes = ['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index']
+  const excludedRoutes = ['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index', 'myItems']
 
   if (!loaded) {
     return null
   }
 
+  const BackButton = ({ onPress }) => (
+    <XStack ai="center" onPress={onPress}>
+      <ChevronLeft />
+      <Text>Back</Text>
+    </XStack>
+  )
+
   return (
     <Provider>
       <BottomTab.Navigator
+        screenOptions={({ route }) => {
+          const isIndex = route.name === 'index'
+
+          return { headerLeft: () => (isIndex ? null : <BackButton onPress={goBack} />) }
+        }}
         tabBar={(props) => <TabBar excludedRoutes={excludedRoutes} {...props} />}
       >
         <BottomTab.Screen options={{ headerTitle: 'Home' }} name="index" component={HomeScreen} />
@@ -51,6 +67,11 @@ export default function HomeLayout() {
           name={'pack/[id]/index'}
           options={{ headerTitle: 'Details' }}
           component={UserDetailScreen}
+        />
+        <BottomTab.Screen
+          name={'myItems'}
+          options={{ headerTitle: 'My Items' }}
+          component={MyItemsScreen}
         />
       </BottomTab.Navigator>
       {/* <Tabs
