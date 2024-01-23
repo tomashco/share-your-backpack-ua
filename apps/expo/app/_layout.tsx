@@ -7,7 +7,7 @@ import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
 import { EditPackScreen } from 'app/features/pack/edit-pack'
 import { UserDetailScreen } from 'app/features/pack/detail-screen'
 import { TabBar, Text, XStack } from '@my/ui/src'
-import { MyItemsScreen } from 'app/features/my-items/screen'
+import { MyItemsScreen } from 'app/features/myItems/screen'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 import { useNavigation } from 'expo-router'
 
