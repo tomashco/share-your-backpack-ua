@@ -5,10 +5,17 @@ import { TRPCError } from '@trpc/server'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis/nodejs'
 import { clerkClient } from '@clerk/nextjs'
-import { type Pack } from '@prisma/client'
+import { type Pack, Author } from '@prisma/client'
 import { filterUserForClient } from '../helpers/filterUserForClient'
+import { Prisma } from '@prisma/client'
 
-const addUserDataToPack = async (authors) => {
+type AuthorWithPack = Prisma.AuthorGetPayload<{
+  include: {
+    packs: true
+  }
+}>
+
+const addUserDataToPack = async (authors: AuthorWithPack[]) => {
   const users = (
     await clerkClient.users.getUserList({
       userId: authors.map((author) => author.authorId),
@@ -54,6 +61,7 @@ export const packsRouter = createTRPCRouter({
         packs: true,
       },
     })
+
     // return packs
     return addUserDataToPack(packs)
   }),
@@ -123,11 +131,8 @@ export const packsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId
-      let pack = {}
 
-      // const author =
-
-      pack = await ctx.prisma.pack.create({
+      const pack: Pack = await ctx.prisma.pack.create({
         data: {
           name: input.name,
           description: input.description,
