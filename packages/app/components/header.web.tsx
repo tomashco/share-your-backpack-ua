@@ -1,5 +1,5 @@
-import { Button, Image, XStack, YStack } from '@my/ui'
-import { useLink } from 'solito/link'
+import { Button, Image, Popover, Text, XStack, YStack } from '@my/ui'
+import { Link, useLink } from 'solito/link'
 import { SignedIn, SignedOut, useAuth, useUser } from '../utils/clerk'
 
 export function Header() {
@@ -19,39 +19,66 @@ export function Header() {
   return (
     <YStack f={1} jc="center" w={'100%'} ai="center" space>
       <XStack space width={'100%'} ai="center" jc="space-between">
-        <Button {...homeLinkProps} theme={'active'}>
-          Home
-        </Button>
+        <Link {...homeLinkProps}>
+          <XStack ai="center" space="$3">
+            <Image
+              source={{
+                uri: '/backpack.png',
+                width: 40,
+                height: 40,
+              }}
+              accessibilityLabel="sharepack logo"
+            />
+            <Text>SharePack</Text>
+          </XStack>
+        </Link>
         {isSignedIn ? (
-          <SignedIn>
-            <XStack space="$3">
-              {window?.location?.pathname !== '/profile' && (
-                <XStack space="$3">
-                  <Image
-                    source={{
-                      uri: user?.imageUrl,
-                      width: 40,
-                      height: 40,
-                    }}
-                    accessibilityLabel="create-universal-app logo"
-                    style={{ borderRadius: 40 }}
-                  />
+          <Popover size="$5" allowFlip placement="bottom">
+            <Popover.Trigger asChild>
+              <Image
+                source={{
+                  uri: user?.imageUrl,
+                  width: 40,
+                  height: 40,
+                }}
+                accessibilityLabel="user profile image"
+                style={{ borderRadius: 40 }}
+              />
+            </Popover.Trigger>
 
+            <Popover.Content
+              borderWidth={1}
+              borderColor="$borderColor"
+              enterStyle={{ y: -10, opacity: 0 }}
+              exitStyle={{ y: -10, opacity: 0 }}
+              elevate
+              animation={[
+                'quick',
+                {
+                  opacity: {
+                    overshootClamping: true,
+                  },
+                },
+              ]}
+            >
+              <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
+              <SignedIn>
+                <YStack space="$3">
                   <Button {...profileLinkProps} theme={'active'}>
                     Profile
                   </Button>
-                </XStack>
-              )}
-              <Button
-                onPress={() => {
-                  signOut()
-                }}
-                theme={'active'}
-              >
-                Log Out
-              </Button>
-            </XStack>
-          </SignedIn>
+                  <Button
+                    onPress={() => {
+                      signOut()
+                    }}
+                    theme={'active'}
+                  >
+                    Log Out
+                  </Button>
+                </YStack>
+              </SignedIn>
+            </Popover.Content>
+          </Popover>
         ) : (
           <SignedOut>
             <Button {...signInOAuthLinkProps} theme={'active'}>
