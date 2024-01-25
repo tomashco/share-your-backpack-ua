@@ -13,11 +13,14 @@
     "prisma:generate": "yarn with-env prisma generate",
     "prisma:studio": "yarn with-env prisma studio",
     "prisma:push": "yarn with-env prisma db push",
+    "prisma:branch": "pscale branch create share-your-backpack-db edit-prisma-schema",
+    "prisma:connect": "pscale connect share-your-backpack-db edit-prisma-schema",
+    "prisma:delete": "pscale branch delete share-your-backpack-db edit-prisma-schema",
+    "prisma:switch": "pscale branch switch edit-prisma-schema --database share-your-backpack-db",
     "pscale:dump": "yarn with-env pscale database dump share-your-backpack-db main",
     "clean": "rm -rf .turbo node_modules",
     "with-env": "dotenv -e ../../.env.local --",
-    "dev": "yarn with-env prisma studio --port 5556 --browser=none",
-    "db-generate": "yarn with-env prisma generate"
+    "dev": "yarn with-env prisma studio --port 5556 --browser=none"
   },
   "dependencies": {
     "@prisma/client": "latest"

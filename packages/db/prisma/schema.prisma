@@ -19,43 +19,51 @@ model Post {
 }
 
 model Author {
-  authorId  String @id @unique @default(cuid())
-  packs     Pack[]
-  unit      String? @default("g")
+  authorId String  @id @unique @default(cuid())
+  packs    Pack[]
+  unit     String? @default("g")
+  item     Item[]
 }
 
 model Pack {
-  id          String     @id @unique @default(cuid())
-  createdAt   DateTime   @default(now())
-  name        String     @db.VarChar(255)
-  author      Author[]
-  description String?    @db.Text
+  id           String     @id @unique @default(cuid())
+  createdAt    DateTime   @default(now())
+  name         String     @db.VarChar(255)
+  author       Author[]
+  description  String?    @db.Text
   activityType String?    @default("Other") @db.VarChar(255)
-  packItems   PackItem[]
+  packItems    PackItem[]
 
   @@fulltext([name, description])
 }
 
 model Item {
   // primary entity, belonged by multiple packs and possibly multiple users if shared
-  id        String @id @unique @default(cuid())
-  item      PackItem[]
-  name      String
-  brand     String?
-  imageUrl  String?
-  itemUrl   String?
-  weight    Int?    // weight in grams, can be converted reviewing author specific scale
+  id             String     @id @unique @default(cuid())
+  item           PackItem[]
+  name           String
+  brand          String?
+  imageUrl       String?
+  itemUrl        String?
+  weight         Int? // weight in grams, can be converted reviewing author specific scale
+  author         Author     @relation(fields: [authorId], references: [authorId])
+  authorId String @default("noAuthorId")
+
   @@fulltext([name, brand])
+  @@index([authorId])
 }
 
 model PackItem {
   // Item metadata related to specific pack
   id       String @id @unique @default(cuid())
-  item     Item[]
-  pack     Pack[]
+  item     Item   @relation(fields: [id], references: [id])
+  pack     Pack   @relation(fields: [packId], references: [id])
   category String @default("uncategorized")
   location String @default("unlocated")
   tag      Tag[]
+  packId   String @default("noPackId")
+
+  @@index([packId])
 }
 
 model Tag {
