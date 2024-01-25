@@ -43,7 +43,7 @@ const PackItemForm = ({
   const ctx = trpc.useUtils()
   const [accordionOpen, setAccordionOpen] = useState<string[]>([])
 
-  const { mutate: addPackItem } = trpc.packs.addPackItems.useMutation({
+  const { mutate: addPackItem } = trpc.packs.addPackItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
       if (action) action()
@@ -103,7 +103,7 @@ const PackItemForm = ({
     if (itemId) {
       editPackItem({ packId, id: itemId, ...values })
     } else {
-      addPackItem({ id: packId, packItems: [{ ...values }] })
+      addPackItem({ id: packId, packItem: { ...values } })
     }
   }
 

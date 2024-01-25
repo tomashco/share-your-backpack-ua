@@ -14,6 +14,12 @@ type AuthorWithPack = Prisma.AuthorGetPayload<{
     packs: true
   }
 }>
+type PackWithAuthorAndItems = Prisma.PackGetPayload<{
+  include: {
+    author: true
+    packItems: { include: { item: true } }
+  }
+}> | null
 
 const addUserDataToPack = async (authors: AuthorWithPack[]) => {
   const users = (
@@ -66,10 +72,12 @@ export const packsRouter = createTRPCRouter({
     return addUserDataToPack(packs)
   }),
   getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const pack = await ctx.prisma.pack.findUnique({
+    const pack: PackWithAuthorAndItems = await ctx.prisma.pack.findUnique({
       where: { id: input.id },
       include: {
-        packItems: true,
+        packItems: {
+          include: { item: true },
+        },
         author: true,
       },
     })
@@ -208,17 +216,15 @@ export const packsRouter = createTRPCRouter({
       }
       return 'ok'
     }),
-  addPackItems: privateProcedure
+  addPackItem: privateProcedure
     .input(
       z.object({
         id: z.string(),
-        packItems: z
-          .object({
-            name: z.string().min(1).max(200),
-            category: z.string().optional(),
-            location: z.string().optional(),
-          })
-          .array(),
+        packItem: z.object({
+          name: z.string().min(1).max(200),
+          category: z.string().optional(),
+          location: z.string().optional(),
+        }),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -232,15 +238,30 @@ export const packsRouter = createTRPCRouter({
           where: { id: input.id },
           data: {
             packItems: {
-              create: input.packItems,
+              create: [
+                {
+                  location: input.packItem.location,
+                  category: input.packItem.category,
+                  item: {
+                    create: {
+                      name: input.packItem.name,
+                      authorId: authorId,
+                    },
+                  },
+                },
+              ],
             },
           },
           include: {
-            packItems: true,
+            packItems: {
+              include: {
+                item: true,
+              },
+            },
           },
         })
       } catch (err) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: 'NOT_FOUND', message: err })
       }
       return 'ok'
     }),

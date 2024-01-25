@@ -56,7 +56,7 @@ const Table = ({ data, categoryItems, locationItems }) => {
                     <PackItemForm
                       packId={data.id}
                       itemId={row.id}
-                      itemName={row.name}
+                      itemName={row.item.name}
                       itemLocation={row.location}
                       itemCategory={row.category}
                       categoryItems={categoryItems}
@@ -82,7 +82,7 @@ const Table = ({ data, categoryItems, locationItems }) => {
                         borderColor={'gray'}
                         borderBottomWidth={'$1'}
                       >
-                        <Paragraph>{row[key]}</Paragraph>
+                        <Paragraph>{key === 'name' ? row.item.name : row[key]}</Paragraph>
                       </XStack>
                     ))}
                   </>

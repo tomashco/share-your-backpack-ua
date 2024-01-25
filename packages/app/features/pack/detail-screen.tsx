@@ -31,7 +31,7 @@ export function UserDetailScreen() {
   const user = useUser()
   const isEditable = data?.author.find((author) => author.authorId === user?.user?.id)
 
-  const ItemData = ({ item }: { item: PackItem }) => (
+  const ItemData = ({ item }) => (
     <XStack>
       <Paragraph className="flex ">{item.name}</Paragraph>
     </XStack>
@@ -44,8 +44,8 @@ export function UserDetailScreen() {
           <H3>{sortName ? sortName : 'TBD'}</H3>
           {data?.packItems
             .filter((el) => el[selSort] === sortName)
-            .map((item) => (
-              <ItemData key={item.id} item={item} />
+            .map((packItem) => (
+              <ItemData key={packItem.id} item={packItem.item} />
             ))}
         </YStack>
       ))}

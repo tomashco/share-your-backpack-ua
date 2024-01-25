@@ -1,7 +1,6 @@
-import { Paragraph, ScrollView, YStack, Spinner, Button, useToastController, Sheet } from '@my/ui'
+import { Paragraph, YStack, Spinner, Button, useToastController, Sheet } from '@my/ui'
 import { PageLayout, Table } from '@my/ui/src'
 import { PackForm, PackItemForm } from '@my/ui/src'
-import { Header } from 'app/components/header'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React, { useState } from 'react'
@@ -19,7 +18,7 @@ export function EditPackScreen() {
   const { isLoaded: userIsLoaded, user } = useUser()
   const { push } = useRouter()
   const ctx = trpc.useUtils()
-  const isEditable = user?.id === data?.authorId
+  const isEditable = data?.author.find((el) => el.authorId === user?.id)
 
   const { data: _deletePackResponse, mutate: DeletePack } = trpc.packs.deletePack.useMutation({
     onSuccess: () => {
