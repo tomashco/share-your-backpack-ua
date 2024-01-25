@@ -73,7 +73,7 @@ export const packsRouter = createTRPCRouter({
   }),
   getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const pack: PackWithAuthorAndItems = await ctx.prisma.pack.findUnique({
-      where: { id: input.id },
+      where: { packId: input.id },
       include: {
         packItems: {
           include: { item: true },
@@ -89,7 +89,7 @@ export const packsRouter = createTRPCRouter({
     // find all the unique packItems among all the packs of a single user
     const authorId = ctx.userId
     const userItems = await ctx.prisma.item.findMany({
-      where: { authorId: authorId },
+      where: { itemAuthorId: authorId },
     })
     return userItems
   }),
@@ -157,7 +157,7 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
         await ctx.prisma.pack.update({
-          where: { id: input.id },
+          where: { packId: input.id },
           data: { ...input },
         })
       } catch (err) {
@@ -182,7 +182,7 @@ export const packsRouter = createTRPCRouter({
         await ctx.prisma.$transaction([
           ctx.prisma.pack.update({
             where: {
-              id: input.id,
+              packId: input.id,
             },
             data: {
               packItems: {
@@ -194,7 +194,7 @@ export const packsRouter = createTRPCRouter({
             },
           }),
           ctx.prisma.pack.delete({
-            where: { id: input.id },
+            where: { packId: input.id },
           }),
         ])
       } catch (err) {
@@ -222,25 +222,25 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
         await ctx.prisma.pack.update({
-          where: { id: input.packId },
+          where: { packId: input.packId },
           data: {
             packItems: {
               create: [
                 {
                   location: input.packItem.location,
                   category: input.packItem.category,
-                  // item: {
-                  //   create: {
-                  //     name: input.packItem.name,
-                  //     authorId: authorId,
-                  //   },
-                  // },
                   item: {
-                    connectOrCreate: {
-                      where: { name: input.packItem.name, authorId: authorId, id: input.itemId },
-                      create: { name: input.packItem.name },
+                    create: {
+                      name: input.packItem.name,
+                      itemAuthorId: authorId,
                     },
                   },
+                  // item: {
+                  //   connectOrCreate: {
+                  //     where: { name: input.packItem.name, itemAuthorId: authorId },
+                  //     create: { name: input.packItem.name },
+                  //   },
+                  // },
                 },
               ],
             },
@@ -277,12 +277,12 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
         await ctx.prisma.pack.update({
-          where: { id: input.packId },
+          where: { packId: input.packId },
           data: {
             packItems: {
               update: {
                 where: {
-                  id: input.id,
+                  PackItemId: input.id,
                 },
                 data: {
                   item: {
@@ -324,11 +324,11 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
         await ctx.prisma.pack.update({
-          where: { id: input.packId },
+          where: { packId: input.packId },
           data: {
             packItems: {
               delete: {
-                id: input.id,
+                PackItemId: input.id,
               },
             },
           },

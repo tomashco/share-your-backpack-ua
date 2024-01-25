@@ -1,7 +1,6 @@
 import React from 'react'
 import { H1, PageLayout, Text } from '@my/ui'
 import { trpc } from '../../utils/trpc'
-import { PackItem } from '@my/db/index'
 
 export function MyItemsScreen() {
   const { data: userItems, isLoading, error } = trpc.packs.getItems.useQuery()
@@ -13,7 +12,7 @@ export function MyItemsScreen() {
       ) : error ? (
         <Text>{JSON.stringify(error)}</Text>
       ) : (
-        userItems?.map((item) => <Text key={item.id}>{item.name}</Text>)
+        userItems?.map((item) => <Text key={item.itemId}>{item.name}</Text>)
       )}
     </PageLayout>
   )

@@ -54,7 +54,7 @@ export function HomeScreen() {
             {packsByUser.map(({ author, authorInfo }) => (
               <XStack key={author.authorId}>
                 {author.packs.map((pack) => (
-                  <XStack p="$2" ai="center" key={pack.id}>
+                  <XStack p="$2" ai="center" key={pack.packId}>
                     <Image
                       source={{
                         uri: authorInfo?.profileImageUrl,
@@ -67,7 +67,7 @@ export function HomeScreen() {
                       theme="active"
                       accessibilityRole="link"
                       onPress={() => {
-                        push(`/pack/${pack.id}`)
+                        push(`/pack/${pack.packId}`)
                       }}
                     >
                       {pack.name}

@@ -45,7 +45,7 @@ export function UserDetailScreen() {
           {data?.packItems
             .filter((el) => el[selSort] === sortName)
             .map((packItem) => (
-              <ItemData key={packItem.id} item={packItem.item} />
+              <ItemData key={packItem.PackItemId} item={packItem.item} />
             ))}
         </YStack>
       ))}

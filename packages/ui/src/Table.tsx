@@ -44,8 +44,8 @@ const Table = ({ data, categoryItems, locationItems }) => {
           </XStack>
           <YStack id="tableBody">
             {data.packItems.map((row) => (
-              <XStack key={row.id}>
-                {viewDetailsId === row.id ? (
+              <XStack key={row.packItemId}>
+                {viewDetailsId === row.packItemId ? (
                   <XStack
                     h={cellContainer.height}
                     w={'100%'}
@@ -54,8 +54,8 @@ const Table = ({ data, categoryItems, locationItems }) => {
                     borderBottomWidth={'$1'}
                   >
                     <PackItemForm
-                      packId={data.id}
-                      itemId={row.id}
+                      packId={data.packId}
+                      itemId={row.packItemId}
                       itemName={row.item.name}
                       itemLocation={row.location}
                       itemCategory={row.category}
@@ -108,11 +108,13 @@ const Table = ({ data, categoryItems, locationItems }) => {
           backgroundColor="$color1"
         >
           {data.packItems.map((row) => {
-            const isSelected = viewDetailsId === row.id
+            const isSelected = viewDetailsId === row.packItemId
             return (
               <XStack
                 key={row.id}
-                onPress={() => (isSelected ? setViewDetailsId('') : setViewDetailsId(row.id))}
+                onPress={() =>
+                  isSelected ? setViewDetailsId('') : setViewDetailsId(row.packItemId)
+                }
                 h={isSelected ? cellContainer.height : ROW_HEIGHT}
                 w={ROW_HEIGHT}
                 justifyContent="center"

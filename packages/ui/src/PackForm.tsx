@@ -45,8 +45,8 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
   })
 
   useEffect(() => {
-    if (packData?.id) {
-      push(`/pack/${packData.id}`)
+    if (packData?.packId) {
+      push(`/pack/${packData.packId}`)
     } else if (editData === 'ok') {
       push(`/pack/${packId}`)
     }

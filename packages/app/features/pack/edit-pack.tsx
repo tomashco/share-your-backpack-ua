@@ -53,7 +53,7 @@ export function EditPackScreen() {
     >
       <YStack w="100%" $gtSm={{ width: '35rem' }}>
         <PackForm
-          packId={data.id}
+          packId={data.packId}
           packName={data.name ?? ''}
           packDescription={data.description ?? ''}
         />
@@ -61,7 +61,7 @@ export function EditPackScreen() {
       <PackItemForm
         categoryItems={getSelectItems(data.packItems, 'category')}
         locationItems={getSelectItems(data.packItems, 'location')}
-        packId={data.id}
+        packId={data.packId}
         // action={() => setOpen(false)}
       />
       {/* <Modal data={data} /> */}
@@ -74,7 +74,7 @@ export function EditPackScreen() {
         icon={X}
         direction="rtl"
         theme={'active'}
-        onPress={() => DeletePack({ id: data.id })}
+        onPress={() => DeletePack({ id: data.packId })}
         accessibilityRole="link"
         w="100%"
         $gtSm={{
