@@ -9,15 +9,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  content   String   @db.VarChar(255)
-  authorId  String
-
-  @@index([authorId])
-}
-
 model Author {
   authorId String  @id @unique @default(cuid())
   packs    Pack[]
@@ -26,12 +17,12 @@ model Author {
 }
 
 model Pack {
-  id           String     @id @unique @default(cuid())
+  packId       String     @id @unique @default(cuid())
   createdAt    DateTime   @default(now())
   name         String     @db.VarChar(255)
   author       Author[]
   description  String?    @db.Text
-  activityType String?    @default("Other") @db.VarChar(255)
+  activityType String?    @db.VarChar(255)
   packItems    PackItem[]
 
   @@fulltext([name, description])
@@ -39,35 +30,39 @@ model Pack {
 
 model Item {
   // primary entity, belonged by multiple packs and possibly multiple users if shared
-  id             String     @id @unique @default(cuid())
-  item           PackItem[]
-  name           String
-  brand          String?
-  imageUrl       String?
-  itemUrl        String?
-  weight         Int? // weight in grams, can be converted reviewing author specific scale
-  author         Author     @relation(fields: [authorId], references: [authorId])
-  authorId String @default("noAuthorId")
+  itemId       String     @id @unique @default(cuid())
+  item         PackItem[]
+  name         String
+  createdAt    DateTime   @default(now())
+  brand        String?
+  imageUrl     String?
+  itemUrl      String?
+  weight       Int? // weight in grams, can be converted reviewing author specific scale
+  author       Author     @relation(fields: [itemAuthorId], references: [authorId])
+  itemAuthorId String
 
+  @@index([itemAuthorId])
   @@fulltext([name, brand])
-  @@index([authorId])
 }
 
 model PackItem {
   // Item metadata related to specific pack
-  id       String @id @unique @default(cuid())
-  item     Item   @relation(fields: [id], references: [id])
-  pack     Pack   @relation(fields: [packId], references: [id])
-  category String @default("uncategorized")
-  location String @default("unlocated")
-  tag      Tag[]
-  packId   String @default("noPackId")
+  PackItemId     String   @id @unique @default(cuid())
+  item           Item     @relation(fields: [packItemItemId], references: [itemId])
+  pack           Pack     @relation(fields: [packItemPackId], references: [packId])
+  createdAt      DateTime @default(now())
+  category       String?
+  location       String?
+  tag            Tag[]
+  packItemPackId String
+  packItemItemId String
 
-  @@index([packId])
+  @@index([packItemPackId])
+  @@index([packItemItemId])
 }
 
 model Tag {
-  id        String     @id @unique @default(cuid())
+  tagId     String     @id @unique @default(cuid())
   name      String
   packItems PackItem[]
 }

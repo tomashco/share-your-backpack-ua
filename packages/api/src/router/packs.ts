@@ -88,24 +88,10 @@ export const packsRouter = createTRPCRouter({
   getItems: privateProcedure.query(async ({ ctx }) => {
     // find all the unique packItems among all the packs of a single user
     const authorId = ctx.userId
-    const userPacks = await ctx.prisma.author.findMany({
+    const userItems = await ctx.prisma.item.findMany({
       where: { authorId: authorId },
-      include: {
-        packs: true,
-      },
     })
-    if (!userPacks) throw new TRPCError({ code: 'NOT_FOUND' })
-
-    const packItems = {}
-    userPacks.forEach((user) =>
-      user.packs.forEach((item) => {
-        if (!packItems.hasOwnProperty(item.id)) {
-          packItems[item.id] = item
-        }
-      })
-    )
-
-    return Object.values(packItems)
+    return userItems
   }),
 
   search: publicProcedure.input(z.object({ value: z.string() })).query(async ({ ctx, input }) => {
@@ -204,7 +190,7 @@ export const packsRouter = createTRPCRouter({
               },
             },
             include: {
-              packItems: true,
+              packItems: {},
             },
           }),
           ctx.prisma.pack.delete({
@@ -219,7 +205,8 @@ export const packsRouter = createTRPCRouter({
   addPackItem: privateProcedure
     .input(
       z.object({
-        id: z.string(),
+        packId: z.string(),
+        itemId: z.string().optional(),
         packItem: z.object({
           name: z.string().min(1).max(200),
           category: z.string().optional(),
@@ -235,17 +222,23 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
         await ctx.prisma.pack.update({
-          where: { id: input.id },
+          where: { id: input.packId },
           data: {
             packItems: {
               create: [
                 {
                   location: input.packItem.location,
                   category: input.packItem.category,
+                  // item: {
+                  //   create: {
+                  //     name: input.packItem.name,
+                  //     authorId: authorId,
+                  //   },
+                  // },
                   item: {
-                    create: {
-                      name: input.packItem.name,
-                      authorId: authorId,
+                    connectOrCreate: {
+                      where: { name: input.packItem.name, authorId: authorId, id: input.itemId },
+                      create: { name: input.packItem.name },
                     },
                   },
                 },
@@ -292,7 +285,11 @@ export const packsRouter = createTRPCRouter({
                   id: input.id,
                 },
                 data: {
-                  // name: input.name,
+                  item: {
+                    update: {
+                      name: input.name,
+                    },
+                  },
                   category: input.category,
                   location: input.location,
                 },
@@ -300,7 +297,11 @@ export const packsRouter = createTRPCRouter({
             },
           },
           include: {
-            packItems: true,
+            packItems: {
+              include: {
+                item: true,
+              },
+            },
           },
         })
       } catch (err) {

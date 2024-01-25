@@ -14,6 +14,7 @@
     "prisma:studio": "yarn with-env prisma studio",
     "prisma:push": "yarn with-env prisma db push",
     "prisma:branch": "pscale branch create share-your-backpack-db edit-prisma-schema",
+    "prisma:reset": "yarn with-env prisma db push --force-reset",
     "prisma:connect": "pscale connect share-your-backpack-db edit-prisma-schema",
     "prisma:delete": "pscale branch delete share-your-backpack-db edit-prisma-schema",
     "prisma:switch": "pscale branch switch edit-prisma-schema --database share-your-backpack-db",
