@@ -1,16 +1,6 @@
 import { useState } from 'react'
-import { Keyboard, TouchableWithoutFeedback } from 'react-native'
-import {
-  ScrollView,
-  Input,
-  XStack,
-  YStack,
-  Button,
-  Accordion,
-  Paragraph,
-  Square,
-  Label,
-} from 'tamagui'
+import type { Dispatch, SetStateAction } from 'react'
+import { ScrollView, Input, XStack, YStack, Accordion, Paragraph, Square, Label } from 'tamagui'
 import { ChevronDown } from '@tamagui/lucide-icons'
 import { useController } from 'react-hook-form'
 
@@ -29,10 +19,10 @@ export const FilterInputAccordionItem = ({
     control: control,
   })
   const [filterList, setFilterList] = useState<{ name: string }[]>(items)
-  // const [selectedItem, setSelectedItem] = useState(field.value)
 
   const filterItems = (value) => {
     field.onChange(value)
+    field.value = value
     let filterData =
       items && items?.length > 0
         ? items?.filter((data) => data?.name?.toLowerCase()?.includes(value?.toLowerCase()))
@@ -44,19 +34,25 @@ export const FilterInputAccordionItem = ({
     field.onChange(value)
     field.value = value
     // setSelectedItem(value)
-    setFilterList([])
+    // setFilterList([])
     setAccordionOpen([])
   }
   return (
     <>
       {label && <Label>{label}</Label>}
-      <Accordion.Item value={accordionId}>
+      <Accordion.Item
+        value={accordionId}
+        onPressIn={() => {
+          setFilterList(items)
+        }}
+      >
         <Accordion.Trigger
           h={'$4'}
           p="$2"
           borderRadius={'$4'}
           flexDirection="row"
           justifyContent="space-between"
+          onPressIn={() => filterItems(field.value)} //to reset filterList after submit
         >
           {({ open }) => (
             <>
@@ -81,22 +77,12 @@ export const FilterInputAccordionItem = ({
               ref={field.ref}
               onBlur={field.onBlur}
             />
-            <Button
-              onPress={() => {
-                // Keyboard.dismiss()
-                console.log('🚀 ~ Keyboard.dismiss:')
-                onSelected(field.value)
-              }}
-              size="$4"
-            >
-              add
-            </Button>
           </XStack>
           <YStack h={filterList.length > 0 ? '$15' : '$0'}>
             <ScrollView>
               {filterList.map((item, index) => (
                 <XStack key={item.name + index} borderBottomWidth={1} borderColor="lightgray">
-                  <Paragraph p="$2" w="100%" onPressIn={() => onSelected(item?.name)}>
+                  <Paragraph p="$2" w="100%" onPress={() => onSelected(item?.name)}>
                     {item?.name || ''}
                   </Paragraph>
                 </XStack>

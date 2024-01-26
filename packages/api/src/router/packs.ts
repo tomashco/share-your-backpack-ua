@@ -5,7 +5,7 @@ import { TRPCError } from '@trpc/server'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis/nodejs'
 import { clerkClient } from '@clerk/nextjs'
-import { type Pack, Author } from '@prisma/client'
+import { type Pack } from '@prisma/client'
 import { filterUserForClient } from '../helpers/filterUserForClient'
 import { Prisma } from '@prisma/client'
 
@@ -258,6 +258,7 @@ export const packsRouter = createTRPCRouter({
       z.object({
         packId: z.string(),
         packItemId: z.string(),
+        itemId: z.string().optional(),
         name: z.string().min(1).max(200),
         category: z.string().optional(),
         location: z.string().optional(),
@@ -276,16 +277,26 @@ export const packsRouter = createTRPCRouter({
             packItems: {
               update: {
                 where: {
-                  PackItemId: input.packItemId,
+                  packItemId: input.packItemId,
                 },
+                // data: {
+                //   item: {
+                //     update: {
+                //       name: input.name,
+                //     },
+                //   },
+                //   category: input.category,
+                //   location: input.location,
+                // },
                 data: {
+                  location: input.location,
+                  category: input.category,
                   item: {
-                    update: {
-                      name: input.name,
+                    connectOrCreate: {
+                      where: { itemId: input.itemId || '' },
+                      create: { name: input.name, itemAuthorId: authorId },
                     },
                   },
-                  category: input.category,
-                  location: input.location,
                 },
               },
             },
@@ -322,7 +333,7 @@ export const packsRouter = createTRPCRouter({
           data: {
             packItems: {
               delete: {
-                PackItemId: input.packItemId,
+                packItemId: input.packItemId,
               },
             },
           },

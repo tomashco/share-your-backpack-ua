@@ -47,7 +47,7 @@ model Item {
 
 model PackItem {
   // Item metadata related to specific pack
-  PackItemId     String   @id @unique @default(cuid())
+  packItemId     String   @id @unique @default(cuid())
   item           Item     @relation(fields: [packItemItemId], references: [itemId])
   pack           Pack     @relation(fields: [packItemPackId], references: [packId])
   createdAt      DateTime @default(now())

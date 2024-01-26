@@ -1,8 +1,5 @@
-import { Pack, PackItem } from '@my/db/index'
-import { Button, H1, H3, Paragraph, ScrollView, ToggleGroup, YStack, XStack } from '@my/ui'
+import { Button, H1, H3, Paragraph, ToggleGroup, YStack, XStack } from '@my/ui'
 import { PageLayout } from '@my/ui/src'
-import { ChevronLeft } from '@tamagui/lucide-icons'
-import { Header } from 'app/components/header'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React, { useState } from 'react'
@@ -45,7 +42,7 @@ export function UserDetailScreen() {
           {data?.packItems
             .filter((el) => el[selSort] === sortName)
             .map((packItem) => (
-              <ItemData key={packItem.PackItemId} item={packItem.item} />
+              <ItemData key={packItem.packItemId} item={packItem.item} />
             ))}
         </YStack>
       ))}

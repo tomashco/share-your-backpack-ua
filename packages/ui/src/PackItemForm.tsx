@@ -3,8 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { trpc } from 'app/utils/trpc'
 import { z } from 'zod'
 import { useState } from 'react'
-import { Button, Form, H2, YStack, Accordion, Label } from 'tamagui'
-import FormTextInput from './form/formTextInput'
+import { Button, Form, H2, YStack, Accordion } from 'tamagui'
 import { FilterInputAccordionItem } from './FilterInputAccordionItem'
 import { Item } from '@my/db'
 
@@ -45,7 +44,6 @@ const PackItemForm = ({
 }: PackItemFormProps) => {
   const ctx = trpc.useUtils()
   const [accordionOpen, setAccordionOpen] = useState<string[]>([])
-
   const { mutate: addPackItem } = trpc.packs.addPackItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
@@ -103,11 +101,14 @@ const PackItemForm = ({
   })
 
   function onSubmit(values: z.infer<typeof itemSchema>) {
+    const itemId = userItems.find((el) => el.name === values.name)?.itemId
     if (packItemId) {
-      editPackItem({ packId, packItemId, ...values })
+      editPackItem({ packId, packItemId, ...values, itemId }) //itemId
     } else {
-      addPackItem({ packId, packItem: { ...values, itemId: 'clrtglnku0007s7rxajvmblfm' } })
+      addPackItem({ packId, packItem: { ...values, itemId } })
     }
+    setAccordionOpen([])
+    form.reset()
   }
 
   return (
@@ -119,18 +120,6 @@ const PackItemForm = ({
           </YStack>
         )}
         <YStack space="$3" marginBottom="$3">
-          {/* <FormTextInput
-            variant="input"
-            placeholder="Name"
-            control={form.control}
-            name="name"
-            label="Name"
-          />
-          {form.formState.errors.name?.message != null && (
-            <Label size={'$1'} color="red">
-              {form.formState.errors.name?.message}
-            </Label>
-          )} */}
           <Accordion
             overflow="hidden"
             width="100%"

@@ -5,17 +5,18 @@ import { PackItemForm } from './PackItemForm'
 
 const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
-const ROW_HEIGHT_EXPANDED = 200
 
-const Table = ({ data, categoryItems, locationItems }) => {
+const Table = ({ data, categoryItems, locationItems, userItems }) => {
+  console.log('🚀 ~ Table ~ data:', data)
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  const [cellContainer, setCellContainer] = useState({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: ROW_HEIGHT_EXPANDED,
-  })
+  const cellContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
+  // const [cellContainer, setCellContainer] = useState({
+  //   x: 0,
+  //   y: 0,
+  //   width: 0,
+  //   height: ROW_HEIGHT_EXPANDED,
+  // })
   const headers = ['name', 'category', 'location']
   return (
     <XStack
@@ -47,23 +48,24 @@ const Table = ({ data, categoryItems, locationItems }) => {
               <XStack key={row.packItemId}>
                 {viewDetailsId === row.packItemId ? (
                   <XStack
-                    h={cellContainer.height}
+                    h={cellContainerRef.current.height * 3}
                     w={'100%'}
                     borderColor={'gray'}
                     flexDirection="column"
                     borderBottomWidth={'$1'}
                   >
                     <PackItemForm
+                      userItems={userItems}
+                      categoryItems={categoryItems}
+                      locationItems={locationItems}
                       packId={data.packId}
                       packItemId={row.packItemId}
                       itemName={row.item.name}
                       itemLocation={row.location}
                       itemCategory={row.category}
-                      categoryItems={categoryItems}
-                      locationItems={locationItems}
                       tableContainerWidth={tableContainerRef.current.width - 50}
                       onLayout={(event) => {
-                        setCellContainer(event.nativeEvent.layout)
+                        cellContainerRef.current = event.nativeEvent.layout
                       }}
                       action={() => setViewDetailsId('')}
                     />
@@ -111,11 +113,11 @@ const Table = ({ data, categoryItems, locationItems }) => {
             const isSelected = viewDetailsId === row.packItemId
             return (
               <XStack
-                key={row.id}
+                key={row.packItemId}
                 onPress={() =>
                   isSelected ? setViewDetailsId('') : setViewDetailsId(row.packItemId)
                 }
-                h={isSelected ? cellContainer.height : ROW_HEIGHT}
+                h={isSelected ? cellContainerRef.current.height * 3 : ROW_HEIGHT}
                 w={ROW_HEIGHT}
                 justifyContent="center"
                 alignItems={isSelected ? 'flex-start' : 'center'}

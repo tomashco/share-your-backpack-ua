@@ -1,13 +1,12 @@
-import { Paragraph, YStack, Spinner, Button, useToastController, Sheet } from '@my/ui'
+import { Paragraph, YStack, Spinner, Button, useToastController, Sheet, XStack } from '@my/ui'
 import { PageLayout, Table } from '@my/ui/src'
 import { PackForm, PackItemForm } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
-import React, { useState } from 'react'
+import React from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
-import { ChevronDown, ChevronUp, X } from '@tamagui/lucide-icons'
-import { TRPCProvider } from 'app/provider/trpc'
+import { X } from '@tamagui/lucide-icons'
 import { getSelectItems } from 'app/utils/utils'
 
 const { useParam } = createParam<{ id: string }>()
@@ -64,10 +63,9 @@ export function EditPackScreen() {
         categoryItems={getSelectItems(data.packItems, 'category')}
         locationItems={getSelectItems(data.packItems, 'location')}
         packId={data.packId}
-        // action={() => setOpen(false)}
       />
-      {/* <Modal data={data} /> */}
       <Table
+        userItems={userItems}
         data={data}
         categoryItems={getSelectItems(data.packItems, 'category')}
         locationItems={getSelectItems(data.packItems, 'location')}
