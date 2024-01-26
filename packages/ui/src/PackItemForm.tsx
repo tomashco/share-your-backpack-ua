@@ -18,6 +18,7 @@ const itemSchema = z.object({
 type PackItemFormProps = {
   packId: string
   packItemId?: string
+  itemId?: string
   userItems?: Item[]
   itemName?: string
   itemCategory?: string
@@ -32,6 +33,7 @@ type PackItemFormProps = {
 const PackItemForm = ({
   packId = '',
   packItemId = '',
+  itemId = '',
   itemName = '',
   itemCategory = '',
   itemLocation = '',
@@ -77,7 +79,7 @@ const PackItemForm = ({
     //   })
     // },
     onSuccess: () => {
-      // void ctx.packs.getById.invalidate()
+      void ctx.packs.getById.invalidate()
       if (action) action()
     },
     onError: (e) => console.log('ERROR: ', e),
@@ -101,11 +103,11 @@ const PackItemForm = ({
   })
 
   function onSubmit(values: z.infer<typeof itemSchema>) {
-    const itemId = userItems.find((el) => el.name === values.name)?.itemId
+    const findItemId = itemId || userItems.find((el) => el.name === values.name)?.itemId || ''
     if (packItemId) {
-      editPackItem({ packId, packItemId, ...values, itemId }) //itemId
+      editPackItem({ packId, packItemId, ...values, itemId: findItemId }) //itemId
     } else {
-      addPackItem({ packId, packItem: { ...values, itemId } })
+      addPackItem({ packId, packItem: { ...values, itemId: findItemId } })
     }
     setAccordionOpen([])
     form.reset()

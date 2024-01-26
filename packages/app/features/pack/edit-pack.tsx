@@ -51,19 +51,19 @@ export function EditPackScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
-      <YStack w="100%" $gtSm={{ width: '35rem' }}>
-        <PackForm
-          packId={data.packId}
-          packName={data.name ?? ''}
-          packDescription={data.description ?? ''}
-        />
-      </YStack>
+      {/* <YStack w="100%" $gtSm={{ width: '35rem' }}> */}
+      <PackForm
+        packId={data.packId}
+        packName={data.name ?? ''}
+        packDescription={data.description ?? ''}
+      />
       <PackItemForm
         userItems={userItems}
         categoryItems={getSelectItems(data.packItems, 'category')}
         locationItems={getSelectItems(data.packItems, 'location')}
         packId={data.packId}
       />
+      {/* </YStack> */}
       <Table
         userItems={userItems}
         data={data}

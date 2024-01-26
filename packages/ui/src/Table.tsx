@@ -5,17 +5,12 @@ import { PackItemForm } from './PackItemForm'
 
 const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
+const INITIAL_EXPANDED_ROW_HEIGHT = 200
 
 const Table = ({ data, categoryItems, locationItems, userItems }) => {
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  const cellContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  // const [cellContainer, setCellContainer] = useState({
-  //   x: 0,
-  //   y: 0,
-  //   width: 0,
-  //   height: ROW_HEIGHT_EXPANDED,
-  // })
+  const [cellHeight, setCellHeight] = useState(INITIAL_EXPANDED_ROW_HEIGHT)
   const headers = ['name', 'category', 'location']
   return (
     <XStack
@@ -47,7 +42,7 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
               <XStack key={row.packItemId}>
                 {viewDetailsId === row.packItemId ? (
                   <XStack
-                    h={cellContainerRef.current.height * 3}
+                    h={cellHeight}
                     w={'100%'}
                     borderColor={'gray'}
                     flexDirection="column"
@@ -60,11 +55,12 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
                       packId={data.packId}
                       packItemId={row.packItemId}
                       itemName={row.item.name}
+                      itemId={row.item.itemId}
                       itemLocation={row.location}
                       itemCategory={row.category}
                       tableContainerWidth={tableContainerRef.current.width - 50}
                       onLayout={(event) => {
-                        cellContainerRef.current = event.nativeEvent.layout
+                        setCellHeight(event.nativeEvent.layout.height)
                       }}
                       action={() => setViewDetailsId('')}
                     />
@@ -116,7 +112,7 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
                 onPress={() =>
                   isSelected ? setViewDetailsId('') : setViewDetailsId(row.packItemId)
                 }
-                h={isSelected ? cellContainerRef.current.height * 3 : ROW_HEIGHT}
+                h={isSelected ? cellHeight : ROW_HEIGHT}
                 w={ROW_HEIGHT}
                 justifyContent="center"
                 alignItems={isSelected ? 'flex-start' : 'center'}

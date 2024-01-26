@@ -1,4 +1,4 @@
-import { Button, H3, Paragraph, Separator, XStack, YStack, Image, isWeb } from '@my/ui'
+import { Button, Paragraph, Separator, XStack, YStack, Image, isWeb, Text, H2 } from '@my/ui'
 import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import React from 'react'
@@ -7,6 +7,11 @@ import { PackForm, PageLayout } from '@my/ui/src'
 
 export function HomeScreen() {
   const { data: packsByUser, isLoading, error } = trpc.packs.getAll.useQuery()
+  const {
+    data: userItems,
+    isLoading: itemsIsLoading,
+    error: itemsError,
+  } = trpc.packs.getItems.useQuery()
   const { push } = useRouter()
   const { user } = useUser()
   const isEditable = !!user?.id
@@ -32,19 +37,24 @@ export function HomeScreen() {
           />
         )}
       </XStack>
+      {isEditable && <PackForm />}
+
+      <Separator />
       {isEditable && (
-        <YStack
-          $gtSm={{
-            width: '25rem',
-          }}
-          w="100%"
-        >
-          <PackForm />
+        <YStack>
+          <H2>My Items</H2>
+          {itemsIsLoading ? (
+            <Text>Loading...</Text>
+          ) : itemsError ? (
+            <Text>{JSON.stringify(error)}</Text>
+          ) : (
+            userItems?.map((item) => <Text key={item.itemId}>{item.name}</Text>)
+          )}
         </YStack>
       )}
       <Separator />
-      <H3 ta="center">List of packs</H3>
-      <YStack w="100%" $gtSm={{ width: '35rem' }}>
+      <H2>List of packs</H2>
+      <YStack>
         {isLoading ? (
           <Paragraph>Loading...</Paragraph>
         ) : error ? (

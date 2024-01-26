@@ -279,22 +279,13 @@ export const packsRouter = createTRPCRouter({
                 where: {
                   packItemId: input.packItemId,
                 },
-                // data: {
-                //   item: {
-                //     update: {
-                //       name: input.name,
-                //     },
-                //   },
-                //   category: input.category,
-                //   location: input.location,
-                // },
                 data: {
                   location: input.location,
                   category: input.category,
                   item: {
-                    connectOrCreate: {
+                    update: {
                       where: { itemId: input.itemId || '' },
-                      create: { name: input.name, itemAuthorId: authorId },
+                      data: { name: input.name, itemAuthorId: authorId },
                     },
                   },
                 },
