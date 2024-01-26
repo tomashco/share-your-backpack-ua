@@ -7,7 +7,6 @@ const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
 
 const Table = ({ data, categoryItems, locationItems, userItems }) => {
-  console.log('🚀 ~ Table ~ data:', data)
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
   const cellContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
