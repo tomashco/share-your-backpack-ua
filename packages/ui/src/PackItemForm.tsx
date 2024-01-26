@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Button, Form, H2, YStack, Accordion, Label } from 'tamagui'
 import FormTextInput from './form/formTextInput'
 import { FilterInputAccordionItem } from './FilterInputAccordionItem'
+import { Item } from '@my/db'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
@@ -17,7 +18,8 @@ const itemSchema = z.object({
 
 type PackItemFormProps = {
   packId: string
-  itemId?: string
+  packItemId?: string
+  userItems?: Item[]
   itemName?: string
   itemCategory?: string
   itemLocation?: string
@@ -30,10 +32,11 @@ type PackItemFormProps = {
 
 const PackItemForm = ({
   packId = '',
-  itemId = '',
+  packItemId = '',
   itemName = '',
   itemCategory = '',
   itemLocation = '',
+  userItems = [],
   categoryItems = [],
   locationItems = [],
   tableContainerWidth,
@@ -100,23 +103,23 @@ const PackItemForm = ({
   })
 
   function onSubmit(values: z.infer<typeof itemSchema>) {
-    if (itemId) {
-      editPackItem({ packId, id: itemId, ...values })
+    if (packItemId) {
+      editPackItem({ packId, packItemId, ...values })
     } else {
-      addPackItem({ packId, packItem: { ...values } })
+      addPackItem({ packId, packItem: { ...values, itemId: 'clrtglnku0007s7rxajvmblfm' } })
     }
   }
 
   return (
     <YStack w={tableContainerWidth ? tableContainerWidth : '100%'} onLayout={onLayout}>
       <Form onSubmit={form.handleSubmit(onSubmit)} {...form}>
-        {!itemId && (
+        {!packItemId && (
           <YStack marginBottom="$3" alignItems="center">
             <H2>{'Add a new item'}</H2>
           </YStack>
         )}
         <YStack space="$3" marginBottom="$3">
-          <FormTextInput
+          {/* <FormTextInput
             variant="input"
             placeholder="Name"
             control={form.control}
@@ -127,7 +130,7 @@ const PackItemForm = ({
             <Label size={'$1'} color="red">
               {form.formState.errors.name?.message}
             </Label>
-          )}
+          )} */}
           <Accordion
             overflow="hidden"
             width="100%"
@@ -135,6 +138,16 @@ const PackItemForm = ({
             value={accordionOpen}
             onValueChange={setAccordionOpen}
           >
+            <FilterInputAccordionItem
+              label={'Name'}
+              accordionId={'nameAccordion'}
+              headerPlaceholder="Select Item"
+              inputPlaceholder="search or add new"
+              items={userItems}
+              setAccordionOpen={setAccordionOpen}
+              name="name"
+              control={form.control}
+            />
             <FilterInputAccordionItem
               label={'Category'}
               accordionId={'categoryAccordion'}
@@ -158,11 +171,11 @@ const PackItemForm = ({
           </Accordion>
           <Form.Trigger asChild>
             <Button theme={'active'} accessibilityRole="link">
-              {itemId ? 'Edit' : 'Add'}
+              {packItemId ? 'Edit' : 'Add'}
             </Button>
           </Form.Trigger>
-          {itemId && (
-            <Button onPress={() => DeletePackItem({ id: itemId, packId })} accessibilityRole="link">
+          {packItemId && (
+            <Button onPress={() => DeletePackItem({ packItemId, packId })} accessibilityRole="link">
               Delete Item
             </Button>
           )}

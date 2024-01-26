@@ -55,7 +55,7 @@ const Table = ({ data, categoryItems, locationItems }) => {
                   >
                     <PackItemForm
                       packId={data.packId}
-                      itemId={row.packItemId}
+                      packItemId={row.packItemId}
                       itemName={row.item.name}
                       itemLocation={row.location}
                       itemCategory={row.category}

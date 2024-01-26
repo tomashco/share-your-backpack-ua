@@ -206,8 +206,8 @@ export const packsRouter = createTRPCRouter({
     .input(
       z.object({
         packId: z.string(),
-        itemId: z.string().optional(),
         packItem: z.object({
+          itemId: z.string().optional(),
           name: z.string().min(1).max(200),
           category: z.string().optional(),
           location: z.string().optional(),
@@ -230,17 +230,11 @@ export const packsRouter = createTRPCRouter({
                   location: input.packItem.location,
                   category: input.packItem.category,
                   item: {
-                    create: {
-                      name: input.packItem.name,
-                      itemAuthorId: authorId,
+                    connectOrCreate: {
+                      where: { itemId: input.packItem.itemId || '' },
+                      create: { name: input.packItem.name, itemAuthorId: authorId },
                     },
                   },
-                  // item: {
-                  //   connectOrCreate: {
-                  //     where: { name: input.packItem.name, itemAuthorId: authorId },
-                  //     create: { name: input.packItem.name },
-                  //   },
-                  // },
                 },
               ],
             },
@@ -263,7 +257,7 @@ export const packsRouter = createTRPCRouter({
     .input(
       z.object({
         packId: z.string(),
-        id: z.string(),
+        packItemId: z.string(),
         name: z.string().min(1).max(200),
         category: z.string().optional(),
         location: z.string().optional(),
@@ -282,7 +276,7 @@ export const packsRouter = createTRPCRouter({
             packItems: {
               update: {
                 where: {
-                  PackItemId: input.id,
+                  PackItemId: input.packItemId,
                 },
                 data: {
                   item: {
@@ -313,7 +307,7 @@ export const packsRouter = createTRPCRouter({
     .input(
       z.object({
         packId: z.string(),
-        id: z.string(),
+        packItemId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -328,7 +322,7 @@ export const packsRouter = createTRPCRouter({
           data: {
             packItems: {
               delete: {
-                PackItemId: input.id,
+                PackItemId: input.packItemId,
               },
             },
           },
