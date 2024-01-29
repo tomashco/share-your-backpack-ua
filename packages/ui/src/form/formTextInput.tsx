@@ -1,7 +1,14 @@
 import { useController } from 'react-hook-form'
 import { Input, Label, TextArea } from 'tamagui'
 
-export default function FormTextInput({ name, control, label, variant, ...props }) {
+export default function FormTextInput({
+  name,
+  control,
+  label,
+  variant = '',
+  placeholder = '',
+  ...props
+}) {
   const {
     field,
     fieldState: { invalid, isTouched, isDirty },
@@ -18,6 +25,7 @@ export default function FormTextInput({ name, control, label, variant, ...props 
         {label && <Label>{label}</Label>}
         <TextArea
           {...props}
+          placeholder={placeholder}
           ref={field.ref}
           value={field.value}
           onChangeText={field.onChange}
@@ -30,6 +38,7 @@ export default function FormTextInput({ name, control, label, variant, ...props 
       {label && <Label>{label}</Label>}
       <Input
         {...props}
+        placeholder={placeholder}
         ref={field.ref}
         value={field.value}
         onChangeText={field.onChange}

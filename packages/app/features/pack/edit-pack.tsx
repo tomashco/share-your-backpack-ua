@@ -1,4 +1,4 @@
-import { Paragraph, YStack, Spinner, Button, useToastController, Sheet, XStack } from '@my/ui'
+import { Paragraph, YStack, Spinner, Button } from '@my/ui'
 import { PageLayout, Table } from '@my/ui/src'
 import { PackForm, PackItemForm } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
@@ -51,7 +51,6 @@ export function EditPackScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
-      {/* <YStack w="100%" $gtSm={{ width: '35rem' }}> */}
       <PackForm
         packId={data.packId}
         packName={data.name ?? ''}
@@ -63,7 +62,6 @@ export function EditPackScreen() {
         locationItems={getSelectItems(data.packItems, 'location')}
         packId={data.packId}
       />
-      {/* </YStack> */}
       <Table
         userItems={userItems}
         data={data}

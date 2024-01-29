@@ -4,6 +4,7 @@ import { useUser } from '../../utils/clerk'
 import React from 'react'
 import { useRouter } from 'solito/router'
 import { PackForm, PageLayout } from '@my/ui/src'
+import { useLink } from 'solito/link'
 
 export function HomeScreen() {
   const { data: packsByUser, isLoading, error } = trpc.packs.getAll.useQuery()
@@ -15,6 +16,9 @@ export function HomeScreen() {
   const { push } = useRouter()
   const { user } = useUser()
   const isEditable = !!user?.id
+  const myItemsLinkProps = useLink({
+    href: '/myItems',
+  })
 
   return (
     <PageLayout
@@ -41,7 +45,7 @@ export function HomeScreen() {
 
       <Separator />
       {isEditable && (
-        <YStack>
+        <YStack w="100%">
           <H2>My Items</H2>
           {itemsIsLoading ? (
             <Text>Loading...</Text>
@@ -50,6 +54,9 @@ export function HomeScreen() {
           ) : (
             userItems?.map((item) => <Text key={item.itemId}>{item.name}</Text>)
           )}
+          <Button {...myItemsLinkProps} theme={'active'}>
+            Go to my Items
+          </Button>
         </YStack>
       )}
       <Separator />

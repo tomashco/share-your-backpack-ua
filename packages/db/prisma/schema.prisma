@@ -48,7 +48,7 @@ model Item {
 model PackItem {
   // Item metadata related to specific pack
   packItemId     String   @id @unique @default(cuid())
-  item           Item     @relation(fields: [packItemItemId], references: [itemId])
+  item           Item     @relation(fields: [packItemItemId], references: [itemId], onUpdate: Cascade, onDelete: Cascade)
   pack           Pack     @relation(fields: [packItemPackId], references: [packId])
   createdAt      DateTime @default(now())
   category       String?

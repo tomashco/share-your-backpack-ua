@@ -1,6 +1,5 @@
 import React from 'react'
-import { Button, H1, H3, Image, PageLayout, ToggleGroup, View, XStack, YStack } from '@my/ui'
-import { Header } from 'app/components/header'
+import { Button, H3, Image, PageLayout, ToggleGroup, View, XStack, YStack } from '@my/ui'
 import { useLink } from 'solito/link'
 import { SignedIn, SignedOut, useAuth, useUser } from 'app/utils/clerk'
 import { ThemeContext } from '@my/ui/src/ThemeProvider'
@@ -103,8 +102,6 @@ export function ProfileScreen() {
             <Moon />
           </ToggleGroup.Item>
         </ToggleGroup>
-        {/* </XStack> */}
-        {/* <XStack flexDirection="row" alignItems="center" justifyContent="center" space="$4"> */}
       </XStack>
       <Button {...myItemsLinkProps} theme={'active'} w={'100%'}>
         My Items

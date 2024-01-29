@@ -1,6 +1,6 @@
 import { Paragraph, ScrollView, XStack, YStack } from 'tamagui'
 import { useState, useRef } from 'react'
-import { ArrowUpRight, X } from '@tamagui/lucide-icons'
+import { Edit3, X } from '@tamagui/lucide-icons'
 import { PackItemForm } from './PackItemForm'
 
 const HEADER_SIZE = 200
@@ -16,7 +16,6 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
     <XStack
       id="tableContainer"
       w="100%"
-      $gtSm={{ width: '35rem' }}
       onLayout={(event) => {
         tableContainerRef.current = event.nativeEvent.layout
       }}
@@ -94,7 +93,7 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
           id="stickyTableHeader"
           h={ROW_HEIGHT}
           borderTopRightRadius={10}
-          backgroundColor={'$color12'}
+          backgroundColor={'$background'}
         />
         <YStack
           id="stickyTableBody"
@@ -120,7 +119,7 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
                 borderBottomWidth={'$1'}
                 borderColor={'gray'}
               >
-                {isSelected ? <X color={'$color10'} /> : <ArrowUpRight color={'$color10'} />}
+                {isSelected ? <X color={'$color10'} /> : <Edit3 color={'$color10'} />}
               </XStack>
             )
           })}

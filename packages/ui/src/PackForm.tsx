@@ -46,8 +46,10 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
 
   useEffect(() => {
     if (packData?.packId) {
-      push(`/pack/${packData.packId}`)
+      // new pack created
+      push(`/pack/${packData.packId}/edit`)
     } else if (editData === 'ok') {
+      // edit pack name and description
       push(`/pack/${packId}`)
     }
   }, [packData, editData, router])

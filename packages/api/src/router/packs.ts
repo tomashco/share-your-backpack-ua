@@ -68,7 +68,7 @@ export const packsRouter = createTRPCRouter({
       },
     })
 
-    // return packs
+    // TODO: get only user packs, convert the getAll to getLatestAdded()
     return addUserDataToPack(packs)
   }),
   getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
@@ -95,6 +95,7 @@ export const packsRouter = createTRPCRouter({
   }),
 
   search: publicProcedure.input(z.object({ value: z.string() })).query(async ({ ctx, input }) => {
+    //TODO: To be tested
     const result = await ctx.prisma.pack.findMany({
       where: {
         name: {
@@ -115,12 +116,12 @@ export const packsRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1).max(200),
         description: z.string().optional(),
-        packItems: z
-          .object({
-            name: z.string().min(1).max(200),
-          })
-          .array()
-          .optional(),
+        // packItems: z
+        //   .object({
+        //     name: z.string().min(1).max(200),
+        //   })
+        //   .array()
+        //   .optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -334,6 +335,75 @@ export const packsRouter = createTRPCRouter({
         })
       } catch (err) {
         throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+      return 'ok'
+    }),
+    addItem: privateProcedure
+    .input(
+      z.object({
+          name: z.string().min(1).max(200),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.userId
+
+      const { success } = await ratelimit.limit(authorId)
+
+      if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
+      try {
+        await ctx.prisma.item.create({data: {
+          name: input.name,
+          author: {
+            connect: {  authorId: authorId },
+          },
+        }})
+      } catch (err) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: err })
+      }
+      return 'ok'
+    }),
+
+  editItem: privateProcedure
+    .input(
+      z.object({
+        itemId: z.string(),
+        name: z.string().min(1).max(200),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.userId
+
+      const { success } = await ratelimit.limit(authorId)
+
+      if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
+      try {
+        await ctx.prisma.item.update({
+          where: { itemId: input.itemId },
+                      data: { name: input.name, itemAuthorId: authorId },
+        })
+      } catch (err) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+      return 'ok'
+    }),
+  deleteItem: privateProcedure
+    .input(
+      z.object({
+        itemId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.userId
+
+      const { success } = await ratelimit.limit(authorId)
+
+      if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
+      try {
+        await ctx.prisma.item.delete({
+          where: { itemId: input.itemId, itemAuthorId: authorId },
+        })
+      } catch (err) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: JSON.stringify(err) })
       }
       return 'ok'
     }),
