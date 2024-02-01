@@ -10,10 +10,11 @@ datasource db {
 }
 
 model Author {
-  authorId String  @id @unique @default(cuid())
-  packs    Pack[]
-  unit     String? @default("g")
-  item     Item[]
+  authorId     String  @id @unique @default(cuid())
+  packs        Pack[]
+  unit         String? @default("g")
+  item         Item[]
+  isSubscribed Boolean @default(false)
 }
 
 model Pack {
@@ -31,8 +32,11 @@ model Pack {
 model Item {
   // primary entity, belonged by multiple packs and possibly multiple users if shared
   itemId       String     @id @unique @default(cuid())
-  item         PackItem[]
+  item         PackItem[] @relation(name: "item")
+  locationItem PackItem[] @relation(name: "locationItem")
   name         String
+  isMeal       Boolean    @default(false)
+  isBag        Boolean    @default(false)
   createdAt    DateTime   @default(now())
   brand        String?
   imageUrl     String?
@@ -47,18 +51,24 @@ model Item {
 
 model PackItem {
   // Item metadata related to specific pack
-  packItemId     String   @id @unique @default(cuid())
-  item           Item     @relation(fields: [packItemItemId], references: [itemId], onUpdate: Cascade, onDelete: Cascade)
-  pack           Pack     @relation(fields: [packItemPackId], references: [packId])
-  createdAt      DateTime @default(now())
-  category       String?
-  location       String?
-  tag            Tag[]
-  packItemPackId String
-  packItemItemId String
+  packItemId   String   @id @unique @default(cuid())
+  item         Item     @relation(name: "item", fields: [packItemItemId], references: [itemId], onUpdate: Cascade, onDelete: Cascade)
+  pack         Pack     @relation(fields: [packItemPackId], references: [packId])
+  createdAt    DateTime @default(now())
+  isWorn       Boolean  @default(false)
+  quantity     Int      @default(1)
+  category     String?
+  location     String?
+  locationItem Item?    @relation(name: "locationItem", fields: [locationItemItemId], references: [itemId], onUpdate: Cascade, onDelete: Cascade)
+
+  tag                Tag[]
+  packItemPackId     String
+  locationItemItemId String?
+  packItemItemId     String
 
   @@index([packItemPackId])
   @@index([packItemItemId])
+  @@index([locationItemItemId])
 }
 
 model Tag {
