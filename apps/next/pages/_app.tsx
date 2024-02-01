@@ -19,8 +19,11 @@ function MyApp({ Component, pageProps }: SolitoAppProps) {
   return (
     <>
       <Head>
-        <title>Tamagui Example App</title>
-        <meta name="description" content="Tamagui, Solito, Expo & Next.js" />
+        <title>Sharepack</title>
+        <meta
+          name="description"
+          content="Prepare for your next adventure and share your backpack!"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThemeProvider>

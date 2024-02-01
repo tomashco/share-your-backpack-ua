@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Sign In</title>
+        <title>Sharepack - Sign In</title>
       </Head>
       <SignInWithOAuthScreen />
     </>

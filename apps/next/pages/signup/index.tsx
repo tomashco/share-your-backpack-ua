@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Sign Up</title>
+        <title>Sharepack - Sign Up</title>
       </Head>
       <SignUpScreen />
     </>

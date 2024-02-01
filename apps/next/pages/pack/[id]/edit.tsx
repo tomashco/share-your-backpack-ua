@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Pack</title>
+        <title>Sharepack - Edit Pack</title>
       </Head>
       <EditPackScreen />
     </>

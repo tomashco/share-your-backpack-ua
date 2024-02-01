@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Profile</title>
+        <title>Sharepack - Profile</title>
       </Head>
       <ProfileScreen />
     </>
