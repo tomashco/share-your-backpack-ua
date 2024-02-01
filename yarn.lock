@@ -19404,9 +19404,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"share-your-backpack-ua@workspace:.":
+"sharepack@workspace:.":
   version: 0.0.0-use.local
-  resolution: "share-your-backpack-ua@workspace:."
+  resolution: "sharepack@workspace:."
   dependencies:
     "@babel/runtime": ^7.18.9
     "@clerk/nextjs": ^4.27.2

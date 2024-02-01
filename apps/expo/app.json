@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "share-your-backpack",
-    "slug": "share-your-backpack",
-    "scheme": "share-your-backpack",
+    "name": "sharepack",
+    "slug": "sharepack",
+    "scheme": "sharepack",
     "version": "0.7.0",
     "orientation": "portrait",
     "icon": "./assets/travel-bag.png",
@@ -18,14 +18,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.shareyourbackpack.app"
+      "bundleIdentifier": "com.sharepack.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/travel-bag.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.shareyourbackpack.app"
+      "package": "com.sharepack.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,7 +36,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d5fe69ed-1649-48f8-8d30-b526660afaeb"
+        "projectId": "ba716a2f-f525-41b0-83e3-ca9c7545114c"
       }
     }
   }

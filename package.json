@@ -1,5 +1,5 @@
 {
-  "name": "share-your-backpack-ua",
+  "name": "sharepack",
   "private": true,
   "workspaces": [
     "apps/*",
