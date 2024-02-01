@@ -12,6 +12,9 @@ export function Header() {
   const profileLinkProps = useLink({
     href: '/profile',
   })
+  const myItemsLinkProps = useLink({
+    href: '/myItems',
+  })
   const homeLinkProps = useLink({
     href: '/',
   })
@@ -66,6 +69,9 @@ export function Header() {
                 <YStack space="$3">
                   <Button {...profileLinkProps} theme={'active'}>
                     Profile
+                  </Button>
+                  <Button {...myItemsLinkProps} theme={'active'}>
+                    My Gear
                   </Button>
                   <Button
                     onPress={() => {
