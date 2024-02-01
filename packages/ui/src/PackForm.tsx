@@ -65,7 +65,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
 
   function onSubmit(values: z.infer<typeof packSchema>) {
     if (packId) {
-      editPack({ id: packId, ...values })
+      editPack({ packId: packId, ...values })
     } else {
       createPack({ ...values })
     }

@@ -145,7 +145,7 @@ export const packsRouter = createTRPCRouter({
   editPack: privateProcedure
     .input(
       z.object({
-        id: z.string(),
+        packId: z.string(),
         name: z.string().min(1).max(200),
         description: z.string().optional(),
       })
@@ -158,7 +158,7 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
         await ctx.prisma.pack.update({
-          where: { packId: input.id },
+          where: { packId: input.packId },
           data: { ...input },
         })
       } catch (err) {
@@ -170,7 +170,7 @@ export const packsRouter = createTRPCRouter({
   deletePack: privateProcedure
     .input(
       z.object({
-        id: z.string(),
+        packId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -183,7 +183,7 @@ export const packsRouter = createTRPCRouter({
         await ctx.prisma.$transaction([
           ctx.prisma.pack.update({
             where: {
-              packId: input.id,
+              packId: input.packId,
             },
             data: {
               packItems: {
@@ -195,7 +195,7 @@ export const packsRouter = createTRPCRouter({
             },
           }),
           ctx.prisma.pack.delete({
-            where: { packId: input.id },
+            where: { packId: input.packId },
           }),
         ])
       } catch (err) {
@@ -338,10 +338,10 @@ export const packsRouter = createTRPCRouter({
       }
       return 'ok'
     }),
-    addItem: privateProcedure
+  addItem: privateProcedure
     .input(
       z.object({
-          name: z.string().min(1).max(200),
+        name: z.string().min(1).max(200),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -351,12 +351,14 @@ export const packsRouter = createTRPCRouter({
 
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
-        await ctx.prisma.item.create({data: {
-          name: input.name,
-          author: {
-            connect: {  authorId: authorId },
+        await ctx.prisma.item.create({
+          data: {
+            name: input.name,
+            author: {
+              connect: { authorId: authorId },
+            },
           },
-        }})
+        })
       } catch (err) {
         throw new TRPCError({ code: 'NOT_FOUND', message: err })
       }
@@ -379,7 +381,7 @@ export const packsRouter = createTRPCRouter({
       try {
         await ctx.prisma.item.update({
           where: { itemId: input.itemId },
-                      data: { name: input.name, itemAuthorId: authorId },
+          data: { name: input.name, itemAuthorId: authorId },
         })
       } catch (err) {
         throw new TRPCError({ code: 'NOT_FOUND' })

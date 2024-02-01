@@ -72,7 +72,7 @@ export function EditPackScreen() {
         icon={X}
         direction="rtl"
         theme={'active'}
-        onPress={() => DeletePack({ id: data.packId })}
+        onPress={() => DeletePack({ packId: data.packId })}
         accessibilityRole="link"
         w="100%"
         $gtSm={{
