@@ -7,11 +7,10 @@ const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
 const INITIAL_EXPANDED_ROW_HEIGHT = 200
 
-const Table = ({ data, categoryItems, locationItems, userItems }) => {
+const GenericTable = ({ headers, data }) => {
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
   const [cellHeight, setCellHeight] = useState(INITIAL_EXPANDED_ROW_HEIGHT)
-  const headers = ['name', 'category', 'location']
   return (
     <XStack
       id="tableContainer"
@@ -25,21 +24,23 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
           <XStack borderTopLeftRadius={10} id="tableHeader" backgroundColor={'$background'}>
             {headers.map((header) => (
               <XStack
-                key={'head' + header}
+                key={'head' + header.key}
                 h={ROW_HEIGHT}
-                w={HEADER_SIZE}
+                w={header.width || HEADER_SIZE}
                 alignItems="center"
                 paddingLeft="$2"
                 paddingRight="$2"
               >
-                <Paragraph>{header}</Paragraph>
+                <Paragraph w={'100%'} textAlign={header.textAlign}>
+                  {header.label}
+                </Paragraph>
               </XStack>
             ))}
           </XStack>
           <YStack id="tableBody">
-            {data.packItems.map((row) => (
-              <XStack key={row.packItemId}>
-                {viewDetailsId === row.packItemId ? (
+            {data.map((row) => (
+              <XStack key={row.id}>
+                {viewDetailsId === row.id ? (
                   <XStack
                     h={cellHeight}
                     w={'100%'}
@@ -47,38 +48,31 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
                     flexDirection="column"
                     borderBottomWidth={'$1'}
                   >
-                    <PackItemForm
-                      userItems={userItems}
-                      categoryItems={categoryItems}
-                      locationItems={locationItems}
-                      packId={data.packId}
-                      packItemId={row.packItemId}
-                      itemName={row.item.name}
-                      itemId={row.item.itemId}
-                      itemLocation={row.location}
-                      itemCategory={row.category}
-                      tableContainerWidth={tableContainerRef.current.width - 50}
-                      onLayout={(event) => {
+                    {row.detailedView({
+                      tableContainerWidth: tableContainerRef.current.width - 50,
+                      onLayout: (event) => {
                         setCellHeight(event.nativeEvent.layout.height)
-                      }}
-                      action={() => setViewDetailsId('')}
-                    />
+                      },
+                      action: () => setViewDetailsId(''),
+                    })}
                   </XStack>
                 ) : (
                   <>
-                    {headers.map((key) => (
+                    {headers.map((header) => (
                       <XStack
                         onPress={() => setViewDetailsId('')}
-                        w={HEADER_SIZE}
                         h={ROW_HEIGHT}
+                        w={header.width || HEADER_SIZE}
                         alignItems="center"
                         paddingLeft="$2"
                         paddingRight="$2"
-                        key={'body' + key}
+                        key={'body' + header.key}
                         borderColor={'gray'}
                         borderBottomWidth={'$1'}
                       >
-                        <Paragraph>{key === 'name' ? row.item.name : row[key]}</Paragraph>
+                        <Paragraph w={'100%'} textAlign={header.textAlign}>
+                          {row[header.key]}
+                        </Paragraph>
                       </XStack>
                     ))}
                   </>
@@ -103,14 +97,12 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
           shadowOffset={{ width: -5, height: 5 }}
           backgroundColor="$color1"
         >
-          {data.packItems.map((row) => {
-            const isSelected = viewDetailsId === row.packItemId
+          {data.map((row) => {
+            const isSelected = viewDetailsId === row.id
             return (
               <XStack
-                key={row.packItemId}
-                onPress={() =>
-                  isSelected ? setViewDetailsId('') : setViewDetailsId(row.packItemId)
-                }
+                key={row.id}
+                onPress={() => (isSelected ? setViewDetailsId('') : setViewDetailsId(row.id))}
                 h={isSelected ? cellHeight : ROW_HEIGHT}
                 w={ROW_HEIGHT}
                 justifyContent="center"
@@ -129,4 +121,4 @@ const Table = ({ data, categoryItems, locationItems, userItems }) => {
   )
 }
 
-export { Table }
+export { GenericTable }

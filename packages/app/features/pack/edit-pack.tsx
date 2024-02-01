@@ -1,5 +1,5 @@
 import { Paragraph, YStack, Spinner, Button } from '@my/ui'
-import { PageLayout, Table } from '@my/ui/src'
+import { GenericTable, PageLayout } from '@my/ui/src'
 import { PackForm, PackItemForm } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
@@ -44,6 +44,40 @@ export function EditPackScreen() {
     return <></>
   }
 
+  const tableHeaders = [
+    { key: 'name', label: 'Name' },
+    { key: 'category', label: 'Category' },
+    { key: 'location', label: 'Location' },
+    { key: 'isBag', label: 'Bag', width: 60, textAlign: 'center' },
+    { key: 'isMeal', label: 'Meal', width: 60, textAlign: 'center' },
+  ]
+
+  const tableData = data.packItems.map((packItem) => {
+    const { item } = packItem
+
+    return {
+      id: packItem.packItemId,
+      ...packItem,
+      ...item,
+      isMeal: item.isMeal ? 'yes' : 'no',
+      isBag: item.isBag ? 'yes' : 'no',
+      detailedView: (props) => (
+        <PackItemForm
+          userItems={userItems}
+          categoryItems={getSelectItems(data.packItems, 'category')}
+          locationItems={getSelectItems(data.packItems, 'location')}
+          packId={packItem.packItemPackId}
+          packItemId={packItem.packItemId}
+          itemName={item.name}
+          itemId={item.itemId}
+          itemLocation={packItem.location || undefined}
+          itemCategory={packItem.category || undefined}
+          {...props}
+        />
+      ),
+    }
+  })
+
   return (
     <PageLayout
       scrollViewProps={{
@@ -62,12 +96,7 @@ export function EditPackScreen() {
         locationItems={getSelectItems(data.packItems, 'location')}
         packId={data.packId}
       />
-      <Table
-        userItems={userItems}
-        data={data}
-        categoryItems={getSelectItems(data.packItems, 'category')}
-        locationItems={getSelectItems(data.packItems, 'location')}
-      />
+      <GenericTable headers={tableHeaders} data={tableData} />
       <Button
         icon={X}
         direction="rtl"

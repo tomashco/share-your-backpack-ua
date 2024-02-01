@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { PageLayout, Paragraph, Spinner, Stack, Text, XStack, YStack } from '@my/ui'
+import { PageLayout, Paragraph, Spinner, Stack, Table, Text, XStack, YStack } from '@my/ui'
 import { trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import { Edit3, X } from '@tamagui/lucide-icons'
 import { useRouter } from 'solito/router'
-import { ItemForm } from '@my/ui/src'
+import { GenericTable, ItemForm } from '@my/ui/src'
 
 export function MyItemsScreen() {
   const { data: userItems, isLoading, error } = trpc.packs.getItems.useQuery()
@@ -28,6 +28,24 @@ export function MyItemsScreen() {
       </YStack>
     )
 
+  const tableHeaders = [
+    { key: 'name', label: 'Name' },
+    { key: 'brand', label: 'Brand' },
+    { key: 'weight', label: 'Weight' },
+    { key: 'isBag', label: 'Bag', width: 60, textAlign: 'center' },
+    { key: 'isMeal', label: 'Meal', width: 60, textAlign: 'center' },
+  ]
+
+  const data = userItems.map((item) => {
+    return {
+      id: item.itemId,
+      ...item,
+      isMeal: item.isMeal ? 'yes' : 'no',
+      isBag: item.isBag ? 'yes' : 'no',
+      detailedView: (props) => <ItemForm itemId={item.itemId} itemName={item.name} {...props} />,
+    }
+  })
+
   return (
     <PageLayout scrollViewProps={{}}>
       <ItemForm action={() => setSelectedItem('')} />
@@ -37,38 +55,9 @@ export function MyItemsScreen() {
       ) : error ? (
         <Text>{JSON.stringify(error)}</Text>
       ) : (
-        userItems?.map((item) => {
-          return selectedItem === item.itemId ? (
-            <XStack key={item.itemId} w="100%">
-              <Stack
-                onPress={() => setSelectedItem('')}
-                position="absolute"
-                right={0}
-                zi={1}
-                cursor="pointer"
-              >
-                <X color={'$color10'} />
-              </Stack>
-              <ItemForm
-                itemId={item.itemId}
-                itemName={item.name}
-                action={() => setSelectedItem('')}
-              />
-            </XStack>
-          ) : (
-            <XStack key={item.itemId} w="100%" jc={'space-between'}>
-              <Text>{item.name}</Text>
-              <Stack
-                onPress={() => {
-                  setSelectedItem(item.itemId)
-                }}
-                cursor="pointer"
-              >
-                <Edit3 color={'$color10'} />
-              </Stack>
-            </XStack>
-          )
-        })
+        <>
+          <GenericTable headers={tableHeaders} data={data} />
+        </>
       )}
     </PageLayout>
   )
