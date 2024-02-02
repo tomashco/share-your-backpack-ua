@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Button, Form, H2, YStack, Accordion } from 'tamagui'
 import { FilterInputAccordionItem } from './FilterInputAccordionItem'
 import { Item } from '@my/db'
+import { QuantityItemWithLabel } from './form/quantityItemWithLabel'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
@@ -13,6 +14,8 @@ const itemSchema = z.object({
   }),
   category: z.string().optional(),
   location: z.string().optional(),
+  isWorn: z.boolean().optional(),
+  quantity: z.number().optional(),
 })
 
 type PackItemFormProps = {
@@ -22,6 +25,8 @@ type PackItemFormProps = {
   userItems?: Item[]
   itemName?: string
   itemCategory?: string
+  isWorn?: boolean
+  quantity?: number
   itemLocation?: string
   categoryItems?: { name: string }[]
   locationItems?: { name: string }[]
@@ -37,6 +42,8 @@ const PackItemForm = ({
   itemName = '',
   itemCategory = '',
   itemLocation = '',
+  isWorn = false,
+  quantity = 1,
   userItems = [],
   categoryItems = [],
   locationItems = [],
@@ -46,6 +53,7 @@ const PackItemForm = ({
 }: PackItemFormProps) => {
   const ctx = trpc.useUtils()
   const [accordionOpen, setAccordionOpen] = useState<string[]>([])
+  const [localIsWorn, setLocalIsWorn] = useState(isWorn)
   const { mutate: addPackItem } = trpc.packs.addPackItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getById.invalidate()
@@ -98,9 +106,13 @@ const PackItemForm = ({
       name: itemName,
       category: itemCategory,
       location: itemLocation,
+      isWorn,
+      quantity,
     },
     mode: 'onChange',
   })
+
+  const watchIsWorn = form.watch('isWorn', isWorn)
 
   function onSubmit(values: z.infer<typeof itemSchema>) {
     const findItemId = itemId || userItems.find((el) => el.name === values.name)?.itemId || ''
@@ -157,6 +169,13 @@ const PackItemForm = ({
               items={locationItems}
               setAccordionOpen={setAccordionOpen}
               name="location"
+              control={form.control}
+            />
+            <QuantityItemWithLabel
+              containerStyle={{ marginVertical: '$3' }}
+              size={'$3'}
+              label={'Quantity'}
+              name="quantity"
               control={form.control}
             />
           </Accordion>

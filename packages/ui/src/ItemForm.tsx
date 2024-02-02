@@ -3,18 +3,28 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { trpc } from 'app/utils/trpc'
 import { z } from 'zod'
 import { useState } from 'react'
-import { Button, Form, H2, YStack } from 'tamagui'
+import { Button, Form, H2, Label, Text, YStack } from 'tamagui'
 import FormTextInput from './form/formTextInput'
+import { Author } from '@my/db'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
     message: 'Item name must be at least 2 characters.',
   }),
+  brand: z.string().optional(),
+  weight: z.coerce
+    .number({
+      invalid_type_error: 'Weight must be a number',
+    })
+    .optional(),
 })
 
 type PackItemFormProps = {
   itemId?: string
   itemName?: string
+  itemBrand?: string
+  itemWeight?: number
+  authorInfo?: Author
   // userItems?: Item[]
   tableContainerWidth?: number
   onLayout?: (event: any) => void
@@ -24,6 +34,9 @@ type PackItemFormProps = {
 const ItemForm = ({
   itemId = '',
   itemName = '',
+  itemBrand = '',
+  itemWeight = 0,
+  authorInfo,
   // userItems,
   tableContainerWidth,
   onLayout = () => {},
@@ -81,6 +94,8 @@ const ItemForm = ({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: itemName,
+      brand: itemBrand,
+      weight: itemWeight,
     },
     mode: 'onChange',
   })
@@ -111,6 +126,23 @@ const ItemForm = ({
             label="Name"
             placeholder="Item name"
           />
+          <FormTextInput
+            name={'brand'}
+            control={form.control}
+            label="Brand"
+            placeholder="Item  brand"
+          />
+          <FormTextInput
+            name={'weight'}
+            control={form.control}
+            label={`Weight (${authorInfo?.unit || ''})`}
+            placeholder="Item weight"
+            keyboardType="numeric"
+            type="number"
+          />
+          {form.formState.errors.weight?.message != null && (
+            <Text fontSize={'$2'}>{form.formState.errors.weight?.message}</Text>
+          )}
           {/* <Accordion
             overflow="hidden"
             width="100%"

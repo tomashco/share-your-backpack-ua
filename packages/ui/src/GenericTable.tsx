@@ -70,9 +70,15 @@ const GenericTable = ({ headers, data }) => {
                         borderColor={'gray'}
                         borderBottomWidth={'$1'}
                       >
-                        <Paragraph w={'100%'} textAlign={header.textAlign}>
-                          {row[header.key]}
-                        </Paragraph>
+                        {header.isIcon ? (
+                          <XStack w={'100%'} jc={header.align}>
+                            {row[header.key]}
+                          </XStack>
+                        ) : (
+                          <Paragraph w={'100%'} textAlign={header.textAlign}>
+                            {row[header.key]}
+                          </Paragraph>
+                        )}
                       </XStack>
                     ))}
                   </>

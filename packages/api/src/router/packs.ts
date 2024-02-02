@@ -85,6 +85,16 @@ export const packsRouter = createTRPCRouter({
 
     return pack
   }),
+  getUser: publicProcedure
+    .input(z.object({ authorId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.author.findUnique({
+        where: { authorId: input.authorId },
+      })
+      if (!user) throw new TRPCError({ code: 'NOT_FOUND' })
+
+      return user
+    }),
   getItems: privateProcedure.query(async ({ ctx }) => {
     // find all the unique packItems among all the packs of a single user
     const authorId = ctx.userId
@@ -212,6 +222,7 @@ export const packsRouter = createTRPCRouter({
           name: z.string().min(1).max(200),
           category: z.string().optional(),
           location: z.string().optional(),
+          quantity: z.number().optional(),
         }),
       })
     )
@@ -230,6 +241,7 @@ export const packsRouter = createTRPCRouter({
                 {
                   location: input.packItem.location,
                   category: input.packItem.category,
+                  quantity: input.packItem.quantity,
                   item: {
                     connectOrCreate: {
                       where: { itemId: input.packItem.itemId || '' },
@@ -263,6 +275,7 @@ export const packsRouter = createTRPCRouter({
         name: z.string().min(1).max(200),
         category: z.string().optional(),
         location: z.string().optional(),
+        quantity: z.number().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -283,6 +296,7 @@ export const packsRouter = createTRPCRouter({
                 data: {
                   location: input.location,
                   category: input.category,
+                  quantity: input.quantity,
                   item: {
                     update: {
                       where: { itemId: input.itemId || '' },
@@ -342,6 +356,8 @@ export const packsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1).max(200),
+        brand: z.string().optional(),
+        weight: z.coerce.number().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -354,6 +370,8 @@ export const packsRouter = createTRPCRouter({
         await ctx.prisma.item.create({
           data: {
             name: input.name,
+            brand: input.brand,
+            weight: input.weight,
             author: {
               connect: { authorId: authorId },
             },
@@ -370,6 +388,8 @@ export const packsRouter = createTRPCRouter({
       z.object({
         itemId: z.string(),
         name: z.string().min(1).max(200),
+        brand: z.string().optional(),
+        weight: z.coerce.number().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -381,7 +401,12 @@ export const packsRouter = createTRPCRouter({
       try {
         await ctx.prisma.item.update({
           where: { itemId: input.itemId },
-          data: { name: input.name, itemAuthorId: authorId },
+          data: {
+            name: input.name,
+            brand: input.brand,
+            weight: input.weight,
+            itemAuthorId: authorId,
+          },
         })
       } catch (err) {
         throw new TRPCError({ code: 'NOT_FOUND' })

@@ -48,8 +48,7 @@ export function EditPackScreen() {
     { key: 'name', label: 'Name' },
     { key: 'category', label: 'Category' },
     { key: 'location', label: 'Location' },
-    { key: 'isBag', label: 'Bag', width: 60, textAlign: 'center' },
-    { key: 'isMeal', label: 'Meal', width: 60, textAlign: 'center' },
+    { key: 'quantity', label: 'Quantity', width: 80, textAlign: 'center' },
   ]
 
   const tableData = data.packItems.map((packItem) => {
@@ -59,8 +58,6 @@ export function EditPackScreen() {
       id: packItem.packItemId,
       ...packItem,
       ...item,
-      isMeal: item.isMeal ? 'yes' : 'no',
-      isBag: item.isBag ? 'yes' : 'no',
       detailedView: (props) => (
         <PackItemForm
           userItems={userItems}
@@ -68,6 +65,7 @@ export function EditPackScreen() {
           locationItems={getSelectItems(data.packItems, 'location')}
           packId={packItem.packItemPackId}
           packItemId={packItem.packItemId}
+          quantity={packItem.quantity}
           itemName={item.name}
           itemId={item.itemId}
           itemLocation={packItem.location || undefined}
