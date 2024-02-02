@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { PageLayout, Paragraph, Spinner, Text, YStack } from '@my/ui'
+import { Button, PageLayout, Paragraph, Spinner, Text, XStack, YStack } from '@my/ui'
 import { trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import { useRouter } from 'solito/router'
@@ -8,6 +8,7 @@ import { GenericTable, ItemForm } from '@my/ui/src'
 export function MyItemsScreen() {
   const { data: userItems, isLoading, error } = trpc.packs.getItems.useQuery()
   const { isLoaded: userIsLoaded, isSignedIn, user } = useUser()
+  const [newItemForm, toggleNewItemForm] = useState(false)
   const { data: authorInfo } = trpc.packs.getUser.useQuery({ authorId: user?.id || '' })
 
   const { push } = useRouter()
@@ -47,7 +48,12 @@ export function MyItemsScreen() {
 
   return (
     <PageLayout scrollViewProps={{}}>
-      <ItemForm authorInfo={authorInfo} />
+      <XStack w="100%" jc={'flex-end'}>
+        <Button onPress={() => toggleNewItemForm(!newItemForm)} theme={'active'}>
+          {newItemForm ? 'Close Edit' : 'New Item'}
+        </Button>
+      </XStack>
+      {newItemForm && <ItemForm authorInfo={authorInfo} />}
 
       {isLoading ? (
         <Text>Loading...</Text>

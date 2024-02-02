@@ -1,4 +1,4 @@
-import { Button, H1, H3, Paragraph, ToggleGroup, YStack, XStack } from '@my/ui'
+import { Button, H1, H3, Paragraph, ToggleGroup, YStack, XStack, Popover } from '@my/ui'
 import { PageLayout } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
@@ -55,7 +55,6 @@ export function UserDetailScreen() {
 
   const PackDetails = () => (
     <YStack>
-      <H1 ta="center">{data?.name}</H1>
       <XStack paddingTop="$4">
         <Paragraph>{data?.description}</Paragraph>
       </XStack>
@@ -87,19 +86,60 @@ export function UserDetailScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
-      {isEditable && (
-        <XStack w="100%" jc={'flex-end'}>
-          <Button
-            accessibilityRole="link"
-            theme={'active'}
-            onPress={() => {
-              push(`/pack/${id}/edit`)
-            }}
-          >
-            Edit Pack
-          </Button>
-        </XStack>
-      )}
+      <XStack w="100%" ai={'center'}>
+        <H1 flexGrow={1} ta="center">
+          {data?.name}
+        </H1>
+        {isEditable && (
+          <XStack>
+            <Popover size="$5" allowFlip placement="bottom-end">
+              <Popover.Trigger asChild>
+                <Button accessibilityRole="link" theme={'active'}>
+                  ...
+                </Button>
+              </Popover.Trigger>
+
+              <Popover.Content
+                borderWidth={1}
+                borderColor="$borderColor"
+                enterStyle={{ y: -10, opacity: 0 }}
+                exitStyle={{ y: -10, opacity: 0 }}
+                elevate
+                animation={[
+                  'quick',
+                  {
+                    opacity: {
+                      overshootClamping: true,
+                    },
+                  },
+                ]}
+              >
+                <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
+                <YStack space="$3">
+                  <Button
+                    accessibilityRole="link"
+                    theme={'active'}
+                    onPress={() => {
+                      push(`/pack/${id}/edit-pack-info`)
+                    }}
+                  >
+                    Edit Title and Description
+                  </Button>
+                  <Button
+                    accessibilityRole="link"
+                    theme={'active'}
+                    onPress={() => {
+                      push(`/pack/${id}/edit`)
+                    }}
+                  >
+                    Edit Pack Items
+                  </Button>
+                </YStack>
+              </Popover.Content>
+            </Popover>
+          </XStack>
+        )}
+      </XStack>
       <YStack w="100%" $gtSm={{ width: '35rem' }}>
         {isLoading ? (
           <Paragraph>Loading...</Paragraph>
@@ -107,7 +147,6 @@ export function UserDetailScreen() {
           <Paragraph>{error.message}</Paragraph>
         ) : (
           <PackDetails />
-          // <Paragraph ta="center" fow="700">{`pack name: ${data.name}`}</Paragraph>
         )}
       </YStack>
     </PageLayout>

@@ -357,6 +357,8 @@ export const packsRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1).max(200),
         brand: z.string().optional(),
+        itemUrl: z.string().optional(),
+        imageUrl: z.string().optional(),
         weight: z.coerce.number().optional(),
       })
     )
@@ -372,6 +374,8 @@ export const packsRouter = createTRPCRouter({
             name: input.name,
             brand: input.brand,
             weight: input.weight,
+            itemUrl: input.itemUrl,
+            imageUrl: input.imageUrl,
             author: {
               connect: { authorId: authorId },
             },

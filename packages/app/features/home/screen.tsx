@@ -1,7 +1,7 @@
 import { Button, Paragraph, Separator, XStack, YStack, Image, isWeb, Text, H2 } from '@my/ui'
 import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'solito/router'
 import { PackForm, PageLayout } from '@my/ui/src'
 import { useLink } from 'solito/link'
@@ -15,9 +15,13 @@ export function HomeScreen() {
   } = trpc.packs.getItems.useQuery()
   const { push } = useRouter()
   const { user } = useUser()
+  const [newPackForm, toggleNewPack] = useState(false)
   const isEditable = !!user?.id
   const myItemsLinkProps = useLink({
     href: '/myItems',
+  })
+  const myPacksLinkProps = useLink({
+    href: '/myPacks',
   })
 
   return (
@@ -41,7 +45,18 @@ export function HomeScreen() {
           />
         )}
       </XStack>
-      {isEditable && <PackForm />}
+      <XStack w="100%" jc={'space-between'}>
+        <Button {...myItemsLinkProps} theme={'active'}>
+          My Items
+        </Button>
+        <Button {...myPacksLinkProps} theme={'active'}>
+          My Packs
+        </Button>
+        <Button onPress={() => toggleNewPack(!newPackForm)} theme={'active'}>
+          {newPackForm ? 'Close Edit' : 'New Pack'}
+        </Button>
+      </XStack>
+      {isEditable && newPackForm && <PackForm />}
 
       <Separator />
       {isEditable && (
@@ -54,9 +69,6 @@ export function HomeScreen() {
           ) : (
             userItems?.map((item) => <Text key={item.itemId}>{item.name}</Text>)
           )}
-          <Button {...myItemsLinkProps} theme={'active'}>
-            Go to my Items
-          </Button>
         </YStack>
       )}
       <Separator />

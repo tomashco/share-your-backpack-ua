@@ -12,6 +12,8 @@ const itemSchema = z.object({
     message: 'Item name must be at least 2 characters.',
   }),
   brand: z.string().optional(),
+  itemUrl: z.string().optional(),
+  imageUrl: z.string().optional(),
   weight: z.coerce
     .number({
       invalid_type_error: 'Weight must be a number',
@@ -23,6 +25,8 @@ type PackItemFormProps = {
   itemId?: string
   itemName?: string
   itemBrand?: string
+  itemUrl?: string
+  imageUrl?: string
   itemWeight?: number
   authorInfo?: Author
   // userItems?: Item[]
@@ -35,6 +39,8 @@ const ItemForm = ({
   itemId = '',
   itemName = '',
   itemBrand = '',
+  itemUrl = '',
+  imageUrl = '',
   itemWeight = 0,
   authorInfo,
   // userItems,
@@ -96,6 +102,8 @@ const ItemForm = ({
       name: itemName,
       brand: itemBrand,
       weight: itemWeight,
+      itemUrl: itemUrl,
+      imageUrl: imageUrl,
     },
     mode: 'onChange',
   })
@@ -130,7 +138,19 @@ const ItemForm = ({
             name={'brand'}
             control={form.control}
             label="Brand"
-            placeholder="Item  brand"
+            placeholder="Item brand"
+          />
+          <FormTextInput
+            name={'itemUrl'}
+            control={form.control}
+            label="Item URL"
+            placeholder="Item url"
+          />
+          <FormTextInput
+            name={'imageUrl'}
+            control={form.control}
+            label="Image URL"
+            placeholder="Image url"
           />
           <FormTextInput
             name={'weight'}

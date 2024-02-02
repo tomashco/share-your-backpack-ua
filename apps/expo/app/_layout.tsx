@@ -10,6 +10,7 @@ import { TabBar, Text, XStack } from '@my/ui/src'
 import { MyItemsScreen } from 'app/features/myItems/screen'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 import { useNavigation } from 'expo-router'
+import { EditPackInfoScreen } from 'app/features/pack/edit-pack-info'
 
 export default function HomeLayout() {
   const [loaded] = useFonts({
@@ -19,7 +20,14 @@ export default function HomeLayout() {
   const BottomTab = createBottomTabNavigator()
   const { goBack } = useNavigation()
 
-  const excludedRoutes = ['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index', 'myItems']
+  const excludedRoutes = [
+    'signin',
+    'signup',
+    'pack/[id]/edit',
+    'pack/[id]/edit-pack-info',
+    'pack/[id]/index',
+    'myItems',
+  ]
 
   if (!loaded) {
     return null
@@ -62,6 +70,11 @@ export default function HomeLayout() {
           name={'pack/[id]/edit'}
           options={{ headerTitle: 'Edit' }}
           component={EditPackScreen}
+        />
+        <BottomTab.Screen
+          name={'pack/[id]/edit-pack-info'}
+          options={{ headerTitle: 'Edit Pack Info' }}
+          component={EditPackInfoScreen}
         />
         <BottomTab.Screen
           name={'pack/[id]/index'}

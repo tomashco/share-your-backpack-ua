@@ -1,9 +1,9 @@
-import { Paragraph, YStack, Spinner, Button } from '@my/ui'
+import { Paragraph, YStack, Spinner, Button, XStack } from '@my/ui'
 import { GenericTable, PageLayout } from '@my/ui/src'
 import { PackForm, PackItemForm } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
-import React from 'react'
+import React, { useState } from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
 import { X } from '@tamagui/lucide-icons'
@@ -14,6 +14,7 @@ const { useParam } = createParam<{ id: string }>()
 export function EditPackScreen() {
   const [id] = useParam('id')
   const { data, isLoading, error } = trpc.packs.getById.useQuery({ id: id || '' })
+  const [newItemForm, toggleNewItemForm] = useState(false)
   const { data: userItems } = trpc.packs.getItems.useQuery()
   const { isLoaded: userIsLoaded, user } = useUser()
   const { push } = useRouter()
@@ -83,31 +84,21 @@ export function EditPackScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
-      <PackForm
-        packId={data.packId}
-        packName={data.name ?? ''}
-        packDescription={data.description ?? ''}
-      />
-      <PackItemForm
-        userItems={userItems}
-        categoryItems={getSelectItems(data.packItems, 'category')}
-        locationItems={getSelectItems(data.packItems, 'location')}
-        packId={data.packId}
-      />
+      <XStack w="100%" jc={'flex-end'}>
+        <Button onPress={() => toggleNewItemForm(!newItemForm)} theme={'active'}>
+          {newItemForm ? 'Close Edit' : 'New Item'}
+        </Button>
+      </XStack>
+      {newItemForm && (
+        <PackItemForm
+          userItems={userItems}
+          categoryItems={getSelectItems(data.packItems, 'category')}
+          locationItems={getSelectItems(data.packItems, 'location')}
+          packId={data.packId}
+        />
+      )}
+
       <GenericTable headers={tableHeaders} data={tableData} />
-      <Button
-        icon={X}
-        direction="rtl"
-        theme={'active'}
-        onPress={() => DeletePack({ packId: data.packId })}
-        accessibilityRole="link"
-        w="100%"
-        $gtSm={{
-          width: '15rem',
-        }}
-      >
-        Delete Pack
-      </Button>
     </PageLayout>
   )
 }
