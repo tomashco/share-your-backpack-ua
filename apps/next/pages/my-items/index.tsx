@@ -1,4 +1,4 @@
-import { MyItemsScreen } from 'app/features/myItems/screen'
+import { MyItemsScreen } from 'app/features/my-items/screen'
 import Head from 'next/head'
 
 export default function Page() {

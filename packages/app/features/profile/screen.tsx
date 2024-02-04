@@ -11,7 +11,7 @@ import { Platform } from 'react-native'
 export function ProfileScreen() {
   const { user } = useUser()
   const myItemsLinkProps = useLink({
-    href: '/myItems',
+    href: '/my-items',
   })
 
   const { toggleTheme } = useTheme()

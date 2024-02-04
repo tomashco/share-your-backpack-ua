@@ -7,12 +7,13 @@ import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
 import { EditPackScreen } from 'app/features/pack/edit-pack'
 import { UserDetailScreen } from 'app/features/pack/detail-screen'
 import { TabBar, Text, XStack } from '@my/ui/src'
-import { MyItemsScreen } from 'app/features/myItems/screen'
+import { MyItemsScreen } from 'app/features/my-items/screen'
+import { MyPacksScreen } from 'app/features/my-packs/screen'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 import { useNavigation } from 'expo-router'
 import { EditPackInfoScreen } from 'app/features/pack/edit-pack-info'
 
-export default function HomeLayout() {
+export default function HomeLayout({ children }) {
   const [loaded] = useFonts({
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
@@ -26,7 +27,8 @@ export default function HomeLayout() {
     'pack/[id]/edit',
     'pack/[id]/edit-pack-info',
     'pack/[id]/index',
-    'myItems',
+    'my-items',
+    'my-packs',
   ]
 
   if (!loaded) {
@@ -82,9 +84,14 @@ export default function HomeLayout() {
           component={UserDetailScreen}
         />
         <BottomTab.Screen
-          name={'myItems'}
+          name={'my-items'}
           options={{ headerTitle: 'My Items' }}
           component={MyItemsScreen}
+        />
+        <BottomTab.Screen
+          name={'my-packs'}
+          options={{ headerTitle: 'My Packs' }}
+          component={MyPacksScreen}
         />
       </BottomTab.Navigator>
       {/* <Tabs

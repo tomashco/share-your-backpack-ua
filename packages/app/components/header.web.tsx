@@ -13,7 +13,7 @@ export function Header() {
     href: '/profile',
   })
   const myItemsLinkProps = useLink({
-    href: '/myItems',
+    href: '/my-items',
   })
   const homeLinkProps = useLink({
     href: '/',

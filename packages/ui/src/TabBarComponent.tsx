@@ -10,7 +10,7 @@ import Animated, {
 import { TabNavigationState, ParamListBase, NavigationHelpers } from '@react-navigation/native'
 import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs'
 import { Home, User2 } from '@tamagui/lucide-icons'
-import { useTheme } from 'tamagui'
+import { Stack, useTheme } from 'tamagui'
 
 export const routes = {
   index: { name: 'Home', icon: (props) => <Home {...props} /> },
@@ -91,7 +91,7 @@ const TabBarComponent = ({ excludedRoutes, state, navigation, descriptors }: Pro
         const routeName = route.name as keyof typeof routes
 
         const Icon = routes[routeName]?.icon
-        if (excludedRoutes.includes(routeName)) return <></>
+        if (excludedRoutes.includes(routeName)) return <Stack key={`route-${route.name}`} />
         return (
           <Pressable
             key={`route-${route.name}`}
