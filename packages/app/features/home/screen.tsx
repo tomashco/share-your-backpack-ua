@@ -45,17 +45,19 @@ export function HomeScreen() {
           />
         )}
       </XStack>
-      <XStack w="100%" jc={'space-between'}>
-        <Button {...myItemsLinkProps} theme={'active'}>
-          My Items
-        </Button>
-        <Button {...myPacksLinkProps} theme={'active'}>
-          My Packs
-        </Button>
-        <Button onPress={() => toggleNewPack(!newPackForm)} theme={'active'}>
-          {newPackForm ? 'Close Edit' : 'New Pack'}
-        </Button>
-      </XStack>
+      {isEditable && (
+        <XStack w="100%" jc={'space-between'}>
+          <Button {...myItemsLinkProps} theme={'active'}>
+            My Items
+          </Button>
+          <Button {...myPacksLinkProps} theme={'active'}>
+            My Packs
+          </Button>
+          <Button onPress={() => toggleNewPack(!newPackForm)} theme={'active'}>
+            {newPackForm ? 'Close Edit' : 'New Pack'}
+          </Button>
+        </XStack>
+      )}
       {isEditable && newPackForm && <PackForm />}
 
       <Separator />
