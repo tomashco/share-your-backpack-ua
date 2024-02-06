@@ -26,26 +26,24 @@ export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'conf
     <SafeAreaProvider>
       <AuthProvider>
         <TamaguiProvider config={config} disableInjectCSS defaultTheme={mainTheme} {...rest}>
-          <ToastProvider
-            swipeDirection="horizontal"
-            duration={6000}
-            native={
-              [
-                /* uncomment the next line to do native toasts on mobile. NOTE: it'll require you making a dev build and won't work with Expo Go */
-                // 'mobile'
-              ]
-            }
-          >
-            <ThemeContext.Provider value={{ colorTheme, setColorTheme, mainTheme, setMainTheme }}>
-              <ThemeProvider value={mainTheme === 'dark' ? DarkTheme : DefaultTheme}>
-                <Theme name={colorTheme as ThemeName}>
+          <ThemeContext.Provider value={{ colorTheme, setColorTheme, mainTheme, setMainTheme }}>
+            <ThemeProvider value={mainTheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Theme name={colorTheme as ThemeName}>
+                <ToastProvider
+                  swipeDirection="horizontal"
+                  duration={4000}
+                  native={[
+                    /* uncomment the next line to do native toasts on mobile. NOTE: it'll require you making a dev build and won't work with Expo Go */
+                    'mobile',
+                  ]}
+                >
                   <TRPCProvider>{children}</TRPCProvider>
-                </Theme>
-              </ThemeProvider>
-            </ThemeContext.Provider>
-            <CustomToast />
-            <ToastViewport />
-          </ToastProvider>
+                  <CustomToast />
+                  <ToastViewport />
+                </ToastProvider>
+              </Theme>
+            </ThemeProvider>
+          </ThemeContext.Provider>
         </TamaguiProvider>
       </AuthProvider>
     </SafeAreaProvider>

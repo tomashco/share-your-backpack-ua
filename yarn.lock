@@ -7802,6 +7802,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@uidotdev/usehooks@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "@uidotdev/usehooks@npm:2.4.1"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: d381ce7d4853abe53127b70b0734935d1cfba97bfd2314e67aa42d4f35cd5b955712c6e968f435d8818bd51bea9cf7688b60eeb0db19bae2a6666a37ceee8b5f
+  languageName: node
+  linkType: hard
+
 "@ungap/structured-clone@npm:^1.2.0":
   version: 1.2.0
   resolution: "@ungap/structured-clone@npm:1.2.0"
@@ -8422,6 +8432,7 @@ __metadata:
     "@trpc/react-query": ^10.44.1
     "@types/react": ^18.0.27
     "@types/react-native": ^0.71.3
+    "@uidotdev/usehooks": ^2.4.1
     burnt: ^0.12.1
     expo-constants: ~14.4.2
     expo-linking: ~5.0.2

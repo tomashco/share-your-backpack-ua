@@ -18,7 +18,7 @@ export function UserDetailScreen() {
   const [id] = useParam('id')
   const { push } = useRouter()
   const [selectedSort, setSelectedSort] = useState(sortCriteria.category)
-  const { data, isLoading, error } = trpc.packs.getById.useQuery({ id: id || '' })
+  const { data, isLoading, error } = trpc.packs.getPackById.useQuery({ id: id || '' })
   const categories = Array.from(new Set(data?.packItems.map((item) => item.category)))
   const locations = Array.from(new Set(data?.packItems.map((item) => item.location)))
   const allSorts = {
@@ -42,7 +42,7 @@ export function UserDetailScreen() {
           {data?.packItems
             .filter((el) => el[selSort] === sortName)
             .map((packItem) => (
-              <ItemData key={packItem.packItemId} item={packItem.item} />
+              <ItemData key={packItem.packItemId} item={packItem.itemSelection.item.name} />
             ))}
         </YStack>
       ))}

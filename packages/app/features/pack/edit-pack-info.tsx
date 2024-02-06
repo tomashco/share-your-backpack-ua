@@ -13,7 +13,7 @@ const { useParam } = createParam<{ id: string }>()
 
 export function EditPackInfoScreen() {
   const [id] = useParam('id')
-  const { data, isLoading, error } = trpc.packs.getById.useQuery({ id: id || '' })
+  const { data, isLoading, error } = trpc.packs.getPackById.useQuery({ id: id || '' })
   const { data: userItems } = trpc.packs.getItems.useQuery()
   const { isLoaded: userIsLoaded, user } = useUser()
   const { push } = useRouter()

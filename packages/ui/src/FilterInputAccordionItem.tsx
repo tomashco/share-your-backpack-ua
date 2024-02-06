@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import type { Dispatch, SetStateAction } from 'react'
+import { useState, useEffect } from 'react'
 import { ScrollView, Input, XStack, YStack, Accordion, Paragraph, Square, Label } from 'tamagui'
 import { ChevronDown } from '@tamagui/lucide-icons'
 import { useController } from 'react-hook-form'
@@ -9,6 +8,7 @@ export const FilterInputAccordionItem = ({
   items,
   setAccordionOpen,
   headerPlaceholder,
+  setSearchValue,
   inputPlaceholder,
   label,
   name,
@@ -20,14 +20,25 @@ export const FilterInputAccordionItem = ({
   })
   const [filterList, setFilterList] = useState<{ name: string }[]>(items)
 
+  // useEffect(() => {
+  //   if (items?.length > 0) {
+  //     setFilterList(items)
+  //     console.log('🚀 ~ filterItems ~ updating items:', items)
+  //   }
+  // }, [items])
+
   const filterItems = (value) => {
     field.onChange(value)
     field.value = value
-    let filterData =
-      items && items?.length > 0
-        ? items?.filter((data) => data?.name?.toLowerCase()?.includes(value?.toLowerCase()))
-        : []
-    setFilterList([...filterData])
+    if (setSearchValue) {
+      setSearchValue(value)
+    } else {
+      let filterData =
+        items && items?.length > 0
+          ? items?.filter((data) => data?.name?.toLowerCase()?.includes(value?.toLowerCase()))
+          : []
+      setFilterList([...filterData])
+    }
   }
 
   const onSelected = (value) => {
@@ -78,9 +89,9 @@ export const FilterInputAccordionItem = ({
               onBlur={field.onBlur}
             />
           </XStack>
-          <YStack h={filterList.length > 0 ? '$15' : '$0'}>
+          <YStack h={(setSearchValue ? items : filterList)?.length > 0 ? '$15' : '$0'}>
             <ScrollView>
-              {filterList.map((item, index) => (
+              {(setSearchValue ? items : filterList)?.map((item, index) => (
                 <XStack key={item.name + index} borderBottomWidth={1} borderColor="lightgray">
                   <Paragraph p="$2" w="100%" onPress={() => onSelected(item?.name)}>
                     {item?.name || ''}

@@ -13,7 +13,7 @@ const { useParam } = createParam<{ id: string }>()
 
 export function EditPackScreen() {
   const [id] = useParam('id')
-  const { data, isLoading, error } = trpc.packs.getById.useQuery({ id: id || '' })
+  const { data, isLoading, error } = trpc.packs.getPackById.useQuery({ id: id || '' })
   const [newItemForm, toggleNewItemForm] = useState(false)
   const { data: userItems } = trpc.packs.getItems.useQuery()
   const { isLoaded: userIsLoaded, user } = useUser()
@@ -53,12 +53,12 @@ export function EditPackScreen() {
   ]
 
   const tableData = data.packItems.map((packItem) => {
-    const { item } = packItem
+    const { itemSelection } = packItem
 
     return {
       id: packItem.packItemId,
       ...packItem,
-      ...item,
+      ...itemSelection.item,
       detailedView: (props) => (
         <PackItemForm
           userItems={userItems}
@@ -67,8 +67,8 @@ export function EditPackScreen() {
           packId={packItem.packItemPackId}
           packItemId={packItem.packItemId}
           quantity={packItem.quantity}
-          itemName={item.name}
-          itemId={item.itemId}
+          itemName={itemSelection.item.name}
+          itemId={itemSelection.item.itemId}
           itemLocation={packItem.location || undefined}
           itemCategory={packItem.category || undefined}
           {...props}
@@ -91,7 +91,7 @@ export function EditPackScreen() {
       </XStack>
       {newItemForm && (
         <PackItemForm
-          userItems={userItems}
+          // userItems={userItems}
           categoryItems={getSelectItems(data.packItems, 'category')}
           locationItems={getSelectItems(data.packItems, 'location')}
           packId={data.packId}

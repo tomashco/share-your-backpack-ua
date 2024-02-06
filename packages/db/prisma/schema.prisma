@@ -10,11 +10,12 @@ datasource db {
 }
 
 model Author {
-  authorId     String  @id @unique @default(cuid())
-  packs        Pack[]
-  unit         String? @default("g")
-  item         Item[]
-  isSubscribed Boolean @default(false)
+  authorId      String          @id @unique @default(cuid())
+  packs         Pack[]
+  unit          String?         @default("g")
+  item          Item[]
+  itemSelection ItemSelection[]
+  isSubscribed  Boolean         @default(false)
 }
 
 model Pack {
@@ -30,42 +31,64 @@ model Pack {
 }
 
 model Item {
-  // primary entity, belonged by multiple packs and possibly multiple users if shared
-  itemId       String     @id @unique @default(cuid())
-  item         PackItem[] @relation(name: "item")
-  locationItem PackItem[] @relation(name: "locationItem")
+  itemId       String          @id @unique @default(cuid())
   name         String
-  createdAt    DateTime   @default(now())
+  createdAt    DateTime        @default(now())
   brand        String?
   imageUrl     String?
   itemUrl      String?
   weight       Int? // weight in grams, can be converted reviewing author specific scale
-  author       Author     @relation(fields: [itemAuthorId], references: [authorId])
+  author       Author          @relation(fields: [itemAuthorId], references: [authorId])
   itemAuthorId String
+  selections   ItemSelection[]
 
   @@index([itemAuthorId])
   @@fulltext([name, brand])
 }
 
+model ItemSelection {
+  selectionId           String            @id @unique @default(cuid())
+  // authorId            String
+  author                Author            @relation(fields: [itemSelectionAuthorId], references: [authorId])
+  item                  Item              @relation(fields: [itemSelectionItemId], references: [itemId])
+  itemSelectionItemId   String
+  itemSelectionAuthorId String
+  // selectionPackItemId String
+  createdAt             DateTime          @default(now())
+  itemModification      ItemModification?
+  packItem              PackItem?
+
+  @@index([itemSelectionItemId])
+  @@index([itemSelectionAuthorId])
+}
+
+model ItemModification {
+  modificationId              String        @id @unique @default(cuid())
+  selection                   ItemSelection @relation(fields: [itemModificationSelectionId], references: [selectionId])
+  itemModificationSelectionId String        @unique
+  imageUrl                    String?
+  itemUrl                     String?
+  modifiedAt                  DateTime      @default(now())
+  // modifiedBy                  String // Identifier of the user who made the modification
+
+  @@index([itemModificationSelectionId])
+}
+
 model PackItem {
   // Item metadata related to specific pack
-  packItemId   String   @id @unique @default(cuid())
-  item         Item     @relation(name: "item", fields: [packItemItemId], references: [itemId], onUpdate: Cascade, onDelete: Cascade)
-  pack         Pack     @relation(fields: [packItemPackId], references: [packId])
-  createdAt    DateTime @default(now())
-  quantity     Int      @default(1)
-  category     String?
-  location     String?
-  locationItem Item?    @relation(name: "locationItem", fields: [locationItemItemId], references: [itemId], onUpdate: Cascade, onDelete: Cascade)
+  packItemId    String        @id @unique @default(cuid())
+  itemSelection ItemSelection @relation(fields: [packItemSelectionId], references: [selectionId], onUpdate: Cascade, onDelete: Cascade)
+  pack          Pack          @relation(fields: [packItemPackId], references: [packId])
+  createdAt     DateTime      @default(now())
+  quantity      Int           @default(1)
+  category      String?
+  location      String?
 
-  tag                Tag[]
-  packItemPackId     String
-  locationItemItemId String?
-  packItemItemId     String
+  tag                 Tag[]
+  packItemPackId      String
+  packItemSelectionId String @unique
 
   @@index([packItemPackId])
-  @@index([packItemItemId])
-  @@index([locationItemItemId])
 }
 
 model Tag {

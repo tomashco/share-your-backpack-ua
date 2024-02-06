@@ -2,11 +2,13 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { trpc } from 'app/utils/trpc'
 import { z } from 'zod'
+import { useDebounce } from '@uidotdev/usehooks'
 import { useState } from 'react'
 import { Button, Form, H2, YStack, Accordion } from 'tamagui'
+
 import { FilterInputAccordionItem } from './FilterInputAccordionItem'
-import { Item } from '@my/db'
 import { QuantityItemWithLabel } from './form/quantityItemWithLabel'
+import { useToastController } from '@tamagui/toast'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
@@ -14,7 +16,6 @@ const itemSchema = z.object({
   }),
   category: z.string().optional(),
   location: z.string().optional(),
-  isWorn: z.boolean().optional(),
   quantity: z.number().optional(),
 })
 
@@ -22,10 +23,9 @@ type PackItemFormProps = {
   packId: string
   packItemId?: string
   itemId?: string
-  userItems?: Item[]
+  // userItems?: Item[]
   itemName?: string
   itemCategory?: string
-  isWorn?: boolean
   quantity?: number
   itemLocation?: string
   categoryItems?: { name: string }[]
@@ -42,9 +42,8 @@ const PackItemForm = ({
   itemName = '',
   itemCategory = '',
   itemLocation = '',
-  isWorn = false,
   quantity = 1,
-  userItems = [],
+  // userItems = [],
   categoryItems = [],
   locationItems = [],
   tableContainerWidth,
@@ -53,14 +52,39 @@ const PackItemForm = ({
 }: PackItemFormProps) => {
   const ctx = trpc.useUtils()
   const [accordionOpen, setAccordionOpen] = useState<string[]>([])
-  const [localIsWorn, setLocalIsWorn] = useState(isWorn)
+  const [searchValue, setSearchValue] = useState(itemName || '')
+  const [value, setValue] = useState('')
+  const search = useDebounce(searchValue, 500)
+  const toast = useToastController()
+  // const { data } = useQuery(['suggestions', search], () => api.getSuggestions(search),
+  //   {
+  //     enabled: search.length > 2,
+  //     staleTime: 1000 * 60,
+  //   }
+  // );
+  const {
+    data: allItems,
+    isLoading,
+    error,
+  } = trpc.packs.searchAllItems.useQuery(
+    { value: search, page: 1, limit: 10 },
+    {
+      enabled: search.length > 2,
+      staleTime: 1000 * 60,
+    }
+  )
   const { mutate: addPackItem } = trpc.packs.addPackItem.useMutation({
     onSuccess: () => {
-      void ctx.packs.getById.invalidate()
+      void ctx.packs.getPackById.invalidate()
       if (action) action()
       form.reset()
     },
-    onError: (e) => console.log('ERROR: ', e),
+    onError: (e) =>
+      e.data?.code === 'CONFLICT'
+        ? toast.show(e.data?.code, {
+            message: 'Item has already been added to your pack.',
+          })
+        : console.log('ERROR: ', e),
   })
 
   const { mutate: editPackItem } = trpc.packs.editPackItem.useMutation({
@@ -87,7 +111,7 @@ const PackItemForm = ({
     //   })
     // },
     onSuccess: () => {
-      void ctx.packs.getById.invalidate()
+      void ctx.packs.getPackById.invalidate()
       if (action) action()
     },
     onError: (e) => console.log('ERROR: ', e),
@@ -95,7 +119,7 @@ const PackItemForm = ({
 
   const { mutate: DeletePackItem } = trpc.packs.deletePackItem.useMutation({
     onSuccess: () => {
-      void ctx.packs.getById.invalidate()
+      void ctx.packs.getPackById.invalidate()
     },
     onError: (e) => console.log('ERROR: ', e),
   })
@@ -106,16 +130,13 @@ const PackItemForm = ({
       name: itemName,
       category: itemCategory,
       location: itemLocation,
-      isWorn,
       quantity,
     },
     mode: 'onChange',
   })
 
-  const watchIsWorn = form.watch('isWorn', isWorn)
-
   function onSubmit(values: z.infer<typeof itemSchema>) {
-    const findItemId = itemId || userItems.find((el) => el.name === values.name)?.itemId || ''
+    const findItemId = itemId || allItems?.find((el) => el.name === values.name)?.itemId || ''
     if (packItemId) {
       editPackItem({ packId, packItemId, ...values, itemId: findItemId }) //itemId
     } else {
@@ -146,10 +167,12 @@ const PackItemForm = ({
               accordionId={'nameAccordion'}
               headerPlaceholder="Select Item"
               inputPlaceholder="search or add new"
-              items={userItems}
+              // items={userItems}
+              items={allItems}
               setAccordionOpen={setAccordionOpen}
               name="name"
               control={form.control}
+              setSearchValue={setSearchValue}
             />
             <FilterInputAccordionItem
               label={'Category'}
@@ -160,6 +183,7 @@ const PackItemForm = ({
               setAccordionOpen={setAccordionOpen}
               name="category"
               control={form.control}
+              setSearchValue={undefined}
             />
             <FilterInputAccordionItem
               label={'Location'}
@@ -170,6 +194,7 @@ const PackItemForm = ({
               setAccordionOpen={setAccordionOpen}
               name="location"
               control={form.control}
+              setSearchValue={undefined}
             />
             <QuantityItemWithLabel
               containerStyle={{ marginVertical: '$3' }}
