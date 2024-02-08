@@ -269,9 +269,8 @@ export const packsRouter = createTRPCRouter({
       try {
         await ctx.prisma.$transaction(async (prisma) => {
           let item
-
-          // Step 1: Create a new Item if itemId is not provided
           if (!input.packItem.itemId) {
+            // Step 1: Create a new Item if itemId is not provided
             item = await prisma.item.create({
               data: {
                 name: input.packItem.name,
@@ -285,39 +284,58 @@ export const packsRouter = createTRPCRouter({
               },
             })
           } else {
-            console.log('🚀 ~ awaitctx.prisma.$transaction ~ else: ', input.packItem.itemId)
-            item = await prisma.item.update({
+            item = await prisma.item.findUnique({
               where: { itemId: input.packItem.itemId },
-              data: {
-                selections: { create: [{ itemSelectionAuthorId: authorId }] },
-              },
               include: {
-                selections: true,
+                selections: {
+                  where: { itemSelectionAuthorId: authorId },
+                },
               },
             })
-            // add a new Selection to the existing item
+            // item is present, check if author has already selected the item
+
+            if (item?.selections.length > 0) {
+              // author has already selected the item, so just add the packItem
+
+              const newPackItem = await prisma.packItem.create({
+                data: {
+                  itemSelection: {
+                    connect: { selectionId: item.selections[0].selectionId },
+                  },
+                  pack: { connect: { packId: input.packId } },
+                  quantity: input.packItem.quantity || 1,
+                  category: input.packItem.category || '',
+                  location: input.packItem.location || '',
+                },
+              })
+
+              return 'ok'
+            } else {
+              // author has not selected the item, so select the item and add the packItem
+              item = await prisma.item.update({
+                where: { itemId: input.packItem.itemId },
+                data: {
+                  selections: {
+                    create: [
+                      {
+                        itemSelectionAuthorId: authorId,
+                        packItem: {
+                          create: [
+                            {
+                              pack: { connect: { packId: input.packId } },
+                              quantity: input.packItem.quantity,
+                              category: input.packItem.category,
+                              location: input.packItem.location,
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              })
+            }
           }
-
-          // get the selectionId of the newly created selection
-          const selectionId = item.selections.find(
-            (el) => el.itemSelectionAuthorId === authorId
-          ).selectionId
-
-          // Step 3: Create a new PackItem
-          const packItem = await prisma.packItem.create({
-            data: {
-              pack: { connect: { packId: input.packId } },
-              quantity: input.packItem.quantity,
-              category: input.packItem.category,
-              location: input.packItem.location,
-              // connect packItem to item through Selection:
-              itemSelection: {
-                connect: { itemSelectionItemId: item.itemId, selectionId: selectionId },
-              },
-            },
-          })
-
-          return packItem
         })
       } catch (err) {
         errorHandler(err)

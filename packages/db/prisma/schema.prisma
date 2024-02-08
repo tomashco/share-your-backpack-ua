@@ -46,17 +46,33 @@ model Item {
   @@fulltext([name, brand])
 }
 
+model PackItem {
+  // Item metadata related to specific pack
+  packItemId    String        @id @unique @default(cuid())
+  itemSelection ItemSelection @relation(fields: [packItemSelectionId], references: [selectionId])
+  pack          Pack          @relation(fields: [packItemPackId], references: [packId])
+  createdAt     DateTime      @default(now())
+  quantity      Int           @default(1)
+  category      String?
+  location      String?
+
+  tag                 Tag[]
+  packItemPackId      String
+  packItemSelectionId String
+
+  @@index([packItemPackId])
+  @@index([packItemSelectionId])
+}
+
 model ItemSelection {
   selectionId           String            @id @unique @default(cuid())
-  // authorId            String
   author                Author            @relation(fields: [itemSelectionAuthorId], references: [authorId])
   item                  Item              @relation(fields: [itemSelectionItemId], references: [itemId])
   itemSelectionItemId   String
   itemSelectionAuthorId String
-  // selectionPackItemId String
   createdAt             DateTime          @default(now())
   itemModification      ItemModification?
-  packItem              PackItem?
+  packItem              PackItem[]
 
   @@index([itemSelectionItemId])
   @@index([itemSelectionAuthorId])
@@ -72,23 +88,6 @@ model ItemModification {
   // modifiedBy                  String // Identifier of the user who made the modification
 
   @@index([itemModificationSelectionId])
-}
-
-model PackItem {
-  // Item metadata related to specific pack
-  packItemId    String        @id @unique @default(cuid())
-  itemSelection ItemSelection @relation(fields: [packItemSelectionId], references: [selectionId], onUpdate: Cascade, onDelete: Cascade)
-  pack          Pack          @relation(fields: [packItemPackId], references: [packId])
-  createdAt     DateTime      @default(now())
-  quantity      Int           @default(1)
-  category      String?
-  location      String?
-
-  tag                 Tag[]
-  packItemPackId      String
-  packItemSelectionId String @unique
-
-  @@index([packItemPackId])
 }
 
 model Tag {
