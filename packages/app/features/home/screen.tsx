@@ -20,9 +20,6 @@ export function HomeScreen() {
   const myItemsLinkProps = useLink({
     href: '/my-items',
   })
-  const myPacksLinkProps = useLink({
-    href: '/my-packs',
-  })
 
   return (
     <PageLayout
@@ -50,7 +47,12 @@ export function HomeScreen() {
           <Button {...myItemsLinkProps} theme={'active'}>
             My Items
           </Button>
-          <Button {...myPacksLinkProps} theme={'active'}>
+          <Button
+            onPress={() => {
+              push(`/my-packs/${user?.id}`)
+            }}
+            theme={'active'}
+          >
             My Packs
           </Button>
           <Button onPress={() => toggleNewPack(!newPackForm)} theme={'active'}>

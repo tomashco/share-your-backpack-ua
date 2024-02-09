@@ -53,12 +53,12 @@ export function EditPackScreen() {
   ]
 
   const tableData = data.packItems.map((packItem) => {
-    const { itemSelection } = packItem
+    const { item } = packItem
 
     return {
       id: packItem.packItemId,
       ...packItem,
-      ...itemSelection.item,
+      ...item,
       detailedView: (props) => (
         <PackItemForm
           userItems={userItems}
@@ -67,8 +67,8 @@ export function EditPackScreen() {
           packId={packItem.packItemPackId}
           packItemId={packItem.packItemId}
           quantity={packItem.quantity}
-          itemName={itemSelection.item.name}
-          itemId={itemSelection.item.itemId}
+          itemName={item.name}
+          itemId={item.itemId}
           itemLocation={packItem.location || undefined}
           itemCategory={packItem.category || undefined}
           {...props}

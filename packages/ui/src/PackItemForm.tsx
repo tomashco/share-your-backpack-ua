@@ -136,11 +136,10 @@ const PackItemForm = ({
   })
 
   function onSubmit(values: z.infer<typeof itemSchema>) {
-    const findItemId = itemId || allItems?.find((el) => el.name === values.name)?.itemId || ''
-    if (packItemId) {
-      editPackItem({ packId, packItemId, ...values, itemId: findItemId }) //itemId
+    if (itemId) {
+      editPackItem({ packId, packItemId, ...values, itemId })
     } else {
-      addPackItem({ packId, packItem: { ...values, itemId: findItemId } })
+      addPackItem({ packId, packItem: { ...values } })
     }
     setAccordionOpen([])
     form.reset()

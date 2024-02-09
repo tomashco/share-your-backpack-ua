@@ -4,7 +4,6 @@ import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React, { useState } from 'react'
 import { createParam } from 'solito'
-import { useLink } from 'solito/link'
 import { useRouter } from 'solito/router'
 
 const { useParam } = createParam<{ id: string }>()
@@ -38,20 +37,16 @@ export function UserDetailScreen() {
     <YStack space="$3">
       {allSorts[selSort]?.map((sortName) => (
         <YStack key={sortName}>
-          <H3>{sortName ? sortName : 'TBD'}</H3>
+          <H3>{sortName ? sortName : 'Unsorted'}</H3>
           {data?.packItems
             .filter((el) => el[selSort] === sortName)
             .map((packItem) => (
-              <ItemData key={packItem.packItemId} item={packItem.itemSelection.item.name} />
+              <ItemData key={packItem.packItemId} item={packItem.item} />
             ))}
         </YStack>
       ))}
     </YStack>
   )
-
-  const link = useLink({
-    href: '/',
-  })
 
   const PackDetails = () => (
     <YStack>

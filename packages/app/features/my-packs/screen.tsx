@@ -1,11 +1,19 @@
 import React from 'react'
-import { H1, PageLayout, Paragraph, Spinner, YStack } from '@my/ui'
+import { Button, H1, Image, PageLayout, Paragraph, Spinner, XStack, YStack } from '@my/ui'
 import { trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import { useRouter } from 'solito/router'
+import { createParam } from 'solito'
+
+const { useParam } = createParam<{ authorId: string }>()
 
 export function MyPacksScreen() {
-  const { data, isLoading, error } = trpc.packs.getItems.useQuery()
+  const [authorId] = useParam('authorId')
+  const {
+    data: packsByUser,
+    isLoading,
+    error,
+  } = trpc.packs.getPacksByUser.useQuery({ authorId: authorId || '' })
   const { isLoaded: userIsLoaded, isSignedIn, user } = useUser()
 
   const { push } = useRouter()
@@ -28,7 +36,30 @@ export function MyPacksScreen() {
 
   return (
     <PageLayout scrollViewProps={{}}>
-      <H1>My Packs! - to be implemented</H1>
+      <H1>My Packs</H1>
+      <YStack>
+        {isLoading ? (
+          <Paragraph>Loading...</Paragraph>
+        ) : error ? (
+          <Paragraph>{error}</Paragraph>
+        ) : (
+          <XStack flexWrap="wrap" jc="space-between">
+            {packsByUser.map(({ name, packId }) => (
+              <XStack p="$2" ai="center" key={packId}>
+                <Button
+                  theme="active"
+                  accessibilityRole="link"
+                  onPress={() => {
+                    push(`/pack/${packId}`)
+                  }}
+                >
+                  {name}
+                </Button>
+              </XStack>
+            ))}
+          </XStack>
+        )}
+      </YStack>
     </PageLayout>
   )
 }

@@ -1,10 +1,12 @@
 import { Button, Image, Popover, Text, XStack, YStack } from '@my/ui'
 import { Link, useLink } from 'solito/link'
+import { useRouter } from 'solito/router'
 import { SignedIn, SignedOut, useAuth, useUser } from '../utils/clerk'
 
 export function Header() {
   const { signOut, isSignedIn } = useAuth()
   const { user } = useUser()
+  const { push } = useRouter()
 
   const signInOAuthLinkProps = useLink({
     href: '/signin',
@@ -72,6 +74,14 @@ export function Header() {
                   </Button>
                   <Button {...myItemsLinkProps} theme={'active'}>
                     My Gear
+                  </Button>
+                  <Button
+                    onPress={() => {
+                      push(`/my-packs/${user?.id}`)
+                    }}
+                    theme={'active'}
+                  >
+                    My Packs
                   </Button>
                   <Button
                     onPress={() => {

@@ -70,9 +70,7 @@ export const packsRouter = createTRPCRouter({
     const pack = await ctx.prisma.pack.findUnique({
       where: { packId: input.id },
       include: {
-        packItems: {
-          include: { itemSelection: { include: { item: true } } },
-        },
+        packItems: { include: { item: true } },
         author: true,
       },
     })
@@ -89,6 +87,22 @@ export const packsRouter = createTRPCRouter({
       if (!user) throw new TRPCError({ code: 'NOT_FOUND' })
 
       return user
+    }),
+  getPacksByUser: publicProcedure
+    .input(z.object({ authorId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // find all the packs of a single user
+      const userPacks = await ctx.prisma.pack.findMany({
+        where: {
+          author: {
+            every: { authorId: input.authorId },
+          },
+        },
+      })
+
+      if (!userPacks) throw new TRPCError({ code: 'NOT_FOUND' })
+
+      return userPacks
     }),
   getItems: privateProcedure.query(async ({ ctx }) => {
     // find all the unique packItems among all the packs of a single user
@@ -141,6 +155,7 @@ export const packsRouter = createTRPCRouter({
           brand: {
             search: input.value ? searchVal : '',
           },
+          isDuplicate: false,
         },
         take: input.limit,
         skip: (input.page - 1) * input.limit,
@@ -252,7 +267,6 @@ export const packsRouter = createTRPCRouter({
       z.object({
         packId: z.string(),
         packItem: z.object({
-          itemId: z.string().optional(),
           name: z.string().min(1).max(200),
           category: z.string().optional(),
           location: z.string().optional(),
@@ -267,75 +281,49 @@ export const packsRouter = createTRPCRouter({
 
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       try {
-        await ctx.prisma.$transaction(async (prisma) => {
-          let item
-          if (!input.packItem.itemId) {
-            // Step 1: Create a new Item if itemId is not provided
-            item = await prisma.item.create({
-              data: {
-                name: input.packItem.name,
-                author: {
-                  connect: { authorId },
-                },
-                selections: { create: [{ itemSelectionAuthorId: authorId }] },
-              },
-              include: {
-                selections: true,
-              },
-            })
-          } else {
-            item = await prisma.item.findUnique({
-              where: { itemId: input.packItem.itemId },
-              include: {
-                selections: {
-                  where: { itemSelectionAuthorId: authorId },
-                },
-              },
-            })
-            // item is present, check if author has already selected the item
+        // check if there is an item with the same name
+        const userItems = await ctx.prisma.author.findUnique({
+          where: { authorId },
+          include: {
+            item: true,
+          },
+        })
+        const userHasItem = userItems?.item.find((item) => item.name === input.packItem.name)
 
-            if (item?.selections.length > 0) {
-              // author has already selected the item, so just add the packItem
+        const itemAlreadyPresent = await ctx.prisma.item.findMany({
+          where: { name: input.packItem.name },
+        })
 
-              const newPackItem = await prisma.packItem.create({
-                data: {
-                  itemSelection: {
-                    connect: { selectionId: item.selections[0].selectionId },
-                  },
-                  pack: { connect: { packId: input.packId } },
-                  quantity: input.packItem.quantity || 1,
-                  category: input.packItem.category || '',
-                  location: input.packItem.location || '',
-                },
-              })
-
-              return 'ok'
-            } else {
-              // author has not selected the item, so select the item and add the packItem
-              item = await prisma.item.update({
-                where: { itemId: input.packItem.itemId },
-                data: {
-                  selections: {
-                    create: [
-                      {
-                        itemSelectionAuthorId: authorId,
-                        packItem: {
-                          create: [
-                            {
-                              pack: { connect: { packId: input.packId } },
-                              quantity: input.packItem.quantity,
-                              category: input.packItem.category,
-                              location: input.packItem.location,
-                            },
-                          ],
-                        },
+        await ctx.prisma.pack.update({
+          where: { packId: input.packId },
+          data: {
+            packItems: {
+              create: [
+                {
+                  location: input.packItem.location,
+                  category: input.packItem.category,
+                  quantity: input.packItem.quantity,
+                  item: {
+                    connectOrCreate: {
+                      where: { itemId: userHasItem?.itemId || '' },
+                      create: {
+                        name: input.packItem.name,
+                        itemAuthorId: authorId,
+                        isDuplicate: itemAlreadyPresent?.length > 0,
                       },
-                    ],
+                    },
                   },
                 },
-              })
-            }
-          }
+              ],
+            },
+          },
+          include: {
+            packItems: {
+              include: {
+                item: true,
+              },
+            },
+          },
         })
       } catch (err) {
         errorHandler(err)
@@ -349,7 +337,7 @@ export const packsRouter = createTRPCRouter({
         packId: z.string(),
         packItemId: z.string(),
         itemId: z.string().optional(),
-        name: z.string().min(1).max(200).optional(),
+        name: z.string().min(1).max(200),
         category: z.string().optional(),
         location: z.string().optional(),
         quantity: z.number().optional(),
@@ -363,61 +351,36 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       let updatedPackItem
       try {
-        updatedPackItem = await ctx.prisma.$transaction(async (prisma) => {
-          // if author is the owner of the item in the selection, edit the name
-          // get the item whose packItem is being edited
-          // const packItem = await prisma.packItem.findUnique({
-          //   where: { packItemId: input.packItemId },
-          //   include: {
-          //     itemSelection: true,
-          //   },
-          // })
-          const updatedPackItem = prisma.pack.update({
-            where: { packId: input.packId },
-            data: {
-              packItems: {
-                update: {
-                  where: {
-                    packItemId: input.packItemId,
-                  },
-                  data: {
-                    location: input.location,
-                    category: input.category,
-                    quantity: input.quantity,
-                    itemSelection: {
-                      update: {
-                        data: {
-                          item: {
-                            update: {
-                              data: {
-                                name: input.name,
-                              },
-                              where: {
-                                itemId: input.itemId,
-                              },
-                            },
-                          },
-                        },
-                      },
+        await ctx.prisma.pack.update({
+          where: { packId: input.packId },
+          data: {
+            packItems: {
+              update: {
+                where: {
+                  packItemId: input.packItemId,
+                },
+                data: {
+                  location: input.location,
+                  category: input.category,
+                  quantity: input.quantity,
+                  item: {
+                    update: {
+                      where: { itemId: input.itemId || '' },
+                      data: { name: input.name, itemAuthorId: authorId },
                     },
                   },
                 },
               },
             },
-            include: {
-              packItems: {
-                include: {
-                  itemSelection: {
-                    include: {
-                      item: true,
-                    },
-                  },
-                },
+          },
+          include: {
+            packItems: {
+              include: {
+                item: true,
               },
             },
-          })
-          return updatedPackItem
-        }) // end of transaction
+          },
+        })
       } catch (err) {
         errorHandler(err)
       }
