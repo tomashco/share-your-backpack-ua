@@ -16,29 +16,25 @@ type AuthorWithPack = Prisma.AuthorGetPayload<{
   }
 }>
 
-const addUserDataToPack = async (authors: AuthorWithPack[]) => {
+const addUserDataToPack = async (packs) => {
+  const userList: string[] = Array.from(
+    new Set(packs.map((pack) => pack.author.map((author) => author.authorId)).flat())
+  )
+
   const users = (
     await clerkClient.users.getUserList({
-      userId: authors.map((author) => author.authorId),
+      userId: userList.map((author) => author),
       limit: 100,
     })
   ).map(filterUserForClient)
 
-  return authors.map((author) => {
-    const authorInfo = users.find((user) => author.authorId === user.id)
+  return packs.map((pack) => {
+    const author = pack.author.map((author) => {
+      const authorInfo = users.find((user) => author.authorId === user.id)
 
-    if (!author?.authorId) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: JSON.stringify(users),
-        // 'Author for pack not found',
-        // users:
-      })
-    }
-    return {
-      author,
-      authorInfo,
-    }
+      return { ...author, ...authorInfo }
+    })
+    return { ...pack, author }
   })
 }
 
@@ -56,14 +52,14 @@ const ratelimit = new Ratelimit({
 })
 
 export const packsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const packs = await ctx.prisma.author.findMany({
+  getLatestPacks: publicProcedure.query(async ({ ctx }) => {
+    const packs = await ctx.prisma.pack.findMany({
+      take: 10,
+      orderBy: { createdAt: 'desc' },
       include: {
-        packs: true,
+        author: true,
       },
     })
-
-    // TODO: get only user packs, convert the getAll to getLatestAdded()
     return addUserDataToPack(packs)
   }),
   getPackById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {

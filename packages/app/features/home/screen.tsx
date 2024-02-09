@@ -7,7 +7,7 @@ import { PackForm, PageLayout } from '@my/ui/src'
 import { useLink } from 'solito/link'
 
 export function HomeScreen() {
-  const { data: packsByUser, isLoading, error } = trpc.packs.getAll.useQuery()
+  const { data: latestPacks, isLoading, error } = trpc.packs.getLatestPacks.useQuery()
   const {
     data: userItems,
     isLoading: itemsIsLoading,
@@ -84,29 +84,27 @@ export function HomeScreen() {
           <Paragraph>{error.message}</Paragraph>
         ) : (
           <XStack flexWrap="wrap" jc="space-between">
-            {packsByUser.map(({ author, authorInfo }) => (
-              <XStack key={author.authorId}>
-                {author.packs.map((pack) => (
-                  <XStack p="$2" ai="center" key={pack.packId}>
-                    <Image
-                      source={{
-                        uri: authorInfo?.profileImageUrl,
-                        width: 30,
-                        height: 30,
-                      }}
-                      style={{ borderRadius: 40 }}
-                    />
-                    <Button
-                      theme="active"
-                      accessibilityRole="link"
-                      onPress={() => {
-                        push(`/pack/${pack.packId}`)
-                      }}
-                    >
-                      {pack.name}
-                    </Button>
-                  </XStack>
-                ))}
+            {latestPacks.map(({ author, ...pack }) => (
+              <XStack key={author[0]?.authorId}>
+                <XStack p="$2" ai="center" key={pack.packId}>
+                  <Image
+                    source={{
+                      uri: author[0].profileImageUrl,
+                      width: 30,
+                      height: 30,
+                    }}
+                    style={{ borderRadius: 40 }}
+                  />
+                  <Button
+                    theme="active"
+                    accessibilityRole="link"
+                    onPress={() => {
+                      push(`/pack/${pack.packId}`)
+                    }}
+                  >
+                    {pack.name}
+                  </Button>
+                </XStack>
               </XStack>
             ))}
           </XStack>
