@@ -6,6 +6,7 @@ import { useRouter } from 'solito/router'
 import { useEffect } from 'react'
 import { Button, Form, H2, Text, useTheme, YStack } from 'tamagui'
 import FormTextInput from './form/formTextInput'
+import { useToastController } from '@tamagui/toast'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
@@ -28,13 +29,19 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
   const { push } = useRouter()
   const router = useRouter()
   const theme = useTheme()
+  const toast = useToastController()
 
   const { data: packData, mutate: createPack } = trpc.packs.createPack.useMutation({
     onSuccess: () => {
       void ctx.packs.getLatestPacks.invalidate()
       form.reset()
     },
-    onError: (e) => console.log('ERROR: ', e),
+    onError: (e) =>
+      e.data?.code === 'PRECONDITION_FAILED'
+        ? toast.show('LIMIT REACHED', {
+            message: 'Unsubscribed users can create at least 5 packs',
+          })
+        : console.log('ERROR: ', e),
   })
   const { data: editData, mutate: editPack } = trpc.packs.editPack.useMutation({
     onSuccess: () => {

@@ -41,7 +41,15 @@ export function MyItemsScreen() {
       id: item.itemId,
       ...item,
       detailedView: (props) => (
-        <ItemForm authorInfo={authorInfo} itemId={item.itemId} itemName={item.name} {...props} />
+        <ItemForm
+          authorInfo={authorInfo}
+          itemId={item.itemId}
+          itemName={item.name}
+          itemBrand={item.brand || ''}
+          itemUrl={item.itemUrl || ''}
+          imageUrl={item.imageUrl || ''}
+          {...props}
+        />
       ),
     }
   })

@@ -1,4 +1,15 @@
-import { Button, H1, H3, Paragraph, ToggleGroup, YStack, XStack, Popover } from '@my/ui'
+import {
+  Button,
+  H1,
+  H3,
+  Paragraph,
+  ToggleGroup,
+  YStack,
+  XStack,
+  Popover,
+  Anchor,
+  Image,
+} from '@my/ui'
 import { PageLayout } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
@@ -26,10 +37,37 @@ export function UserDetailScreen() {
   }
   const user = useUser()
   const isEditable = data?.author.find((author) => author.authorId === user?.user?.id)
+  const authorData = data?.author[0]
 
   const ItemData = ({ item }) => (
-    <XStack>
-      <Paragraph className="flex ">{item.name}</Paragraph>
+    <XStack jc={'space-between'}>
+      <XStack ai={'center'} gap={'$3'} width={'100%'}>
+        {item.imageUrl && (
+          <Image
+            source={{
+              uri: item.imageUrl,
+              width: 50,
+              height: 50,
+            }}
+            style={{ borderRadius: 10 }}
+          />
+        )}
+        <Paragraph flexGrow={1}>
+          {item.itemUrl ? (
+            <Anchor href={item.itemUrl} target="_blank">
+              {item.name}
+            </Anchor>
+          ) : (
+            item.name
+          )}
+        </Paragraph>
+        {item.brand && <Paragraph>{item.brand}</Paragraph>}
+        {item.weight > 0 && (
+          <Paragraph>
+            {item.weight} {authorData?.unit}
+          </Paragraph>
+        )}
+      </XStack>
     </XStack>
   )
 

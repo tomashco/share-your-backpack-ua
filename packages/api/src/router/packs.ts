@@ -151,14 +151,13 @@ export const packsRouter = createTRPCRouter({
           brand: {
             search: input.value ? searchVal : '',
           },
-          isDuplicate: false,
         },
         take: input.limit,
         skip: (input.page - 1) * input.limit,
       })
       if (!result) throw new TRPCError({ code: 'NOT_FOUND' })
 
-      return result
+      return result.filter((item) => (item.itemAuthorId === ctx.userId ? true : !item.isDuplicate))
     }),
 
   createPack: privateProcedure
@@ -178,22 +177,31 @@ export const packsRouter = createTRPCRouter({
       const authorId = ctx.userId
 
       let pack: Pack
-      try {
-        pack = await ctx.prisma.pack.create({
-          data: {
-            name: input.name,
-            description: input.description,
-            author: {
-              connectOrCreate: { where: { authorId: authorId }, create: { authorId: authorId } },
+      // check if user is not subscribed and has created less than 5 packs
+      const user = await ctx.prisma.author.findUnique({
+        where: { authorId },
+        include: { packs: true },
+      })
+      if (!user?.isSubscribed && user?.packs && user.packs.length >= 5) {
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Pack creation limit' })
+      } else {
+        try {
+          pack = await ctx.prisma.pack.create({
+            data: {
+              name: input.name,
+              description: input.description,
+              author: {
+                connectOrCreate: { where: { authorId: authorId }, create: { authorId: authorId } },
+              },
             },
-          },
-          // packItems: {
-          //   create: input.packItems,
-          // },
-        })
-        return pack
-      } catch (err) {
-        errorHandler(err)
+            // packItems: {
+            //   create: input.packItems,
+            // },
+          })
+          return pack
+        } catch (err) {
+          errorHandler(err)
+        }
       }
     }),
 
@@ -455,6 +463,8 @@ export const packsRouter = createTRPCRouter({
         itemId: z.string(),
         name: z.string().min(1).max(200),
         brand: z.string().optional(),
+        itemUrl: z.string().optional(),
+        imageUrl: z.string().optional(),
         weight: z.coerce.number().optional(),
       })
     )
@@ -470,6 +480,8 @@ export const packsRouter = createTRPCRouter({
           data: {
             name: input.name,
             brand: input.brand,
+            itemUrl: input.itemUrl,
+            imageUrl: input.imageUrl,
             weight: input.weight,
             itemAuthorId: authorId,
           },

@@ -134,24 +134,36 @@ const ItemForm = ({
             label="Name"
             placeholder="Item name"
           />
+          {form.formState.errors.name?.message != null && (
+            <Text fontSize={'$2'}>{form.formState.errors.name?.message}</Text>
+          )}
           <FormTextInput
             name={'brand'}
             control={form.control}
             label="Brand"
             placeholder="Item brand"
           />
+          {form.formState.errors.brand?.message != null && (
+            <Text fontSize={'$2'}>{form.formState.errors.brand?.message}</Text>
+          )}
           <FormTextInput
             name={'itemUrl'}
             control={form.control}
             label="Item URL"
             placeholder="Item url"
           />
+          {form.formState.errors.itemUrl?.message != null && (
+            <Text fontSize={'$2'}>{form.formState.errors.itemUrl?.message}</Text>
+          )}
           <FormTextInput
             name={'imageUrl'}
             control={form.control}
             label="Image URL"
             placeholder="Image url"
           />
+          {form.formState.errors.imageUrl?.message != null && (
+            <Text fontSize={'$2'}>{form.formState.errors.imageUrl?.message}</Text>
+          )}
           <FormTextInput
             name={'weight'}
             control={form.control}
