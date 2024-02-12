@@ -31,7 +31,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
 
   const { data: packData, mutate: createPack } = trpc.packs.createPack.useMutation({
     onSuccess: () => {
-      void ctx.packs.getAll.invalidate()
+      void ctx.packs.getLatestPacks.invalidate()
       form.reset()
     },
     onError: (e) => console.log('ERROR: ', e),

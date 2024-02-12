@@ -1,12 +1,11 @@
 import { Paragraph, YStack, Spinner, Button, XStack } from '@my/ui'
 import { GenericTable, PageLayout } from '@my/ui/src'
-import { PackForm, PackItemForm } from '@my/ui/src'
+import { PackItemForm } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React, { useState } from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
-import { X } from '@tamagui/lucide-icons'
 import { getSelectItems } from 'app/utils/utils'
 
 const { useParam } = createParam<{ id: string }>()
@@ -18,16 +17,7 @@ export function EditPackScreen() {
   const { data: userItems } = trpc.packs.getItems.useQuery()
   const { isLoaded: userIsLoaded, user } = useUser()
   const { push } = useRouter()
-  const ctx = trpc.useUtils()
   const isEditable = data?.author.find((el) => el.authorId === user?.id)
-
-  const { data: _deletePackResponse, mutate: DeletePack } = trpc.packs.deletePack.useMutation({
-    onSuccess: () => {
-      void ctx.packs.getAll.invalidate()
-      push('/')
-    },
-    onError: (e) => console.log('ERROR: ', e),
-  })
 
   if (isLoading || !userIsLoaded || error)
     return (

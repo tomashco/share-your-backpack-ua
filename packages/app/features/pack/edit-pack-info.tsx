@@ -22,7 +22,6 @@ export function EditPackInfoScreen() {
 
   const { data: _deletePackResponse, mutate: DeletePack } = trpc.packs.deletePack.useMutation({
     onSuccess: () => {
-      void ctx.packs.getAll.invalidate()
       push('/')
     },
     onError: (e) => console.log('ERROR: ', e),
