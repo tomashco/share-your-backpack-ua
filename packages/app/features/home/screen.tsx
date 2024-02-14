@@ -64,7 +64,6 @@ export function HomeScreen() {
         </XStack>
       )}
       {isEditable && newPackForm && <PackForm />}
-      <Text>{getBaseUrl()}</Text>
 
       <Separator />
       {isEditable && (
