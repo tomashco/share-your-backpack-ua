@@ -8436,6 +8436,7 @@ __metadata:
     burnt: ^0.12.1
     expo-constants: ~14.4.2
     expo-linking: ~5.0.2
+    react-native-reanimated-carousel: ^3.5.1
     react-native-safe-area-context: 4.6.3
     solito: ^3.0.0
   languageName: unknown
@@ -11682,7 +11683,7 @@ __metadata:
     react-native: 0.72.5
     react-native-dotenv: ^3.4.9
     react-native-gesture-handler: ~2.12.0
-    react-native-reanimated: ^3.6.1
+    react-native-reanimated: ~3.3.0
     react-native-safe-area-context: 4.6.3
     react-native-screens: ~3.22.0
     react-native-svg: 13.9.0
@@ -18247,9 +18248,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:^3.6.1":
-  version: 3.6.1
-  resolution: "react-native-reanimated@npm:3.6.1"
+"react-native-reanimated-carousel@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "react-native-reanimated-carousel@npm:3.5.1"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.6.0"
+    react-native-gesture-handler: ">=2.0.0"
+    react-native-reanimated: ">=3.0.0"
+  checksum: a2eb640453fa35f659c1fb5575f903364d513fb7f621104afa14fee2284132674dfaf0d87cb29e8c119f7513094a5967d5193f3dfa24043af167c6f26abcfe73
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated@npm:~3.3.0":
+  version: 3.3.0
+  resolution: "react-native-reanimated@npm:3.3.0"
   dependencies:
     "@babel/plugin-transform-object-assign": ^7.16.7
     "@babel/preset-typescript": ^7.16.7
@@ -18264,7 +18277,7 @@ __metadata:
     "@babel/plugin-transform-template-literals": ^7.0.0-0
     react: "*"
     react-native: "*"
-  checksum: 245e542de7496081c4c64fe219a6d33a4d7195502fd6e9c12374c04acb1318bdeb0c50889def5e213e3fe3cd0f6316b113a6b1c382715f1b6cf8a6a29f0cf4ab
+  checksum: 58096b28caef8af261c446eccb91a5a74caa303ba3520b1a2767c5b922b3d19b9a58612ab9b517a959c1b562b2e76e4cf4a8ffb21136960ed63375f6a4c37d1e
   languageName: node
   linkType: hard
 

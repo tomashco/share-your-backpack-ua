@@ -28,7 +28,7 @@ export default function HomeLayout({ children }) {
     'pack/[id]/edit-pack-info',
     'pack/[id]/index',
     'my-items',
-    'my-packs',
+    'my-packs/[authorId]/index',
   ]
 
   if (!loaded) {
@@ -89,7 +89,7 @@ export default function HomeLayout({ children }) {
           component={MyItemsScreen}
         />
         <BottomTab.Screen
-          name={'my-packs'}
+          name={'my-packs/[authorId]/index'}
           options={{ headerTitle: 'My Packs' }}
           component={MyPacksScreen}
         />

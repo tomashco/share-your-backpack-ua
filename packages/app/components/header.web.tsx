@@ -8,6 +8,9 @@ export function Header() {
   const { user } = useUser()
   const { push } = useRouter()
 
+  const signUpOAuthLinkProps = useLink({
+    href: '/signup',
+  })
   const signInOAuthLinkProps = useLink({
     href: '/signin',
   })
@@ -97,9 +100,14 @@ export function Header() {
           </Popover>
         ) : (
           <SignedOut>
-            <Button {...signInOAuthLinkProps} theme={'active'}>
-              Sign In
-            </Button>
+            <XStack gap={'$3'}>
+              <Button {...signUpOAuthLinkProps} theme={'active'}>
+                Sign Up
+              </Button>
+              <Button {...signInOAuthLinkProps} theme={'active'}>
+                Log In
+              </Button>
+            </XStack>
           </SignedOut>
         )}
       </XStack>

@@ -28,6 +28,7 @@
     "generate": "cd packages/db && yarn prisma generate",
     "prisma:studio": "cd packages/db && yarn prisma:studio",
     "fix": "manypkg fix",
+    "clear-cache": "watchman watch-del-all",
     "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
     "check-deps": "check-dependency-version-consistency ."

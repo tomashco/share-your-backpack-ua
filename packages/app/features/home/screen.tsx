@@ -1,10 +1,13 @@
-import { Button, Paragraph, Separator, XStack, YStack, Image, isWeb, Text, H2 } from '@my/ui'
-import { onAppStateChange, trpc } from '../../utils/trpc'
+import { Button, Paragraph, Separator, XStack, YStack, Image, isWeb, Text, H2, View } from '@my/ui'
+import { getBaseUrl, onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import React, { useState } from 'react'
 import { useRouter } from 'solito/router'
 import { PackForm, PageLayout } from '@my/ui/src'
 import { useLink } from 'solito/link'
+import Carousel from 'react-native-reanimated-carousel'
+import { Pack } from '@my/db/index'
+import { AuthorWithClerkInfo } from '@my/api/src/router/packs'
 
 export function HomeScreen() {
   const { data: latestPacks, isLoading, error } = trpc.packs.getLatestPacks.useQuery()
@@ -61,6 +64,7 @@ export function HomeScreen() {
         </XStack>
       )}
       {isEditable && newPackForm && <PackForm />}
+      <Text>{getBaseUrl()}</Text>
 
       <Separator />
       {isEditable && (
@@ -69,7 +73,7 @@ export function HomeScreen() {
           {itemsIsLoading ? (
             <Text>Loading...</Text>
           ) : itemsError ? (
-            <Text>{JSON.stringify(error)}</Text>
+            <Text>{JSON.stringify({ error })}</Text>
           ) : (
             userItems?.map((item) => <Text key={item.itemId}>{item.name}</Text>)
           )}
@@ -84,29 +88,49 @@ export function HomeScreen() {
           <Paragraph>{error.message}</Paragraph>
         ) : (
           <XStack flexWrap="wrap" jc="space-between">
-            {latestPacks.map(({ author, ...pack }) => (
-              <XStack key={author[0]?.authorId}>
-                <XStack p="$2" ai="center" key={pack.packId}>
-                  <Image
-                    source={{
-                      uri: author[0].profileImageUrl,
-                      width: 30,
-                      height: 30,
-                    }}
-                    style={{ borderRadius: 40 }}
-                  />
-                  <Button
-                    theme="active"
-                    accessibilityRole="link"
-                    onPress={() => {
-                      push(`/pack/${pack.packId}`)
+            <Carousel
+              loop
+              width={400}
+              height={400 / 2}
+              autoPlay={true}
+              data={latestPacks}
+              scrollAnimationDuration={3000}
+              // onSnapToItem={}
+              renderItem={({ item }: { item: { pack: Pack; author: AuthorWithClerkInfo[] } }) => {
+                const { author, pack } = item
+                return (
+                  <View
+                    style={{
+                      flex: 1,
+                      borderWidth: 1,
+                      justifyContent: 'center',
                     }}
                   >
-                    {pack.name}
-                  </Button>
-                </XStack>
-              </XStack>
-            ))}
+                    <XStack key={pack?.packId}>
+                      <XStack p="$2" ai="center" key={pack?.packId}>
+                        <Image
+                          source={{
+                            uri: author[0]?.profileImageUrl,
+                            width: 30,
+                            height: 30,
+                          }}
+                          style={{ borderRadius: 40 }}
+                        />
+                        <Button
+                          theme="active"
+                          accessibilityRole="link"
+                          onPress={() => {
+                            push(`/pack/${pack?.packId}`)
+                          }}
+                        >
+                          {pack?.name}
+                        </Button>
+                      </XStack>
+                    </XStack>
+                  </View>
+                )
+              }}
+            />
           </XStack>
         )}
       </YStack>

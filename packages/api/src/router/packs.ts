@@ -5,7 +5,7 @@ import { TRPCError } from '@trpc/server'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis/nodejs'
 import { clerkClient } from '@clerk/nextjs'
-import { type Pack } from '@prisma/client'
+import { Author, type Pack } from '@prisma/client'
 import { filterUserForClient } from '../helpers/filterUserForClient'
 import { Prisma } from '@prisma/client'
 import { errorHandler } from '../helpers/errorHandler'
@@ -15,6 +15,8 @@ type AuthorWithPack = Prisma.AuthorGetPayload<{
     packs: true
   }
 }>
+
+export type AuthorWithClerkInfo = Author & { profileImageUrl: string }
 
 const addUserDataToPack = async (packs) => {
   const userList: string[] = Array.from(
@@ -34,7 +36,7 @@ const addUserDataToPack = async (packs) => {
 
       return { ...author, ...authorInfo }
     })
-    return { ...pack, author }
+    return { pack, author }
   })
 }
 

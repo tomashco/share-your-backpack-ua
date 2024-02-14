@@ -19,6 +19,9 @@ export function ProfileScreen() {
   const { signOut, isSignedIn } = useAuth()
   const themeColors = ['orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'red']
 
+  const signUpOAuthLinkProps = useLink({
+    href: '/signup',
+  })
   const signInOAuthLinkProps = useLink({
     href: '/signin',
   })
@@ -40,7 +43,10 @@ export function ProfileScreen() {
         </SignedIn>
       ) : (
         <SignedOut>
-          <XStack w="100%" justifyContent="flex-end">
+          <XStack w="100%" justifyContent="flex-end" gap="$3">
+            <Button {...signUpOAuthLinkProps} theme={'active'}>
+              Sign Up
+            </Button>
             <Button {...signInOAuthLinkProps} theme={'active'}>
               Sign In
             </Button>
