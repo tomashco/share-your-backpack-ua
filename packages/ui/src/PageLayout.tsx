@@ -13,7 +13,7 @@ export const PageLayout = ({
 }) => {
   const Footer = () => (
     <Paragraph textAlign="right" px={'$4'} fontSize={'$4'}>
-      Built with ❤️ by <Anchor href="https://tomashco/github.io">Tom</Anchor>
+      Built with ❤️ by <Anchor href="https://tomashco.github.io">Tom</Anchor>
     </Paragraph>
   )
   return (
