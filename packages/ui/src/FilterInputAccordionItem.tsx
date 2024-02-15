@@ -20,13 +20,6 @@ export const FilterInputAccordionItem = ({
   })
   const [filterList, setFilterList] = useState<{ name: string }[]>(items)
 
-  // useEffect(() => {
-  //   if (items?.length > 0) {
-  //     setFilterList(items)
-  //     console.log('🚀 ~ filterItems ~ updating items:', items)
-  //   }
-  // }, [items])
-
   const filterItems = (value) => {
     field.onChange(value)
     field.value = value

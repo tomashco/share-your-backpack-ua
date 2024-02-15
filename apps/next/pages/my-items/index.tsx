@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>Sharepack - My Items</title>
+        <title>Sharepack - My Gear</title>
       </Head>
       <MyItemsScreen />
     </>

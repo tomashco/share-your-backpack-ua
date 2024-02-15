@@ -85,7 +85,7 @@ export default function HomeLayout({ children }) {
         />
         <BottomTab.Screen
           name={'my-items'}
-          options={{ headerTitle: 'My Items' }}
+          options={{ headerTitle: 'My Gear' }}
           component={MyItemsScreen}
         />
         <BottomTab.Screen

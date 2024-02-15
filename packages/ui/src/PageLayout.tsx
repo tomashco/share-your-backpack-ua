@@ -1,4 +1,4 @@
-import { Anchor, Paragraph, ScrollView, Separator, YStack } from 'tamagui'
+import { Anchor, isWeb, Paragraph, ScrollView, Separator, YStack } from 'tamagui'
 import { Header } from 'app/components/header'
 import { LayoutChangeEvent, Platform } from 'react-native'
 
@@ -18,8 +18,8 @@ export const PageLayout = ({
   )
   return (
     <YStack f={1} backgroundColor={'$color4'}>
-      <ScrollView mb={Platform.OS !== 'web' ? '$13' : 0} {...scrollViewProps}>
-        {Platform.OS === 'web' && (
+      <ScrollView mb={!isWeb ? '$13' : 0} {...scrollViewProps}>
+        {isWeb && (
           <YStack
             p={'$4'}
             pb={0}
@@ -50,9 +50,8 @@ export const PageLayout = ({
         >
           {children}
         </YStack>
-        {Platform.OS !== 'web' && <Footer />}
       </ScrollView>
-      {Platform.OS === 'web' && (
+      {isWeb && (
         <YStack position="absolute" bottom={0} right={0}>
           <Footer />
         </YStack>

@@ -12,7 +12,7 @@ import {
   Anchor,
 } from '@my/ui'
 import { onAppStateChange, trpc } from '../../utils/trpc'
-import { useUser } from '../../utils/clerk'
+import { useUser, useAuth, SignedOut, SignedIn } from '../../utils/clerk'
 import React, { useRef, useState } from 'react'
 import { useRouter } from 'solito/router'
 import { ChevronLeft, ChevronRight } from '@tamagui/lucide-icons'
@@ -21,9 +21,11 @@ import { useLink } from 'solito/link'
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel'
 import { Pack } from '@my/db/index'
 import { AuthorWithClerkInfo } from '@my/api/src/router/packs'
+import { Platform } from 'react-native'
 
 export function HomeScreen() {
   const { data: latestPacks, isLoading, error } = trpc.packs.getLatestPacks.useQuery()
+  const { signOut, isSignedIn } = useAuth()
   const carouselRef = useRef<ICarouselInstance | null>(null)
   const layout = useRef({ x: 0, y: 0, height: 0, width: 0 })
   const {
@@ -38,11 +40,17 @@ export function HomeScreen() {
   const myItemsLinkProps = useLink({
     href: '/my-items',
   })
+  const signUpOAuthLinkProps = useLink({
+    href: '/signup',
+  })
+  const signInOAuthLinkProps = useLink({
+    href: '/signin',
+  })
 
   const baseOptions = {
     vertical: false,
-    width: layout.current.width / 3 || 200,
-    height: layout.current.width / 2 || 100,
+    width: layout.current.width / (isWeb && layout.current.width > 400 ? 3 : 1) || 400,
+    height: layout.current.width / 1.5 || 300,
     style: {
       width: layout.current.width || 200,
     },
@@ -51,7 +59,6 @@ export function HomeScreen() {
     scrollAnimationDuration: 1000,
     autoPlayInterval: 5000,
   }
-
   const carouselItem = ({ item }: { item: { pack: Pack; author: AuthorWithClerkInfo[] } }) => {
     const { author, pack } = item
     return (
@@ -101,6 +108,18 @@ export function HomeScreen() {
       }}
       layout={layout}
     >
+      {!isWeb && (
+        <SignedOut>
+          <XStack w="100%" justifyContent="flex-end" gap="$3">
+            <Button {...signUpOAuthLinkProps} theme={'active'}>
+              Sign Up
+            </Button>
+            <Button {...signInOAuthLinkProps} theme={'active'}>
+              Sign In
+            </Button>
+          </XStack>
+        </SignedOut>
+      )}
       <XStack w="100%" justifyContent="flex-end">
         {isEditable && !isWeb && (
           <Image
@@ -118,7 +137,7 @@ export function HomeScreen() {
       {isEditable && (
         <XStack w="100%" jc={'space-between'}>
           <Button {...myItemsLinkProps} theme={'active'}>
-            My Items
+            My Gear
           </Button>
           <Button
             onPress={() => {
@@ -138,7 +157,7 @@ export function HomeScreen() {
       <Separator />
       {isEditable && (
         <YStack w="100%">
-          <H2>My Items</H2>
+          <H2>My Gear</H2>
           {itemsIsLoading ? (
             <Text>Loading...</Text>
           ) : itemsError ? (
@@ -188,18 +207,22 @@ export function HomeScreen() {
               data={latestPacks}
               renderItem={carouselItem}
             />
-            <Button
-              onPress={() => carouselRef.current?.prev()}
-              theme={'active'}
-              icon={ChevronLeft}
-              circular
-            />
-            <Button
-              onPress={() => carouselRef.current?.next()}
-              theme={'active'}
-              icon={ChevronRight}
-              circular
-            />
+            {isWeb && layout.current.width > 400 && (
+              <>
+                <Button
+                  onPress={() => carouselRef.current?.prev()}
+                  theme={'active'}
+                  icon={ChevronLeft}
+                  circular
+                />
+                <Button
+                  onPress={() => carouselRef.current?.next()}
+                  theme={'active'}
+                  icon={ChevronRight}
+                  circular
+                />
+              </>
+            )}
           </XStack>
         )}
       </YStack>

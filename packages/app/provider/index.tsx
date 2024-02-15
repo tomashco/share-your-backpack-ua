@@ -1,5 +1,6 @@
 import {
   CustomToast,
+  isWeb,
   TamaguiProvider,
   TamaguiProviderProps,
   Theme,
@@ -24,7 +25,7 @@ export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'conf
   const [colorTheme, setColorTheme] = useState('green')
   const [mainTheme, setMainTheme] = useState('light')
 
-  enableLegacyWebImplementation(Platform.OS === 'web' ? true : false)
+  enableLegacyWebImplementation(isWeb ? true : false)
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
