@@ -55,7 +55,7 @@ export function MyItemsScreen() {
   })
 
   return (
-    <PageLayout scrollViewProps={{}}>
+    <PageLayout>
       <XStack w="100%" jc={'flex-end'}>
         <Button onPress={() => toggleNewItemForm(!newItemForm)} theme={'active'}>
           {newItemForm ? 'Close Edit' : 'New Item'}

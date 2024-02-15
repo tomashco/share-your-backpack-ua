@@ -40,7 +40,7 @@ export function UserDetailScreen() {
   const authorData = data?.author[0]
 
   const ItemData = ({ item }) => (
-    <XStack jc={'space-between'}>
+    <YStack py={'$3'} key={item.itemId}>
       <XStack ai={'center'} gap={'$3'} width={'100%'}>
         {item.imageUrl && (
           <Image
@@ -68,7 +68,7 @@ export function UserDetailScreen() {
           </Paragraph>
         )}
       </XStack>
-    </XStack>
+    </YStack>
   )
 
   const itemsByView = (selSort: sortCriteria) => (

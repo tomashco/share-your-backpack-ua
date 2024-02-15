@@ -1,8 +1,16 @@
 import { ScrollView, YStack } from 'tamagui'
 import { Header } from 'app/components/header'
-import { Platform } from 'react-native'
+import { LayoutChangeEvent, Platform } from 'react-native'
 
-export const PageLayout = ({ children, scrollViewProps }) => {
+export const PageLayout = ({
+  children,
+  scrollViewProps,
+  layout,
+}: {
+  children: React.ReactNode
+  scrollViewProps?: object
+  layout?: React.RefObject<LayoutChangeEvent['nativeEvent']['layout'] | null>
+}) => {
   return (
     <ScrollView backgroundColor={'$color4'} {...scrollViewProps}>
       {Platform.OS === 'web' && (
@@ -30,6 +38,10 @@ export const PageLayout = ({ children, scrollViewProps }) => {
         ai="center"
         $gtSm={{ width: '35rem' }}
         space
+        onLayout={(event) => {
+          const { x, y, height, width } = event.nativeEvent.layout
+          if (layout?.current) Object.assign(layout.current, { x, y, height, width })
+        }}
       >
         {children}
       </YStack>

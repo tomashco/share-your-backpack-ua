@@ -27,7 +27,7 @@ export function ProfileScreen() {
   })
 
   return (
-    <PageLayout scrollViewProps={{}}>
+    <PageLayout>
       {Platform.OS !== 'web' && isSignedIn ? (
         <SignedIn>
           <XStack w="100%" justifyContent="flex-end">

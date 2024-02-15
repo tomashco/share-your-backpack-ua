@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, H1, Image, PageLayout, Paragraph, Spinner, XStack, YStack } from '@my/ui'
+import { Button, H1, PageLayout, Paragraph, Spinner, XStack, YStack } from '@my/ui'
 import { trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import { useRouter } from 'solito/router'
@@ -35,7 +35,7 @@ export function MyPacksScreen() {
     )
 
   return (
-    <PageLayout scrollViewProps={{}}>
+    <PageLayout>
       <H1>My Packs</H1>
       <YStack>
         {isLoading ? (

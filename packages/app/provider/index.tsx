@@ -27,7 +27,7 @@ export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'conf
   enableLegacyWebImplementation(Platform.OS === 'web' ? true : false)
 
   return (
-    <GestureHandlerRootView style={{ height: '100%' }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AuthProvider>
           <TamaguiProvider config={config} disableInjectCSS defaultTheme={mainTheme} {...rest}>

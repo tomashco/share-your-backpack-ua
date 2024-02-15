@@ -1,16 +1,31 @@
-import { Button, Paragraph, Separator, XStack, YStack, Image, isWeb, Text, H2, View } from '@my/ui'
-import { getBaseUrl, onAppStateChange, trpc } from '../../utils/trpc'
+import {
+  Button,
+  Paragraph,
+  Separator,
+  XStack,
+  YStack,
+  Image,
+  isWeb,
+  Text,
+  H2,
+  H5,
+  Anchor,
+} from '@my/ui'
+import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useRouter } from 'solito/router'
+import { ChevronLeft, ChevronRight } from '@tamagui/lucide-icons'
 import { PackForm, PageLayout } from '@my/ui/src'
 import { useLink } from 'solito/link'
-import Carousel from 'react-native-reanimated-carousel'
+import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel'
 import { Pack } from '@my/db/index'
 import { AuthorWithClerkInfo } from '@my/api/src/router/packs'
 
 export function HomeScreen() {
   const { data: latestPacks, isLoading, error } = trpc.packs.getLatestPacks.useQuery()
+  const carouselRef = useRef<ICarouselInstance | null>(null)
+  const layout = useRef({ x: 0, y: 0, height: 0, width: 0 })
   const {
     data: userItems,
     isLoading: itemsIsLoading,
@@ -24,12 +39,67 @@ export function HomeScreen() {
     href: '/my-items',
   })
 
+  const baseOptions = {
+    vertical: false,
+    width: layout.current.width / 3 || 200,
+    height: layout.current.width / 2 || 100,
+    style: {
+      width: layout.current.width || 200,
+    },
+    loop: true,
+    autoPlay: true,
+    scrollAnimationDuration: 1000,
+    autoPlayInterval: 5000,
+  }
+
+  const carouselItem = ({ item }: { item: { pack: Pack; author: AuthorWithClerkInfo[] } }) => {
+    const { author, pack } = item
+    return (
+      <YStack
+        flex={1}
+        backgroundColor={'$background'}
+        borderRadius={'$5'}
+        margin={'$3'}
+        py={'$3'}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+        gap={'$3'}
+      >
+        <YStack gap={'$2'} alignItems={'center'}>
+          <Image
+            source={{
+              uri: author[0]?.profileImageUrl,
+              width: 30,
+              height: 30,
+            }}
+            style={{ borderRadius: 40 }}
+          />
+          <H5 fontWeight={'600'}>{pack.name}</H5>
+          <Paragraph textAlign="center">{pack.description}</Paragraph>
+        </YStack>
+        {/* <XStack p="$2" ai="center" key={pack?.packId}> */}
+        {/* </XStack> */}
+        <Button
+          w={'$10'}
+          theme="active"
+          accessibilityRole="link"
+          onPress={() => {
+            push(`/pack/${pack?.packId}`)
+          }}
+        >
+          View
+        </Button>
+      </YStack>
+    )
+  }
+
   return (
     <PageLayout
       scrollViewProps={{
         onScrollBeginDrag: () => onAppStateChange('active'),
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
+      layout={layout}
     >
       <XStack w="100%" justifyContent="flex-end">
         {isEditable && !isWeb && (
@@ -74,61 +144,61 @@ export function HomeScreen() {
           ) : itemsError ? (
             <Text>{JSON.stringify({ error })}</Text>
           ) : (
-            userItems?.map((item) => <Text key={item.itemId}>{item.name}</Text>)
+            userItems?.map((item) => (
+              <YStack py={'$3'} key={item.itemId}>
+                <XStack ai={'center'} gap={'$3'} width={'100%'}>
+                  {item.imageUrl && (
+                    <Image
+                      source={{
+                        uri: item.imageUrl,
+                        width: 50,
+                        height: 50,
+                      }}
+                      style={{ borderRadius: 10 }}
+                    />
+                  )}
+                  <Paragraph flexGrow={1}>
+                    {item.itemUrl ? (
+                      <Anchor href={item.itemUrl} target="_blank">
+                        {item.name}
+                      </Anchor>
+                    ) : (
+                      item.name
+                    )}
+                  </Paragraph>
+                  {item.brand && <Paragraph>{item.brand}</Paragraph>}
+                </XStack>
+              </YStack>
+            ))
           )}
         </YStack>
       )}
       <Separator />
-      <H2>List of packs</H2>
+      <H2>Latest packs</H2>
       <YStack>
         {isLoading ? (
           <Paragraph>Loading...</Paragraph>
         ) : error ? (
           <Paragraph>{error.message}</Paragraph>
         ) : (
-          <XStack flexWrap="wrap" jc="space-between">
+          <XStack flexWrap="wrap" jc="center" gap={'$3'}>
             <Carousel
-              loop
-              width={400}
-              height={400 / 2}
-              autoPlay={true}
+              ref={carouselRef}
+              {...baseOptions}
               data={latestPacks}
-              scrollAnimationDuration={3000}
-              // onSnapToItem={}
-              renderItem={({ item }: { item: { pack: Pack; author: AuthorWithClerkInfo[] } }) => {
-                const { author, pack } = item
-                return (
-                  <View
-                    style={{
-                      flex: 1,
-                      borderWidth: 1,
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <XStack key={pack?.packId}>
-                      <XStack p="$2" ai="center" key={pack?.packId}>
-                        <Image
-                          source={{
-                            uri: author[0]?.profileImageUrl,
-                            width: 30,
-                            height: 30,
-                          }}
-                          style={{ borderRadius: 40 }}
-                        />
-                        <Button
-                          theme="active"
-                          accessibilityRole="link"
-                          onPress={() => {
-                            push(`/pack/${pack?.packId}`)
-                          }}
-                        >
-                          {pack?.name}
-                        </Button>
-                      </XStack>
-                    </XStack>
-                  </View>
-                )
-              }}
+              renderItem={carouselItem}
+            />
+            <Button
+              onPress={() => carouselRef.current?.prev()}
+              theme={'active'}
+              icon={ChevronLeft}
+              circular
+            />
+            <Button
+              onPress={() => carouselRef.current?.next()}
+              theme={'active'}
+              icon={ChevronRight}
+              circular
             />
           </XStack>
         )}
