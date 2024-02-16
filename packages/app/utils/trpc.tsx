@@ -1,4 +1,5 @@
 import { HTTPHeaders, createTRPCReact } from '@trpc/react-query'
+
 import type { AppRouter } from '@my/api'
 /**
  * Extend this function when going to production by
@@ -15,8 +16,9 @@ import { transformer } from '@my/api/transformer'
 import { useAuth } from '@clerk/clerk-expo'
 import { Platform, AppStateStatus } from 'react-native'
 import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query'
-// import { View } from '@tamagui/web'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 /**
  * A set of typesafe hooks for consuming your API.
  */
@@ -54,6 +56,10 @@ export function onAppStateChange(status: AppStateStatus) {
   }
 }
 
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+})
+
 export const TRPCProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
@@ -76,6 +82,16 @@ export const TRPCProvider: React.FC<{
     })
   )
 
+  // // we need a default mutation function so that paused mutations can resume after a page reload
+  // queryClient.setMutationDefaults(['createPack'], {
+  //   mutationFn: async (data) => {
+  //     return trpc.packs.createPack(data);
+  //   },
+  //   onSettled: (_data, _err) => {
+  //     console.log('settled item');
+  //   },
+  // });
+
   // useEffect(() => {
   //   const subscription = AppState.addEventListener('focus', onAppStateChange)
 
@@ -84,7 +100,20 @@ export const TRPCProvider: React.FC<{
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+          persister: asyncStoragePersister,
+          maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        }}
+        onSuccess={() => {
+          queryClient.resumePausedMutations().then(() => {
+            queryClient.invalidateQueries()
+          })
+        }}
+      >
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </PersistQueryClientProvider>
     </trpc.Provider>
   )
 }

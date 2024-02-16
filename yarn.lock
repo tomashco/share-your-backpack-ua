@@ -7119,10 +7119,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-async-storage-persister@npm:^5.20.5":
+  version: 5.20.5
+  resolution: "@tanstack/query-async-storage-persister@npm:5.20.5"
+  dependencies:
+    "@tanstack/query-persist-client-core": 5.20.5
+  checksum: 4cec60e38fc97be1d54e5ab4803a73237a5b4b7ff75de27bd3a65a37dacb09ce0c3aab8ef14241a1ab54afef424670880ca5d06f49ee6d499b85294853afef9f
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-core@npm:4.36.1":
   version: 4.36.1
   resolution: "@tanstack/query-core@npm:4.36.1"
   checksum: 47672094da20d89402d9fe03bb7b0462be73a76ff9ca715169738bc600a719d064d106d083a8eedae22a2c22de22f87d5eb5d31ef447aba771d9190f2117ed10
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:5.20.5":
+  version: 5.20.5
+  resolution: "@tanstack/query-core@npm:5.20.5"
+  checksum: ae7f45fe2f1b5278cc35c9c276e475c19accad897641b4cc02f25d446d796e804f767d3de891ce73130a42d3707e6b54459c9e109fcc00bc5ad75f6cdac263d8
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-persist-client-core@npm:5.20.5":
+  version: 5.20.5
+  resolution: "@tanstack/query-persist-client-core@npm:5.20.5"
+  dependencies:
+    "@tanstack/query-core": 5.20.5
+  checksum: 0389584df6de7768ce303d446186081addebe90a9e8de5efd7a9b4cbb4216062da5438b60b3170acb7f7af6c09c5f1497398e2a6f7cbea57030b5c3a041d5728
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-persist-client@npm:^5.20.5":
+  version: 5.20.5
+  resolution: "@tanstack/react-query-persist-client@npm:5.20.5"
+  dependencies:
+    "@tanstack/query-persist-client-core": 5.20.5
+  peerDependencies:
+    "@tanstack/react-query": ^5.20.5
+    react: ^18.0.0
+  checksum: 958a3b47c52cffc7790981643efc64f95a49da297fda1573fdd0839df048e3f53f2f8aa405d898f4e3bf5743f0d8e2bf2022b75400678959764476f27280666f
   languageName: node
   linkType: hard
 
@@ -8426,7 +8463,9 @@ __metadata:
     "@tamagui/lucide-icons": latest
     "@tamagui/shorthands": latest
     "@tamagui/themes": latest
+    "@tanstack/query-async-storage-persister": ^5.20.5
     "@tanstack/react-query": ^4.35.3
+    "@tanstack/react-query-persist-client": ^5.20.5
     "@tanstack/react-table": ^8.11.2
     "@trpc/next": ^10.44.1
     "@trpc/react-query": ^10.44.1

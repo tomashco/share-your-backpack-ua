@@ -7,14 +7,7 @@ import { Redis } from '@upstash/redis/nodejs'
 import { clerkClient } from '@clerk/nextjs'
 import { Author, type Pack } from '@prisma/client'
 import { filterUserForClient } from '../helpers/filterUserForClient'
-import { Prisma } from '@prisma/client'
 import { errorHandler } from '../helpers/errorHandler'
-
-type AuthorWithPack = Prisma.AuthorGetPayload<{
-  include: {
-    packs: true
-  }
-}>
 
 export type AuthorWithClerkInfo = Author & { profileImageUrl: string }
 
