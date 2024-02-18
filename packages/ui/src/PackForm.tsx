@@ -43,7 +43,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
           })
         : console.log('ERROR: ', e),
   })
-  const { data: editData, mutate: editPack } = trpc.packs.editPack.useMutation({
+  const { data: editData, mutate: editPackInfo } = trpc.packs.editPackInfo.useMutation({
     onSuccess: () => {
       void ctx.packs.getPackById.invalidate()
       // form.reset()
@@ -72,7 +72,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
 
   function onSubmit(values: z.infer<typeof packSchema>) {
     if (packId) {
-      editPack({ packId: packId, ...values })
+      editPackInfo({ packId: packId, ...values })
     } else {
       createPack({ ...values })
     }

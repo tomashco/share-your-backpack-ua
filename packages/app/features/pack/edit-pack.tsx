@@ -1,5 +1,5 @@
-import { Paragraph, YStack, Spinner, Button, XStack } from '@my/ui'
-import { GenericTable, PageLayout } from '@my/ui/src'
+import { Paragraph, YStack, Spinner, Button, XStack, useToastController } from '@my/ui'
+import { CheckboxWithLabel, GenericTable, PageLayout } from '@my/ui/src'
 import { PackItemForm } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
@@ -19,8 +19,10 @@ export function EditPackScreen() {
   const { data: userItems } = trpc.packs.getItems.useQuery()
   const { isLoaded: userIsLoaded, user } = useUser()
   const [searchValue, setSearchValue] = useState('')
+  const [isPublic, setIsPublic] = useState(data?.isPublic)
   const { push } = useRouter()
   const search = useDebounce(searchValue, 500)
+  const toast = useToastController()
   const isEditable = data?.author.find((el) => el.authorId === user?.id)
   const { data: allItems } = trpc.packs.searchAllItems.useQuery(
     { value: search, page: 1, limit: 30 },
@@ -29,6 +31,12 @@ export function EditPackScreen() {
       staleTime: 1000 * 60,
     }
   )
+  const { mutate: updatePack } = trpc.packs.updatePack.useMutation({
+    onSuccess: (e) => {
+      toast.show('Pack status updated')
+    },
+    onError: (e) => (e.data?.code ? toast.show(e.data?.code) : console.log('ERROR: ', e)),
+  })
   const allItemsMapped = allItems?.map((item) =>
     item.itemAuthorId === user?.id ? { ...item, name: `${item.name}${MY_ITEMS}` } : item
   )
@@ -99,6 +107,19 @@ export function EditPackScreen() {
           {newItemForm ? 'Close Edit' : 'New Item'}
         </Button>
       </XStack>
+      <CheckboxWithLabel
+        checked={isPublic}
+        onCheckedChange={(val) => {
+          console.log('🚀 ~ EditPackScreen ~ val:', val)
+          setIsPublic(!!val)
+          updatePack({
+            packId: data.packId,
+            isPublic: !!val,
+          })
+        }}
+        label="Make the Pack public"
+        size="$4"
+      />
       {newItemForm && (
         <PackItemForm
           // userItems={userItems}

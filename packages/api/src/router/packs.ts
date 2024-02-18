@@ -49,6 +49,7 @@ const ratelimit = new Ratelimit({
 export const packsRouter = createTRPCRouter({
   getLatestPacks: publicProcedure.query(async ({ ctx }) => {
     const packs = await ctx.prisma.pack.findMany({
+      where: { isPublic: true },
       take: 10,
       orderBy: { createdAt: 'desc' },
       include: {
@@ -200,7 +201,30 @@ export const packsRouter = createTRPCRouter({
       }
     }),
 
-  editPack: privateProcedure
+  updatePack: privateProcedure
+    .input(
+      z.object({
+        packId: z.string(),
+        isPublic: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.userId
+
+      const { success } = await ratelimit.limit(authorId)
+
+      if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
+      try {
+        await ctx.prisma.pack.update({
+          where: { packId: input.packId },
+          data: { ...input },
+        })
+      } catch (err) {
+        errorHandler(err)
+      }
+      return 'ok'
+    }),
+  editPackInfo: privateProcedure
     .input(
       z.object({
         packId: z.string(),

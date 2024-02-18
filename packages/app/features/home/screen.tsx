@@ -191,7 +191,7 @@ export function HomeScreen() {
           <Paragraph>Loading...</Paragraph>
         ) : error ? (
           <Paragraph>{error.message}</Paragraph>
-        ) : (
+        ) : latestPacks?.length > 0 ? (
           <XStack flexWrap="wrap" jc="center" gap={'$3'}>
             <Carousel
               ref={carouselRef}
@@ -216,6 +216,8 @@ export function HomeScreen() {
               </>
             )}
           </XStack>
+        ) : (
+          <Paragraph>No packs yet</Paragraph>
         )}
       </YStack>
     </PageLayout>

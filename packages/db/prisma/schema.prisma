@@ -29,6 +29,7 @@ model Pack {
   name         String     @db.VarChar(255)
   description  String?    @db.Text
   activityType String?    @db.VarChar(255)
+  isPublic     Boolean    @default(false)
 
   @@fulltext([name, description])
 }
