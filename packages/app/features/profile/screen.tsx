@@ -12,28 +12,22 @@ import {
   XStack,
   YStack,
 } from '@my/ui'
+import { isIos } from '@tamagui/constants'
 import { useLink } from 'solito/link'
 import { SignedIn, SignedOut, useAuth, useUser } from 'app/utils/clerk'
 import { ThemeContext } from '@my/ui/src/ThemeProvider'
 import { SunMedium, Moon } from '@tamagui/lucide-icons'
 import { useTheme } from 'app/utils/useTheme'
 import { useContext } from 'react'
-import { Platform } from 'react-native'
 
 export function ProfileScreen() {
   const { user } = useUser()
-  const myItemsLinkProps = useLink({
-    href: '/my-items',
-  })
 
   const { toggleTheme } = useTheme()
   const { setColorTheme, mainTheme, setMainTheme } = useContext(ThemeContext)
   const { signOut, isSignedIn } = useAuth()
   const themeColors = ['orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'red']
 
-  const signUpOAuthLinkProps = useLink({
-    href: '/signup',
-  })
   const signInOAuthLinkProps = useLink({
     href: '/signin',
   })
@@ -57,9 +51,6 @@ export function ProfileScreen() {
         ) : (
           <SignedOut>
             <XStack w="100%" justifyContent="flex-end" gap="$3">
-              <Button {...signUpOAuthLinkProps} theme={'active'}>
-                Sign Up
-              </Button>
               <Button {...signInOAuthLinkProps} theme={'active'}>
                 Sign In
               </Button>
@@ -127,7 +118,7 @@ export function ProfileScreen() {
         <YStack alignSelf={'stretch'} />
       </PageLayout>
       {!isWeb && (
-        <Paragraph position="absolute" bottom="$11" right="$4" fontSize={'$4'}>
+        <Paragraph position="absolute" bottom={isIos ? '$13' : '$11'} right="$4" fontSize={'$4'}>
           Built with ❤️ by <Anchor href="https://tomashco.github.io">Tom</Anchor>
         </Paragraph>
       )}

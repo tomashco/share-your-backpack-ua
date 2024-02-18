@@ -1,6 +1,6 @@
 import React from 'react'
 import * as WebBrowser from 'expo-web-browser'
-import { Button, XStack, YStack } from '@my/ui'
+import { Button, Image, PageLayout, XStack, YStack } from '@my/ui'
 import { useOAuth } from '../../utils/clerk'
 import { useRouter } from 'solito/router'
 
@@ -19,9 +19,7 @@ export function SignInWithOAuthScreen() {
 
   const onPress = React.useCallback(async (provider: string) => {
     try {
-      const { createdSessionId, signIn, signUp, setActive } = await providerList[
-        provider
-      ].oauthFlow()
+      const { createdSessionId, setActive } = await providerList[provider].oauthFlow()
 
       if (createdSessionId && setActive) {
         setActive({ session: createdSessionId })
@@ -35,22 +33,43 @@ export function SignInWithOAuthScreen() {
   }, [])
 
   return (
-    <YStack f={1} jc="center" ai="center" p="$4" space>
+    <PageLayout>
       <XStack alignItems="center" p="$2">
-        <Button onPress={() => onPress(providerList.google.key)} theme="active">
-          Google Sign In
+        <Button w={'$13'} onPress={() => onPress(providerList.google.key)} theme="active">
+          <Image
+            source={{
+              width: 20,
+              height: 20,
+              uri: require('./google.png'),
+            }}
+          />
+          Google
         </Button>
       </XStack>
       <XStack alignItems="center" p="$2">
-        <Button onPress={() => onPress(providerList.github.key)} theme="active">
-          Github Sign In
+        <Button w={'$13'} onPress={() => onPress(providerList.github.key)} theme="active">
+          <Image
+            source={{
+              width: 20,
+              height: 20,
+              uri: require('./github.png'),
+            }}
+          />
+          Github
         </Button>
       </XStack>
       <XStack alignItems="center" p="$2">
-        <Button onPress={() => onPress(providerList.facebook.key)} theme="active">
-          Facebook Sign In
+        <Button w={'$13'} onPress={() => onPress(providerList.facebook.key)} theme="active">
+          <Image
+            source={{
+              width: 20,
+              height: 20,
+              uri: require('./facebook.png'),
+            }}
+          />
+          Facebook
         </Button>
       </XStack>
-    </YStack>
+    </PageLayout>
   )
 }

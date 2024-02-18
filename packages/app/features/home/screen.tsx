@@ -12,7 +12,7 @@ import {
   Anchor,
 } from '@my/ui'
 import { onAppStateChange, trpc } from '../../utils/trpc'
-import { useUser, useAuth, SignedOut, SignedIn } from '../../utils/clerk'
+import { useUser, SignedOut } from '../../utils/clerk'
 import React, { useRef, useState } from 'react'
 import { useRouter } from 'solito/router'
 import { ChevronLeft, ChevronRight } from '@tamagui/lucide-icons'
@@ -21,11 +21,9 @@ import { useLink } from 'solito/link'
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel'
 import { Pack } from '@my/db/index'
 import { AuthorWithClerkInfo } from '@my/api/src/router/packs'
-import { Platform } from 'react-native'
 
 export function HomeScreen() {
   const { data: latestPacks, isLoading, error } = trpc.packs.getLatestPacks.useQuery()
-  const { signOut, isSignedIn } = useAuth()
   const carouselRef = useRef<ICarouselInstance | null>(null)
   const layout = useRef({ x: 0, y: 0, height: 0, width: 0 })
   const {
@@ -39,9 +37,6 @@ export function HomeScreen() {
   const isEditable = !!user?.id
   const myItemsLinkProps = useLink({
     href: '/my-items',
-  })
-  const signUpOAuthLinkProps = useLink({
-    href: '/signup',
   })
   const signInOAuthLinkProps = useLink({
     href: '/signin',
@@ -111,9 +106,6 @@ export function HomeScreen() {
       {!isWeb && (
         <SignedOut>
           <XStack w="100%" justifyContent="flex-end" gap="$3">
-            <Button {...signUpOAuthLinkProps} theme={'active'}>
-              Sign Up
-            </Button>
             <Button {...signInOAuthLinkProps} theme={'active'}>
               Sign In
             </Button>

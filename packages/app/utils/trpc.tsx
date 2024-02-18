@@ -46,8 +46,8 @@ export const getBaseUrl = () => {
   const localhost = Constants.expoConfig?.hostUri
 
   if (!localhost) return `https://${process.env.VERCEL_URL}`
-  return `http://localhost:3000`
-  // return 'https://share-your-backpack-ua-next.vercel.app'
+  // return `http://localhost:3000`
+  return 'https://share-your-backpack-ua-next.vercel.app'
 }
 
 export function onAppStateChange(status: AppStateStatus) {
@@ -104,7 +104,7 @@ export const TRPCProvider: React.FC<{
         client={queryClient}
         persistOptions={{
           persister: asyncStoragePersister,
-          maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+          maxAge: Infinity, //1000 * 60 * 60 * 24 * 7, // 7 days
         }}
         onSuccess={() => {
           queryClient.resumePausedMutations().then(() => {

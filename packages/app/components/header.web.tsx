@@ -105,7 +105,7 @@ export function Header() {
                 Sign Up
               </Button>
               <Button {...signInOAuthLinkProps} theme={'active'}>
-                Log In
+                Sign In
               </Button>
             </XStack>
           </SignedOut>

@@ -18,7 +18,7 @@ export const PageLayout = ({
   )
   return (
     <YStack f={1} backgroundColor={'$color4'}>
-      <ScrollView mb={!isWeb ? '$13' : 0} {...scrollViewProps}>
+      <ScrollView mb={!isWeb ? '$11' : 0} {...scrollViewProps}>
         {isWeb && (
           <YStack
             p={'$4'}
