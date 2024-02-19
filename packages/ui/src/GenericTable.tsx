@@ -1,13 +1,21 @@
 import { Paragraph, ScrollView, XStack, YStack } from 'tamagui'
+import type { IconProps } from '@tamagui/helpers-icon'
 import { useState, useRef } from 'react'
 import { Edit3, X } from '@tamagui/lucide-icons'
-import { PackItemForm } from './PackItemForm'
 
 const HEADER_SIZE = 200
 const ROW_HEIGHT = 40
-const INITIAL_EXPANDED_ROW_HEIGHT = 200
+const INITIAL_EXPANDED_ROW_HEIGHT = 150
 
-const GenericTable = ({ headers, data }) => {
+const GenericTable = ({
+  headers,
+  data,
+  ExpandIcon,
+}: {
+  headers: any
+  data: any
+  ExpandIcon?: React.NamedExoticComponent<IconProps>
+}) => {
   const [viewDetailsId, setViewDetailsId] = useState('')
   const tableContainerRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
   const [cellHeight, setCellHeight] = useState(INITIAL_EXPANDED_ROW_HEIGHT)
@@ -51,6 +59,10 @@ const GenericTable = ({ headers, data }) => {
                     {row.detailedView({
                       tableContainerWidth: tableContainerRef.current.width - 50,
                       onLayout: (event) => {
+                        console.log(
+                          '🚀 ~ event.nativeEvent.layout.height:',
+                          event.nativeEvent.layout.height
+                        )
                         setCellHeight(event.nativeEvent.layout.height)
                       },
                       action: () => setViewDetailsId(''),
@@ -117,7 +129,13 @@ const GenericTable = ({ headers, data }) => {
                 borderBottomWidth={'$1'}
                 borderColor={'gray'}
               >
-                {isSelected ? <X color={'$color10'} /> : <Edit3 color={'$color10'} />}
+                {isSelected ? (
+                  <X color={'$color10'} />
+                ) : ExpandIcon ? (
+                  <ExpandIcon color={'$color10'} />
+                ) : (
+                  <Edit3 color={'$color10'} />
+                )}
               </XStack>
             )
           })}

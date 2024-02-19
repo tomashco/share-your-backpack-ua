@@ -16,7 +16,7 @@ const itemSchema = z.object({
     message: 'pack item must be at least 2 characters.',
   }),
   category: z.string().optional(),
-  location: z.string().optional(),
+  // location: z.string().optional(),
   quantity: z.number().optional(),
   brand: z.string().optional(),
   itemUrl: z.string().optional(),
@@ -56,7 +56,7 @@ const PackItemForm = ({
   itemUrl = '',
   setSearchValue = () => {},
   itemCategory = '',
-  itemLocation = '',
+  // itemLocation = '',
   quantity = 1,
   // userItems = [],
   categoryItems = [],
@@ -125,7 +125,7 @@ const PackItemForm = ({
     defaultValues: {
       name: itemName,
       category: itemCategory,
-      location: itemLocation,
+      // location: itemLocation,
       brand: itemBrand,
       imageUrl: imageUrl,
       itemUrl: itemUrl,
@@ -195,7 +195,7 @@ const PackItemForm = ({
               control={form.control}
               setSearchValue={undefined}
             />
-            <FilterInputAccordionItem
+            {/* <FilterInputAccordionItem
               label={'Location'}
               accordionId={'locationAccordion'}
               headerPlaceholder="Select location"
@@ -205,7 +205,7 @@ const PackItemForm = ({
               name="location"
               control={form.control}
               setSearchValue={undefined}
-            />
+            /> */}
             <QuantityItemWithLabel
               containerStyle={{ marginVertical: '$3' }}
               size={'$3'}

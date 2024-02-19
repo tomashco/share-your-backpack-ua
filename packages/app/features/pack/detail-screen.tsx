@@ -9,13 +9,15 @@ import {
   Popover,
   Anchor,
   Image,
+  GenericTable,
 } from '@my/ui'
 import { PageLayout } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
+import { Plus } from '@tamagui/lucide-icons'
 
 const { useParam } = createParam<{ id: string }>()
 
@@ -30,57 +32,88 @@ export function UserDetailScreen() {
   const [selectedSort, setSelectedSort] = useState(sortCriteria.category)
   const { data, isLoading, error } = trpc.packs.getPackById.useQuery({ id: id || '' })
   const categories = Array.from(new Set(data?.packItems.map((item) => item.category)))
-  const locations = Array.from(new Set(data?.packItems.map((item) => item.location)))
+  // const locations = Array.from(new Set(data?.packItems.map((item) => item.location)))
   const allSorts = {
     category: categories,
-    location: locations,
+    // location: locations,
   }
   const user = useUser()
   const isEditable = data?.author.find((author) => author.authorId === user?.user?.id)
   const authorData = data?.author[0]
 
-  const ItemData = ({ item }) => (
-    <YStack py={'$3'} key={item.itemId}>
-      <XStack ai={'center'} gap={'$3'} width={'100%'}>
-        {item.imageUrl && (
-          <Image
-            source={{
-              uri: item.imageUrl,
-              width: 50,
-              height: 50,
-            }}
-            style={{ borderRadius: 10 }}
-          />
-        )}
-        <Paragraph flexGrow={1}>
-          {item.itemUrl ? (
-            <Anchor href={item.itemUrl} target="_blank">
-              {item.name}
-            </Anchor>
-          ) : (
-            item.name
+  const tableHeaders = [
+    { key: 'name', label: 'Name' },
+    { key: 'brand', label: 'Brand' },
+    { key: 'weight', label: `Weight (${authorData?.unit || ''})`, width: 100, textAlign: 'center' },
+  ]
+
+  const ExpandedItemView = ({ item, onLayout }) => {
+    return (
+      <YStack
+        onLayout={onLayout}
+        py={'$3'}
+        key={item.itemId}
+        ai={'flex-start'}
+        gap={'$3'}
+        width={'100%'}
+      >
+        <XStack>
+          {item.imageUrl && (
+            <Image
+              source={{
+                uri: item.imageUrl,
+                width: 100,
+                height: 100,
+              }}
+              style={{ borderRadius: 10, margin: 10 }}
+            />
           )}
-        </Paragraph>
-        {item.brand && <Paragraph>{item.brand}</Paragraph>}
-        {item.weight > 0 && (
-          <Paragraph>
-            {item.weight} {authorData?.unit}
-          </Paragraph>
-        )}
-      </XStack>
-    </YStack>
-  )
+          <YStack>
+            <Paragraph flexGrow={1}>
+              {item.itemUrl ? (
+                <Anchor href={item.itemUrl} target="_blank">
+                  {item.name}
+                </Anchor>
+              ) : (
+                item.name
+              )}
+            </Paragraph>
+            {item.brand && <Paragraph>{item.brand}</Paragraph>}
+            {item.weight > 0 && (
+              <Paragraph>
+                {item.weight} {authorData?.unit}
+              </Paragraph>
+            )}
+          </YStack>
+        </XStack>
+      </YStack>
+    )
+  }
 
   const itemsByView = (selSort: sortCriteria) => (
     <YStack space="$3">
       {allSorts[selSort]?.map((sortName) => (
         <YStack key={sortName}>
           <H3>{sortName ? sortName : 'Unsorted'}</H3>
-          {data?.packItems
-            .filter((el) => el[selSort] === sortName)
-            .map((packItem) => (
-              <ItemData key={packItem.packItemId} item={packItem.item} />
-            ))}
+          <GenericTable
+            headers={tableHeaders}
+            ExpandIcon={Plus}
+            data={data?.packItems
+              .filter((el) => el[selSort] === sortName)
+              .map((packItem) => {
+                return {
+                  id: packItem.packItemId,
+                  ...packItem.item,
+                  detailedView: (props) => (
+                    <ExpandedItemView
+                      onLayout={props.onLayout}
+                      key={packItem.packItemId}
+                      item={packItem.item}
+                    />
+                  ),
+                }
+              })}
+          />
         </YStack>
       ))}
     </YStack>
@@ -92,7 +125,7 @@ export function UserDetailScreen() {
         <Paragraph>{data?.description}</Paragraph>
       </XStack>
       <XStack justifyContent="flex-end" paddingVertical="$4">
-        {data?.packItems && data.packItems.length > 0 && (
+        {/* {data?.packItems && data.packItems.length > 0 && (
           <ToggleGroup
             type="single"
             size={'$0.5'}
@@ -106,7 +139,7 @@ export function UserDetailScreen() {
               <Paragraph paddingHorizontal="$4">Position</Paragraph>
             </ToggleGroup.Item>
           </ToggleGroup>
-        )}
+        )} */}
       </XStack>
       {itemsByView(selectedSort)}
     </YStack>
@@ -178,8 +211,10 @@ export function UserDetailScreen() {
           <Paragraph>Loading...</Paragraph>
         ) : error ? (
           <Paragraph>{error.message}</Paragraph>
-        ) : (
+        ) : data.packItems.length > 0 ? (
           <PackDetails />
+        ) : (
+          <Paragraph>No items in this pack</Paragraph>
         )}
       </YStack>
     </PageLayout>

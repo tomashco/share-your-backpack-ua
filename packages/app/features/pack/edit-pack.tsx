@@ -60,7 +60,7 @@ export function EditPackScreen() {
   const tableHeaders = [
     { key: 'name', label: 'Name' },
     { key: 'category', label: 'Category' },
-    { key: 'location', label: 'Location' },
+    // { key: 'location', label: 'Location' },
     { key: 'quantity', label: 'Quantity', width: 80, textAlign: 'center' },
   ]
 
@@ -75,7 +75,7 @@ export function EditPackScreen() {
         <PackItemForm
           userItems={userItems}
           categoryItems={getSelectItems(data.packItems, 'category')}
-          locationItems={getSelectItems(data.packItems, 'location')}
+          // locationItems={getSelectItems(data.packItems, 'location')}
           packId={packItem.packItemPackId}
           packItemId={packItem.packItemId}
           quantity={packItem.quantity}
@@ -110,7 +110,6 @@ export function EditPackScreen() {
       <CheckboxWithLabel
         checked={isPublic}
         onCheckedChange={(val) => {
-          console.log('🚀 ~ EditPackScreen ~ val:', val)
           setIsPublic(!!val)
           updatePack({
             packId: data.packId,
