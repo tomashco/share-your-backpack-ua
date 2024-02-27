@@ -10,14 +10,17 @@ import {
   Anchor,
   Image,
   GenericTable,
+  RadioGroup,
+  Select,
 } from '@my/ui'
-import { PageLayout } from '@my/ui/src'
+import { ChangeWeightUnit, PageLayout, RadioGroupItemWithLabel } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
 import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React, { useRef, useState } from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
 import { Plus } from '@tamagui/lucide-icons'
+import { convertWeight } from 'app/utils/utils'
 
 const { useParam } = createParam<{ id: string }>()
 
@@ -40,11 +43,12 @@ export function UserDetailScreen() {
   const user = useUser()
   const isEditable = data?.author.find((author) => author.authorId === user?.user?.id)
   const authorData = data?.author[0]
+  const [localUnit, setLocalUnit] = useState(authorData?.unit || 'g')
 
   const tableHeaders = [
     { key: 'name', label: 'Name' },
     { key: 'brand', label: 'Brand' },
-    { key: 'weight', label: `Weight (${authorData?.unit || ''})`, width: 100, textAlign: 'center' },
+    { key: 'weight', label: `Weight (${localUnit})`, width: 100, textAlign: 'center' },
   ]
 
   const ExpandedItemView = ({ item, onLayout }) => {
@@ -81,7 +85,7 @@ export function UserDetailScreen() {
             {item.brand && <Paragraph>{item.brand}</Paragraph>}
             {item.weight > 0 && (
               <Paragraph>
-                {item.weight} {authorData?.unit}
+                {convertWeight(item.weight, localUnit)} {localUnit}
               </Paragraph>
             )}
           </YStack>
@@ -90,42 +94,69 @@ export function UserDetailScreen() {
     )
   }
 
-  const itemsByView = (selSort: sortCriteria) => (
-    <YStack space="$3">
-      {allSorts[selSort]?.map((sortName) => (
-        <YStack key={sortName}>
-          <H3>{sortName ? sortName : 'Unsorted'}</H3>
-          <GenericTable
-            headers={tableHeaders}
-            ExpandIcon={Plus}
-            data={data?.packItems
-              .filter((el) => el[selSort] === sortName)
-              .map((packItem) => {
-                return {
-                  id: packItem.packItemId,
-                  ...packItem.item,
-                  detailedView: (props) => (
-                    <ExpandedItemView
-                      onLayout={props.onLayout}
-                      key={packItem.packItemId}
-                      item={packItem.item}
-                    />
-                  ),
-                }
-              })}
-          />
-        </YStack>
-      ))}
-    </YStack>
-  )
+  const itemsByView = (selSort: sortCriteria) => {
+    return (
+      <YStack space="$3">
+        {allSorts[selSort]?.map((sortName) => {
+          const categoryItems = data?.packItems.filter((el) => el[selSort] === sortName)
+          return (
+            <YStack key={sortName}>
+              <H3>{sortName ? sortName : 'Unsorted'}</H3>
+              <GenericTable
+                headers={tableHeaders}
+                ExpandIcon={Plus}
+                data={categoryItems?.map((packItem) => {
+                  return {
+                    ...packItem.item,
+                    id: packItem.packItemId,
+                    weight: convertWeight(packItem.item.weight, localUnit),
+                    detailedView: (props) => (
+                      <ExpandedItemView
+                        onLayout={props.onLayout}
+                        key={packItem.packItemId}
+                        item={packItem.item}
+                      />
+                    ),
+                  }
+                })}
+              />
+              <Paragraph ta={'right'} mr={'$8'} my="$3">
+                {sortName} weight:{' '}
+                {convertWeight(
+                  categoryItems?.reduce((acc, item) => acc + (item.item.weight || 0), 0),
+                  localUnit
+                )}{' '}
+                {localUnit}
+              </Paragraph>
+            </YStack>
+          )
+        })}
+      </YStack>
+    )
+  }
 
   const PackDetails = () => (
     <YStack>
       <XStack paddingTop="$4">
         <Paragraph>{data?.description}</Paragraph>
       </XStack>
-      <XStack justifyContent="flex-end" paddingVertical="$4">
-        {/* {data?.packItems && data.packItems.length > 0 && (
+      <XStack flexGrow={1} justifyContent="flex-end" paddingVertical="$4">
+        <ChangeWeightUnit onValueChange={setLocalUnit} localUnit={localUnit} />
+      </XStack>
+      {/* <RadioGroup
+          aria-labelledby="Select one item"
+          defaultValue={localUnit}
+          name="changeLocalUnit"
+          onValueChange={setLocalUnit}
+        >
+          <YStack>
+            <RadioGroupItemWithLabel size="$3" value="oz" label="oz" />
+            <RadioGroupItemWithLabel size="$3" value="lb" label="lb" />
+            <RadioGroupItemWithLabel size="$3" value="g" label="g" />
+            <RadioGroupItemWithLabel size="$3" value="kg" label="kg" />
+          </YStack>
+        </RadioGroup> */}
+      {/* {data?.packItems && data.packItems.length > 0 && (
           <ToggleGroup
             type="single"
             size={'$0.5'}
@@ -140,8 +171,16 @@ export function UserDetailScreen() {
             </ToggleGroup.Item>
           </ToggleGroup>
         )} */}
-      </XStack>
+
       {itemsByView(selectedSort)}
+      <Paragraph textAlign="right" mr={'$8'}>
+        Total Weight:{' '}
+        {convertWeight(
+          data?.packItems.reduce((acc, item) => acc + (item.item.weight || 0), 0) || 0,
+          localUnit
+        )}{' '}
+        {localUnit}
+      </Paragraph>
     </YStack>
   )
 

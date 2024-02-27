@@ -18,7 +18,7 @@ export function Header() {
     href: '/profile',
   })
   const myItemsLinkProps = useLink({
-    href: '/my-items',
+    href: '/my-gear',
   })
   const homeLinkProps = useLink({
     href: '/',

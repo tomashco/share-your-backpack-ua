@@ -9,3 +9,13 @@ export const getSelectItems = (array, keyValue) => {
     return arr
   }, [])
 }
+
+enum weightConversion {
+  g = 1,
+  kg = 0.001,
+  lb = 0.00220462,
+  oz = 0.035274,
+}
+
+export const convertWeight = (weight: number | null | undefined, localUnit: string) =>
+  Math.round(((weight || 0) * weightConversion[localUnit] + Number.EPSILON) * 100) / 100

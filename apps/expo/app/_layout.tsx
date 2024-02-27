@@ -7,7 +7,7 @@ import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
 import { EditPackScreen } from 'app/features/pack/edit-pack'
 import { UserDetailScreen } from 'app/features/pack/detail-screen'
 import { TabBar, Text, View, XStack } from '@my/ui/src'
-import { MyItemsScreen } from 'app/features/my-items/screen'
+import { MyGearScreen } from 'app/features/my-gear/screen'
 import { MyPacksScreen } from 'app/features/my-packs/screen'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 import { useNavigation } from 'expo-router'
@@ -28,7 +28,7 @@ export default function HomeLayout({ children }) {
     'pack/[id]/edit',
     'pack/[id]/edit-pack-info',
     'pack/[id]/index',
-    'my-items',
+    'my-gear',
     'my-packs/[authorId]/index',
   ]
 
@@ -81,9 +81,9 @@ export default function HomeLayout({ children }) {
             component={UserDetailScreen}
           />
           <BottomTab.Screen
-            name={'my-items'}
+            name={'my-gear'}
             options={{ headerTitle: 'My Gear' }}
-            component={MyItemsScreen}
+            component={MyGearScreen}
           />
           <BottomTab.Screen
             name={'my-packs/[authorId]/index'}

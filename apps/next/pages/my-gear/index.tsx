@@ -1,4 +1,4 @@
-import { MyItemsScreen } from 'app/features/my-items/screen'
+import { MyGearScreen } from 'app/features/my-gear/screen'
 import Head from 'next/head'
 
 export default function Page() {
@@ -7,7 +7,7 @@ export default function Page() {
       <Head>
         <title>Sharepack - My Gear</title>
       </Head>
-      <MyItemsScreen />
+      <MyGearScreen />
     </>
   )
 }

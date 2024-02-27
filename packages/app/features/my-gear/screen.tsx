@@ -4,12 +4,14 @@ import { trpc } from '../../utils/trpc'
 import { useUser } from '../../utils/clerk'
 import { useRouter } from 'solito/router'
 import { GenericTable, ItemForm } from '@my/ui/src'
+import { convertWeight } from 'app/utils/utils'
 
-export function MyItemsScreen() {
+export function MyGearScreen() {
   const { data: userItems, isLoading, error } = trpc.packs.getItems.useQuery()
   const { isLoaded: userIsLoaded, isSignedIn, user } = useUser()
   const [newItemForm, toggleNewItemForm] = useState(false)
   const { data: authorInfo } = trpc.packs.getUser.useQuery({ authorId: user?.id || '' })
+  const [localUnit, setLocalUnit] = useState(authorInfo?.unit || 'g')
 
   const { push } = useRouter()
 
@@ -72,6 +74,15 @@ export function MyItemsScreen() {
           <GenericTable headers={tableHeaders} data={data} />
         </>
       )}
+      <YStack w="100%">
+        <Paragraph textAlign="right" mr="$8">
+          Total weight:{' '}
+          {convertWeight(
+            userItems?.reduce((acc, item) => acc + (item.weight || 0), 0) || 0,
+            localUnit
+          )}
+        </Paragraph>
+      </YStack>
     </PageLayout>
   )
 }

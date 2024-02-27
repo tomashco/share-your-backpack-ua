@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Anchor,
   Button,
@@ -19,6 +19,8 @@ import { ThemeContext } from '@my/ui/src/ThemeProvider'
 import { SunMedium, Moon } from '@tamagui/lucide-icons'
 import { useTheme } from 'app/utils/useTheme'
 import { useContext } from 'react'
+import { ChangeWeightUnit } from '@my/ui/src'
+import { trpc } from 'app/utils/trpc'
 
 export function ProfileScreen() {
   const { user } = useUser()
@@ -26,12 +28,19 @@ export function ProfileScreen() {
   const { toggleTheme } = useTheme()
   const { setColorTheme, mainTheme, setMainTheme } = useContext(ThemeContext)
   const { signOut, isSignedIn } = useAuth()
+  const {
+    data: authorData,
+    isLoading,
+    error,
+  } = trpc.packs.getUser.useQuery({ authorId: user?.id || '' })
   const themeColors = ['orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'red']
+  const [localUnit, setLocalUnit] = useState(authorData?.unit || 'g')
 
   const signInOAuthLinkProps = useLink({
     href: '/signin',
   })
 
+  console.log('🚀 ~ ProfileScreen ~ localUnit:', localUnit)
   return (
     <>
       <PageLayout>
@@ -114,6 +123,7 @@ export function ProfileScreen() {
               <Moon />
             </ToggleGroup.Item>
           </ToggleGroup>
+          {isSignedIn && <ChangeWeightUnit onValueChange={setLocalUnit} localUnit={localUnit} />}
         </YStack>
         <YStack alignSelf={'stretch'} />
       </PageLayout>

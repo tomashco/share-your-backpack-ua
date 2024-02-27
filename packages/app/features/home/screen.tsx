@@ -36,7 +36,7 @@ export function HomeScreen() {
   const [newPackForm, toggleNewPack] = useState(false)
   const isEditable = !!user?.id
   const myItemsLinkProps = useLink({
-    href: '/my-items',
+    href: '/my-gear',
   })
   const signInOAuthLinkProps = useLink({
     href: '/signin',
