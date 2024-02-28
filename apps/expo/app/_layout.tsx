@@ -1,118 +1,106 @@
 import { Provider } from 'app/provider'
-import { useFonts } from 'expo-font'
+import { Tabs } from 'expo-router/tabs'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { HomeScreen } from 'app/features/home/screen'
-import { ProfileScreen } from 'app/features/profile/screen'
-import { SignInWithOAuthScreen } from 'app/features/signinoauth/screen'
-import { EditPackScreen } from 'app/features/pack/edit-pack'
-import { UserDetailScreen } from 'app/features/pack/detail-screen'
-import { TabBar, Text, View, XStack } from '@my/ui/src'
-import { MyGearScreen } from 'app/features/my-gear/screen'
-import { MyPacksScreen } from 'app/features/my-packs/screen'
-import { ChevronLeft } from '@tamagui/lucide-icons'
-import { useNavigation } from 'expo-router'
-import { EditPackInfoScreen } from 'app/features/pack/edit-pack-info'
-import { Dimensions } from 'react-native'
+import { Stack, Text, View } from '@my/ui/src'
+import { Home, User2 } from '@tamagui/lucide-icons'
 
-export default function HomeLayout({ children }) {
-  const [loaded] = useFonts({
-    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
-    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
-  })
-  const BottomTab = createBottomTabNavigator()
-  const { goBack } = useNavigation()
-  const { width, height } = Dimensions.get('window')
-
-  const excludedRoutes = [
-    'signin',
-    'pack/[id]/edit',
-    'pack/[id]/edit-pack-info',
-    'pack/[id]/index',
-    'my-gear',
-    'my-packs/[authorId]/index',
-  ]
-
-  if (!loaded) {
-    return null
-  }
-
-  const BackButton = ({ onPress }) => (
-    <XStack ai="center" onPress={onPress}>
-      <ChevronLeft />
-      <Text>Back</Text>
-    </XStack>
-  )
-
+export default function AppLayout() {
   return (
     <Provider>
-      <View style={{ width, height }}>
-        <BottomTab.Navigator
-          screenOptions={({ route }) => {
-            const isIndex = route.name === 'index'
-
-            return { headerLeft: () => (isIndex ? null : <BackButton onPress={goBack} />) }
-          }}
-          tabBar={(props) => <TabBar excludedRoutes={excludedRoutes} {...props} />}
-        >
-          <BottomTab.Screen options={{ headerTitle: 'Home' }} name="index" component={HomeScreen} />
-          <BottomTab.Screen
-            name="profile"
-            options={{ headerTitle: 'Profile' }}
-            component={ProfileScreen}
-          />
-          <BottomTab.Screen
-            name={'signin'}
-            options={{ headerTitle: 'Sign in' }}
-            component={SignInWithOAuthScreen}
-          />
-          <BottomTab.Screen
-            name={'pack/[id]/edit'}
-            options={{ headerTitle: 'Edit' }}
-            component={EditPackScreen}
-          />
-          <BottomTab.Screen
-            name={'pack/[id]/edit-pack-info'}
-            options={{ headerTitle: 'Edit Pack Info' }}
-            component={EditPackInfoScreen}
-          />
-          <BottomTab.Screen
-            name={'pack/[id]/index'}
-            options={{ headerTitle: 'Details' }}
-            component={UserDetailScreen}
-          />
-          <BottomTab.Screen
-            name={'my-gear'}
-            options={{ headerTitle: 'My Gear' }}
-            component={MyGearScreen}
-          />
-          <BottomTab.Screen
-            name={'my-packs/[authorId]/index'}
-            options={{ headerTitle: 'My Packs' }}
-            component={MyPacksScreen}
-          />
-        </BottomTab.Navigator>
-        {/* <Tabs
-        screenOptions={({ route }) => ({
+      <Tabs
+        screenOptions={{
+          // headerShown: false,
           headerStyle: {
-            height: 80, // Specify the height of your custom header
+            height: 80,
           },
-          tabBarIcon: ({ focused, color, size }) => {
-            if (route.name === 'index') {
-              return <Home color={focused ? '$color10' : color} />
-            } else if (route.name === 'profile') {
-              return <User color={focused ? '$color10' : color} />
-            }
+          tabBarStyle: {
+            position: 'absolute',
+            padding: 16,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            height: 72,
+            elevation: 0,
           },
-          // tabBarLabel
-          tabBarActiveTintColor: 'gray',
-          tabBarInactiveTintColor: 'gray',
-        })}
+        }}
       >
-        {['signin', 'signup', 'pack/[id]/edit', 'pack/[id]/index'].map((routeToHide) => (
-          <Tabs.Screen key={routeToHide} name={routeToHide} options={{ href: null }} />
-        ))}
-      </Tabs> */}
-      </View>
+        <Tabs.Screen
+          options={{
+            headerTitle: 'Home',
+            title: '',
+            tabBarIcon: ({ focused }: { focused: boolean }) => {
+              return (
+                <Stack
+                  alignItems={'center'}
+                  paddingTop={16}
+                  borderTopColor={focused ? '$color6' : '$color8'}
+                  borderTopWidth={2}
+                >
+                  <Home size={24} color={focused ? '$color6' : '$color8'} />
+                  <Text fontSize={'$3'} color={focused ? '$color6' : '$color8'}>
+                    Home
+                  </Text>
+                </Stack>
+              )
+            },
+          }}
+          name="index"
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            headerTitle: 'Profile',
+            title: '',
+            tabBarIcon: ({ focused }: { focused: boolean }) => {
+              return (
+                <Stack
+                  alignItems={'center'}
+                  paddingTop={16}
+                  borderTopColor={focused ? '$color6' : '$color8'}
+                  borderTopWidth={2}
+                >
+                  <User2 size={24} color={focused ? '$color6' : '$color8'} />
+
+                  <Text fontSize={'$3'} color={focused ? '$color6' : '$color8'}>
+                    Profile
+                  </Text>
+                </Stack>
+              )
+            },
+          }}
+          // component={ProfileScreen}
+        />
+        <Tabs.Screen
+          name={'signin'}
+          options={{ headerTitle: 'Sign in', href: null }}
+          // component={SignInWithOAuthScreen}
+        />
+        <Tabs.Screen
+          name={'pack/[id]/edit'}
+          options={{ headerTitle: 'Edit', href: null }}
+          // component={EditPackScreen}
+        />
+        <Tabs.Screen
+          name={'pack/[id]/edit-pack-info'}
+          options={{ headerTitle: 'Edit Pack Info', href: null }}
+          // component={EditPackInfoScreen}
+        />
+        <Tabs.Screen
+          name={'pack/[id]/index'}
+          options={{ headerTitle: 'Details', href: null }}
+          // component={UserDetailScreen}
+        />
+        <Tabs.Screen
+          name={'my-gear'}
+          options={{ headerTitle: 'My Gear', href: null }}
+          // component={MyGearScreen}
+        />
+        <Tabs.Screen
+          name={'my-packs/[authorId]/index'}
+          options={{ headerTitle: 'My Packs', href: null }}
+          // component={MyPacksScreen}
+        />
+      </Tabs>
     </Provider>
   )
 }
