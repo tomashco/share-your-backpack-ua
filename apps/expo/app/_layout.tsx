@@ -10,18 +10,8 @@ export default function AppLayout() {
       <Tabs
         screenOptions={{
           // headerShown: false,
-          headerStyle: {
-            height: 80,
-          },
-          tabBarStyle: {
-            position: 'absolute',
-            padding: 16,
-            bottom: 0,
-            right: 0,
-            left: 0,
-            height: 72,
-            elevation: 0,
-          },
+          headerStyle: {},
+          tabBarStyle: {},
         }}
       >
         <Tabs.Screen
@@ -32,7 +22,8 @@ export default function AppLayout() {
               return (
                 <Stack
                   alignItems={'center'}
-                  paddingTop={16}
+                  top={8}
+                  paddingTop={8}
                   borderTopColor={focused ? '$color6' : '$color8'}
                   borderTopWidth={2}
                 >
@@ -55,7 +46,8 @@ export default function AppLayout() {
               return (
                 <Stack
                   alignItems={'center'}
-                  paddingTop={16}
+                  top={8}
+                  paddingTop={8}
                   borderTopColor={focused ? '$color6' : '$color8'}
                   borderTopWidth={2}
                 >

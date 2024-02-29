@@ -107,7 +107,7 @@ export function PackForm({ packId = '', packName = '', packDescription = '' }) {
           )}
           <Form.Trigger asChild>
             <Button theme={'active'} accessibilityRole="link">
-              {packId ? 'Edit pack' : 'Create pack'}
+              {packId ? 'Save' : 'Create pack'}
             </Button>
           </Form.Trigger>
         </YStack>

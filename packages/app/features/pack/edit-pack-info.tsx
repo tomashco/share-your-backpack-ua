@@ -1,4 +1,4 @@
-import { Paragraph, YStack, Spinner, Button } from '@my/ui'
+import { Paragraph, YStack, Spinner, Button, XStack } from '@my/ui'
 import { PageLayout } from '@my/ui/src'
 import { PackForm } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
@@ -6,7 +6,6 @@ import { onAppStateChange, trpc } from 'app/utils/trpc'
 import React from 'react'
 import { createParam } from 'solito'
 import { useRouter } from 'solito/router'
-import { X } from '@tamagui/lucide-icons'
 
 const { useParam } = createParam<{ id: string }>()
 
@@ -16,13 +15,6 @@ export function EditPackInfoScreen() {
   const { isLoaded: userIsLoaded, user } = useUser()
   const { push } = useRouter()
   const isEditable = data?.author.find((el) => el.authorId === user?.id)
-
-  const { data: _deletePackResponse, mutate: DeletePack } = trpc.packs.deletePack.useMutation({
-    onSuccess: () => {
-      push('/')
-    },
-    onError: (e) => console.log('ERROR: ', e),
-  })
 
   if (isLoading || !userIsLoaded || error)
     return (
@@ -47,24 +39,16 @@ export function EditPackInfoScreen() {
         onScrollEndDrag: () => onAppStateChange('inactive'),
       }}
     >
+      <XStack w="100%" jc={'flex-start'}>
+        <Button onPress={() => push(`/pack/${id}`)} theme={'active'}>
+          {'Close Edit'}
+        </Button>
+      </XStack>
       <PackForm
         packId={data.packId}
         packName={data.name ?? ''}
         packDescription={data.description ?? ''}
       />
-      <Button
-        icon={X}
-        direction="rtl"
-        theme={'active'}
-        onPress={() => DeletePack({ packId: data.packId })}
-        accessibilityRole="link"
-        w="100%"
-        $gtSm={{
-          width: '15rem',
-        }}
-      >
-        Delete Pack
-      </Button>
     </PageLayout>
   )
 }

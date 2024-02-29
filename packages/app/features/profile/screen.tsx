@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Anchor,
   Button,
   H3,
-  Image,
   isWeb,
   PageLayout,
   Paragraph,
@@ -21,6 +20,7 @@ import { useTheme } from 'app/utils/useTheme'
 import { useContext } from 'react'
 import { ChangeWeightUnit } from '@my/ui/src'
 import { trpc } from 'app/utils/trpc'
+import { Image } from 'react-native'
 
 export function ProfileScreen() {
   const { user } = useUser()
@@ -34,7 +34,7 @@ export function ProfileScreen() {
     error,
   } = trpc.packs.getUser.useQuery({ authorId: user?.id || '' })
   const themeColors = ['orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'red']
-  const [localUnit, setLocalUnit] = useState(authorData?.unit || 'g')
+  // const [localUnit, setLocalUnit] = useState(authorData?.unit || 'g')
 
   const signInOAuthLinkProps = useLink({
     href: '/signin',
@@ -74,7 +74,9 @@ export function ProfileScreen() {
                 height: 120,
               }}
               accessibilityLabel="create-universal-app logo"
-              style={{ borderRadius: 120 }}
+              style={{
+                borderRadius: 60,
+              }}
             />
           )}
           <H3>{user?.fullName}</H3>
@@ -122,12 +124,12 @@ export function ProfileScreen() {
               <Moon />
             </ToggleGroup.Item>
           </ToggleGroup>
-          {isSignedIn && <ChangeWeightUnit onValueChange={setLocalUnit} localUnit={localUnit} />}
+          {/* {isSignedIn && <ChangeWeightUnit onValueChange={setLocalUnit} localUnit={localUnit} />} */}
         </YStack>
         <YStack alignSelf={'stretch'} />
       </PageLayout>
       {!isWeb && (
-        <Paragraph position="absolute" bottom={isIos ? '$13' : '$11'} right="$4" fontSize={'$4'}>
+        <Paragraph position="absolute" bottom={0} right="$4" fontSize={'$4'}>
           Built with ❤️ by <Anchor href="https://tomashco.github.io">Tom</Anchor>
         </Paragraph>
       )}

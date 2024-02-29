@@ -4,12 +4,12 @@ import {
   Separator,
   XStack,
   YStack,
-  Image,
   isWeb,
   Text,
   H2,
   H5,
   Anchor,
+  Stack,
 } from '@my/ui'
 import { onAppStateChange, trpc } from '../../utils/trpc'
 import { useUser, SignedOut } from '../../utils/clerk'
@@ -21,6 +21,7 @@ import { useLink } from 'solito/link'
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel'
 import { Pack } from '@my/db/index'
 import { AuthorWithClerkInfo } from '@my/api/src/router/packs'
+import { Image } from 'react-native'
 
 export function HomeScreen() {
   const { data: latestPacks, isLoading, error } = trpc.packs.getLatestPacks.useQuery()
@@ -114,16 +115,17 @@ export function HomeScreen() {
       )}
       <XStack w="100%" justifyContent="flex-end">
         {isEditable && !isWeb && (
-          <Image
-            onPress={() => push('/profile')}
-            source={{
-              uri: user?.imageUrl,
-              width: 40,
-              height: 40,
-            }}
-            accessibilityLabel="create-universal-app logo"
-            style={{ borderRadius: 40 }}
-          />
+          <Stack onPress={() => push('/profile')}>
+            <Image
+              source={{
+                uri: user?.imageUrl,
+                width: 40,
+                height: 40,
+              }}
+              accessibilityLabel="create-universal-app logo"
+              style={{ borderRadius: 40 }}
+            />
+          </Stack>
         )}
       </XStack>
       {isEditable && (

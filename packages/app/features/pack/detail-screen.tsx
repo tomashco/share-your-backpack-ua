@@ -3,15 +3,12 @@ import {
   H1,
   H3,
   Paragraph,
-  ToggleGroup,
   YStack,
   XStack,
   Popover,
   Anchor,
   Image,
   GenericTable,
-  RadioGroup,
-  Select,
   isWeb,
   DropdownMenuRoot,
   DropdownMenuTrigger,
@@ -50,6 +47,12 @@ export function UserDetailScreen() {
   const isEditable = data?.author.find((author) => author.authorId === user?.user?.id)
   const authorData = data?.author[0]
   const [localUnit, setLocalUnit] = useState(authorData?.unit || 'g')
+  const { mutate: DeletePack } = trpc.packs.deletePack.useMutation({
+    onSuccess: () => {
+      push('/')
+    },
+    onError: (e) => console.log('ERROR: ', e),
+  })
 
   const tableHeaders = [
     { key: 'name', label: 'Name' },
@@ -144,6 +147,18 @@ export function UserDetailScreen() {
             >
               Edit Pack Items
             </Button>
+            <Button
+              direction="rtl"
+              theme={'active'}
+              onPress={() => DeletePack({ packId: id || '' })}
+              accessibilityRole="link"
+              w="100%"
+              $gtSm={{
+                width: '15rem',
+              }}
+            >
+              Delete Pack
+            </Button>
           </YStack>
         </Popover.Content>
       </Popover>
@@ -168,6 +183,9 @@ export function UserDetailScreen() {
             }}
           >
             <DropdownMenuItemTitle>Edit Pack Items</DropdownMenuItemTitle>
+          </DropdownMenuItem>
+          <DropdownMenuItem key="delete" onSelect={() => DeletePack({ packId: id || '' })}>
+            <DropdownMenuItemTitle>Delete pack</DropdownMenuItemTitle>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenuRoot>
@@ -259,7 +277,10 @@ export function UserDetailScreen() {
         ) : data.packItems.length > 0 ? (
           <PackDetails />
         ) : (
-          <Paragraph>No items in this pack</Paragraph>
+          <YStack>
+            <Paragraph>{data?.description}</Paragraph>
+            <Paragraph py={'$4'}>No items in this pack</Paragraph>
+          </YStack>
         )}
       </YStack>
     </PageLayout>
