@@ -59,10 +59,6 @@ const GenericTable = ({
                     {row.detailedView({
                       tableContainerWidth: tableContainerRef.current.width - 50,
                       onLayout: (event) => {
-                        console.log(
-                          '🚀 ~ event.nativeEvent.layout.height:',
-                          event.nativeEvent.layout.height
-                        )
                         setCellHeight(event.nativeEvent.layout.height)
                       },
                       action: () => setViewDetailsId(''),
