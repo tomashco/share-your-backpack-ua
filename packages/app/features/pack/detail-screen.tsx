@@ -12,6 +12,12 @@ import {
   GenericTable,
   RadioGroup,
   Select,
+  isWeb,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItemTitle,
 } from '@my/ui'
 import { ChangeWeightUnit, PageLayout, RadioGroupItemWithLabel } from '@my/ui/src'
 import { useUser } from '../../utils/clerk'
@@ -54,7 +60,7 @@ export function UserDetailScreen() {
   const ExpandedItemView = ({ item, onLayout }) => {
     return (
       <YStack
-        onLayout={onLayout}
+        // onLayout={onLayout}
         py={'$3'}
         key={item.itemId}
         ai={'flex-start'}
@@ -93,6 +99,79 @@ export function UserDetailScreen() {
       </YStack>
     )
   }
+
+  const DetailScreenMenu = () =>
+    isWeb ? (
+      <Popover size="$5" allowFlip placement="bottom-end">
+        <Popover.Trigger asChild>
+          <Button accessibilityRole="link" theme={'active'}>
+            ...
+          </Button>
+        </Popover.Trigger>
+
+        <Popover.Content
+          borderWidth={1}
+          borderColor="$borderColor"
+          enterStyle={{ y: -10, opacity: 0 }}
+          exitStyle={{ y: -10, opacity: 0 }}
+          elevate
+          animation={[
+            'quick',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+        >
+          <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
+          <YStack space="$3">
+            <Button
+              accessibilityRole="link"
+              theme={'active'}
+              onPress={() => {
+                push(`/pack/${id}/edit-pack-info`)
+              }}
+            >
+              Edit Title and Description
+            </Button>
+            <Button
+              accessibilityRole="link"
+              theme={'active'}
+              onPress={() => {
+                push(`/pack/${id}/edit`)
+              }}
+            >
+              Edit Pack Items
+            </Button>
+          </YStack>
+        </Popover.Content>
+      </Popover>
+    ) : (
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <Button theme={'active'}>...</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            key="edit-pack-info"
+            onSelect={() => {
+              push(`/pack/${id}/edit-pack-info`)
+            }}
+          >
+            <DropdownMenuItemTitle>Edit Title and Description</DropdownMenuItemTitle>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            key="edit"
+            onSelect={() => {
+              push(`/pack/${id}/edit`)
+            }}
+          >
+            <DropdownMenuItemTitle>Edit Pack Items</DropdownMenuItemTitle>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuRoot>
+    )
 
   const itemsByView = (selSort: sortCriteria) => {
     return (
@@ -143,35 +222,6 @@ export function UserDetailScreen() {
       <XStack flexGrow={1} justifyContent="flex-end" paddingVertical="$4">
         <ChangeWeightUnit onValueChange={setLocalUnit} localUnit={localUnit} />
       </XStack>
-      {/* <RadioGroup
-          aria-labelledby="Select one item"
-          defaultValue={localUnit}
-          name="changeLocalUnit"
-          onValueChange={setLocalUnit}
-        >
-          <YStack>
-            <RadioGroupItemWithLabel size="$3" value="oz" label="oz" />
-            <RadioGroupItemWithLabel size="$3" value="lb" label="lb" />
-            <RadioGroupItemWithLabel size="$3" value="g" label="g" />
-            <RadioGroupItemWithLabel size="$3" value="kg" label="kg" />
-          </YStack>
-        </RadioGroup> */}
-      {/* {data?.packItems && data.packItems.length > 0 && (
-          <ToggleGroup
-            type="single"
-            size={'$0.5'}
-            onValueChange={(value: sortCriteria | '') => value !== '' && setSelectedSort(value)}
-            value={selectedSort}
-          >
-            <ToggleGroup.Item value={sortCriteria.category}>
-              <Paragraph paddingHorizontal="$4">Category</Paragraph>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item value={sortCriteria.location}>
-              <Paragraph paddingHorizontal="$4">Position</Paragraph>
-            </ToggleGroup.Item>
-          </ToggleGroup>
-        )} */}
-
       {itemsByView(selectedSort)}
       <Paragraph textAlign="right" mr={'$8'}>
         Total Weight:{' '}
@@ -197,51 +247,7 @@ export function UserDetailScreen() {
         </H1>
         {isEditable && (
           <XStack>
-            <Popover size="$5" allowFlip placement="bottom-end">
-              <Popover.Trigger asChild>
-                <Button accessibilityRole="link" theme={'active'}>
-                  ...
-                </Button>
-              </Popover.Trigger>
-
-              <Popover.Content
-                borderWidth={1}
-                borderColor="$borderColor"
-                enterStyle={{ y: -10, opacity: 0 }}
-                exitStyle={{ y: -10, opacity: 0 }}
-                elevate
-                animation={[
-                  'quick',
-                  {
-                    opacity: {
-                      overshootClamping: true,
-                    },
-                  },
-                ]}
-              >
-                <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
-                <YStack space="$3">
-                  <Button
-                    accessibilityRole="link"
-                    theme={'active'}
-                    onPress={() => {
-                      push(`/pack/${id}/edit-pack-info`)
-                    }}
-                  >
-                    Edit Title and Description
-                  </Button>
-                  <Button
-                    accessibilityRole="link"
-                    theme={'active'}
-                    onPress={() => {
-                      push(`/pack/${id}/edit`)
-                    }}
-                  >
-                    Edit Pack Items
-                  </Button>
-                </YStack>
-              </Popover.Content>
-            </Popover>
+            <DetailScreenMenu />
           </XStack>
         )}
       </XStack>

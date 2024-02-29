@@ -1,8 +1,9 @@
 import React from 'react'
 import * as WebBrowser from 'expo-web-browser'
-import { Button, Image, PageLayout, XStack, YStack } from '@my/ui'
+import { Button, PageLayout, Stack, XStack, YStack } from '@my/ui'
 import { useOAuth } from '../../utils/clerk'
 import { useRouter } from 'solito/router'
+import { Image } from 'react-native'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -36,37 +37,19 @@ export function SignInWithOAuthScreen() {
     <PageLayout>
       <XStack alignItems="center" p="$2">
         <Button w={'$13'} onPress={() => onPress(providerList.google.key)} theme="active">
-          <Image
-            source={{
-              width: 20,
-              height: 20,
-              uri: require('./google.png'),
-            }}
-          />
+          <Image source={require('./google.png')} style={{ width: 20, height: 20 }} />
           Google
         </Button>
       </XStack>
       <XStack alignItems="center" p="$2">
         <Button w={'$13'} onPress={() => onPress(providerList.github.key)} theme="active">
-          <Image
-            source={{
-              width: 20,
-              height: 20,
-              uri: require('./github.png'),
-            }}
-          />
+          <Image source={require('./github.png')} style={{ width: 20, height: 20 }} />
           Github
         </Button>
       </XStack>
       <XStack alignItems="center" p="$2">
         <Button w={'$13'} onPress={() => onPress(providerList.facebook.key)} theme="active">
-          <Image
-            source={{
-              width: 20,
-              height: 20,
-              uri: require('./facebook.png'),
-            }}
-          />
+          <Image source={require('./facebook.png')} style={{ width: 20, height: 20 }} />
           Facebook
         </Button>
       </XStack>

@@ -45,6 +45,7 @@ module.exports = function () {
     },
     transpilePackages: [
       'solito',
+      'zeego',
       'react-native-web',
       'expo-linking',
       'expo-constants',

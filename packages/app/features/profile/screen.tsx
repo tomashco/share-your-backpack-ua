@@ -40,7 +40,6 @@ export function ProfileScreen() {
     href: '/signin',
   })
 
-  console.log('🚀 ~ ProfileScreen ~ localUnit:', localUnit)
   return (
     <>
       <PageLayout>
