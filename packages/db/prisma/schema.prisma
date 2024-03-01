@@ -42,6 +42,7 @@ model Item {
 
   name         String
   createdAt    DateTime @default(now())
+  model        String?
   brand        String?
   imageUrl     String?
   itemUrl      String?

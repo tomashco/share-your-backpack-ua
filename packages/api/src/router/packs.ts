@@ -144,6 +144,9 @@ export const packsRouter = createTRPCRouter({
           name: {
             search: input.value ? searchVal : '',
           },
+          model: {
+            search: input.value ? searchVal : '',
+          },
           brand: {
             search: input.value ? searchVal : '',
           },
@@ -469,6 +472,7 @@ export const packsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1).max(200),
+        model: z.string().optional(),
         brand: z.string().optional(),
         itemUrl: z.string().optional(),
         imageUrl: z.string().optional(),
@@ -485,6 +489,7 @@ export const packsRouter = createTRPCRouter({
         await ctx.prisma.item.create({
           data: {
             name: input.name,
+            model: input.model,
             brand: input.brand,
             weight: input.weight,
             itemUrl: input.itemUrl,
@@ -505,6 +510,7 @@ export const packsRouter = createTRPCRouter({
       z.object({
         itemId: z.string(),
         name: z.string().min(1).max(200),
+        model: z.string().optional(),
         brand: z.string().optional(),
         itemUrl: z.string().optional(),
         imageUrl: z.string().optional(),
@@ -522,6 +528,7 @@ export const packsRouter = createTRPCRouter({
           where: { itemId: input.itemId },
           data: {
             name: input.name,
+            model: input.model,
             brand: input.brand,
             itemUrl: input.itemUrl,
             imageUrl: input.imageUrl,

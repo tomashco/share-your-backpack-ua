@@ -12,6 +12,7 @@ const itemSchema = z.object({
   name: z.string().min(2, {
     message: 'Item name must be at least 2 characters.',
   }),
+  model: z.string().optional(),
   brand: z.string().optional(),
   itemUrl: z.string().optional(),
   imageUrl: z.string().optional(),
@@ -25,6 +26,7 @@ const itemSchema = z.object({
 type PackItemFormProps = {
   itemId?: string
   itemName?: string
+  itemModel?: string
   itemBrand?: string
   itemUrl?: string
   imageUrl?: string
@@ -39,6 +41,7 @@ type PackItemFormProps = {
 const ItemForm = ({
   itemId = '',
   itemName = '',
+  itemModel = '',
   itemBrand = '',
   itemUrl = '',
   imageUrl = '',
@@ -88,7 +91,7 @@ const ItemForm = ({
       void ctx.packs.getItems.invalidate()
       if (action) action()
     },
-    onError: (e) => console.log('ERROR: ', e),
+    onError: (e) => toast.show(`❌ Error: ${e.message}`),
   })
 
   const { mutate: DeleteItem } = trpc.packs.deleteItem.useMutation({
@@ -106,6 +109,7 @@ const ItemForm = ({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: itemName,
+      model: itemModel,
       brand: itemBrand,
       weight: itemWeight,
       itemUrl: itemUrl,
@@ -115,6 +119,7 @@ const ItemForm = ({
   })
 
   function onSubmit(values: z.infer<typeof itemSchema>) {
+    console.log('🚀 ~ onSubmit ~ values:', values)
     // const findItemId = itemId || userItems.find((el) => el.name === values.name)?.itemId || ''
     if (itemId) {
       editItem({ itemId, ...values }) //itemId
@@ -142,6 +147,15 @@ const ItemForm = ({
           />
           {form.formState.errors.name?.message != null && (
             <Text fontSize={'$2'}>{form.formState.errors.name?.message}</Text>
+          )}
+          <FormTextInput
+            name={'model'}
+            control={form.control}
+            label="Model"
+            placeholder="Item model"
+          />
+          {form.formState.errors.model?.message != null && (
+            <Text fontSize={'$2'}>{form.formState.errors.model?.message}</Text>
           )}
           <FormTextInput
             name={'brand'}

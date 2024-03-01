@@ -33,6 +33,7 @@ export function MyGearScreen() {
 
   const tableHeaders = [
     { key: 'name', label: 'Name' },
+    { key: 'model', label: 'Model' },
     { key: 'brand', label: 'Brand' },
     { key: 'weight', label: `Weight (${authorInfo?.unit || ''})`, width: 100, textAlign: 'center' },
     // { key: 'isBag', label: 'Bag', width: 60, textAlign: 'center' },
@@ -47,6 +48,7 @@ export function MyGearScreen() {
           authorInfo={authorInfo}
           itemId={item.itemId}
           itemName={item.name}
+          itemModel={item.model}
           itemBrand={item.brand || ''}
           itemUrl={item.itemUrl || ''}
           imageUrl={item.imageUrl || ''}
