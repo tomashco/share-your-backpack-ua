@@ -29,8 +29,6 @@ type PackItemFormProps = {
   itemId?: string
   allItems?: Item[]
   itemName?: string
-  setSearchValue?: (string) => void
-  myItemsConst?: string
   itemBrand?: string
   itemUrl?: string
   imageUrl?: string
@@ -50,11 +48,9 @@ const PackItemForm = ({
   itemId = '',
   itemName = '',
   allItems,
-  myItemsConst = '',
   itemBrand = '',
   imageUrl = '',
   itemUrl = '',
-  setSearchValue = () => {},
   itemCategory = '',
   // itemLocation = '',
   quantity = 1,
@@ -142,9 +138,6 @@ const PackItemForm = ({
         packId,
         packItem: {
           ...values,
-          name: values.name.endsWith(myItemsConst)
-            ? values.name.slice(0, -myItemsConst.length)
-            : values.name,
         },
       })
     }
@@ -177,7 +170,6 @@ const PackItemForm = ({
               setAccordionOpen={setAccordionOpen}
               name="name"
               control={form.control}
-              setSearchValue={setSearchValue}
             />
             {form.formState.errors.name?.message != null && (
               <Text my={'$3'} color={'$color10'} fontSize={'$2'}>
@@ -193,7 +185,6 @@ const PackItemForm = ({
               setAccordionOpen={setAccordionOpen}
               name="category"
               control={form.control}
-              setSearchValue={undefined}
             />
             {/* <FilterInputAccordionItem
               label={'Location'}

@@ -8,7 +8,6 @@ export const FilterInputAccordionItem = ({
   items,
   setAccordionOpen,
   headerPlaceholder,
-  setSearchValue,
   inputPlaceholder,
   label,
   name,
@@ -23,15 +22,11 @@ export const FilterInputAccordionItem = ({
   const filterItems = (value) => {
     field.onChange(value)
     field.value = value
-    if (setSearchValue) {
-      setSearchValue(value)
-    } else {
-      let filterData =
-        items && items?.length > 0
-          ? items?.filter((data) => data?.name?.toLowerCase()?.includes(value?.toLowerCase()))
-          : []
-      setFilterList([...filterData])
-    }
+    let filterData =
+      items && items?.length > 0
+        ? items?.filter((data) => data?.name?.toLowerCase()?.includes(value?.toLowerCase()))
+        : []
+    setFilterList([...filterData])
   }
 
   const onSelected = (value) => {
@@ -82,9 +77,9 @@ export const FilterInputAccordionItem = ({
               onBlur={field.onBlur}
             />
           </XStack>
-          <YStack h={(setSearchValue ? items : filterList)?.length > 0 ? '$15' : '$0'}>
+          <YStack h={filterList?.length > 0 ? '$15' : '$0'}>
             <ScrollView>
-              {(setSearchValue ? items : filterList)?.map((item, index) => (
+              {filterList?.map((item, index) => (
                 <XStack key={item.name + index} borderBottomWidth={1} borderColor="lightgray">
                   <Paragraph p="$2" w="100%" onPress={() => onSelected(item?.name)}>
                     {item?.name || ''}

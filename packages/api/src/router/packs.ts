@@ -374,6 +374,19 @@ export const packsRouter = createTRPCRouter({
       if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
       let updatedPackItem
       try {
+        // check if there is an item with the same name
+        const userItems = await ctx.prisma.author.findUnique({
+          where: { authorId },
+          include: {
+            item: true,
+          },
+        })
+        const userHasItem = userItems?.item.find((item) => item.name === input.name)
+
+        const itemAlreadyPresent = await ctx.prisma.item.findMany({
+          where: { name: input.name },
+        })
+
         await ctx.prisma.pack.update({
           where: { packId: input.packId },
           data: {
@@ -386,12 +399,23 @@ export const packsRouter = createTRPCRouter({
                   location: input.location,
                   category: input.category,
                   quantity: input.quantity,
-                  item: {
-                    update: {
-                      where: { itemId: input.itemId || '' },
-                      data: { name: input.name, itemAuthorId: authorId },
-                    },
-                  },
+                  item: userHasItem?.itemId
+                    ? {
+                        connectOrCreate: {
+                          where: { itemId: userHasItem?.itemId || '' },
+                          create: {
+                            name: input.name,
+                            itemAuthorId: authorId,
+                            isDuplicate: itemAlreadyPresent?.length > 0,
+                          },
+                        },
+                      }
+                    : {
+                        update: {
+                          where: { itemId: input.itemId || '' },
+                          data: { name: input.name, itemAuthorId: authorId },
+                        },
+                      },
                 },
               },
             },

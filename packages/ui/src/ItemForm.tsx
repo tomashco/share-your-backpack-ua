@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Button, Form, H2, Label, Text, YStack } from 'tamagui'
 import FormTextInput from './form/formTextInput'
 import { Author } from '@my/db'
+import { useToastController } from '@tamagui/toast'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
@@ -50,6 +51,7 @@ const ItemForm = ({
 }: PackItemFormProps) => {
   const ctx = trpc.useUtils()
   const [accordionOpen, setAccordionOpen] = useState<string[]>([])
+  const toast = useToastController()
   const { mutate: addItem } = trpc.packs.addItem.useMutation({
     onSuccess: () => {
       void ctx.packs.getItems.invalidate()
@@ -93,7 +95,11 @@ const ItemForm = ({
     onSuccess: () => {
       void ctx.packs.getItems.invalidate()
     },
-    onError: (e) => console.log('ERROR: ', e),
+    onError: (e) => {
+      console.log('error delete: ', e)
+
+      toast.show('❌ Gear cannot be deleted because is in use in a pack')
+    },
   })
 
   const form = useForm<z.infer<typeof itemSchema>>({
