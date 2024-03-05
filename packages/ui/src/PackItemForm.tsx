@@ -10,6 +10,7 @@ import { FilterInputAccordionItem } from './FilterInputAccordionItem'
 import { QuantityItemWithLabel } from './form/quantityItemWithLabel'
 import { useToastController } from '@tamagui/toast'
 import { Item } from '@my/db'
+import { SelectAccordion } from './SelectAccordion'
 
 const itemSchema = z.object({
   name: z.string().min(2, {
@@ -18,6 +19,7 @@ const itemSchema = z.object({
   category: z.string().optional(),
   // location: z.string().optional(),
   quantity: z.number().optional(),
+  model: z.string().optional(),
   brand: z.string().optional(),
   itemUrl: z.string().optional(),
   imageUrl: z.string().optional(),
@@ -29,6 +31,7 @@ type PackItemFormProps = {
   itemId?: string
   allItems?: Item[]
   itemName?: string
+  itemModel?: string
   itemBrand?: string
   itemUrl?: string
   imageUrl?: string
@@ -48,6 +51,7 @@ const PackItemForm = ({
   itemId = '',
   itemName = '',
   allItems,
+  itemModel = '',
   itemBrand = '',
   imageUrl = '',
   itemUrl = '',
@@ -122,6 +126,7 @@ const PackItemForm = ({
       name: itemName,
       category: itemCategory,
       // location: itemLocation,
+      model: itemModel,
       brand: itemBrand,
       imageUrl: imageUrl,
       itemUrl: itemUrl,
@@ -161,16 +166,49 @@ const PackItemForm = ({
             value={accordionOpen}
             onValueChange={setAccordionOpen}
           >
-            <FilterInputAccordionItem
-              label={'Name'}
-              accordionId={'nameAccordion'}
-              headerPlaceholder="Select Item"
-              inputPlaceholder="search or add new"
-              items={allItems}
-              setAccordionOpen={setAccordionOpen}
-              name="name"
-              control={form.control}
-            />
+            {packItemId ? (
+              <SelectAccordion
+                label={'Change Item'}
+                accordionId={'nameAccordion'}
+                items={allItems}
+                setAccordionOpen={setAccordionOpen}
+                name="name"
+                control={form.control}
+              />
+            ) : (
+              <>
+                <FilterInputAccordionItem
+                  label={'Name'}
+                  accordionId={'nameAccordion'}
+                  headerPlaceholder="Select Item"
+                  inputPlaceholder="search or add new"
+                  items={allItems}
+                  setAccordionOpen={setAccordionOpen}
+                  name="name"
+                  control={form.control}
+                />
+                {/* <FilterInputAccordionItem
+                  label={'Brand'}
+                  accordionId={'brandAccordion'}
+                  headerPlaceholder="Brand"
+                  inputPlaceholder="search or add new"
+                  items={allItems}
+                  setAccordionOpen={setAccordionOpen}
+                  name="brand"
+                  control={form.control}
+                />
+                <FilterInputAccordionItem
+                  label={'Model'}
+                  accordionId={'modelAccordion'}
+                  headerPlaceholder="model"
+                  inputPlaceholder="search or add new"
+                  items={allItems}
+                  setAccordionOpen={setAccordionOpen}
+                  name="model"
+                  control={form.control}
+                /> */}
+              </>
+            )}
             {form.formState.errors.name?.message != null && (
               <Text my={'$3'} color={'$color10'} fontSize={'$2'}>
                 {form.formState.errors.name?.message}
@@ -212,7 +250,7 @@ const PackItemForm = ({
           </Form.Trigger>
           {packItemId && (
             <Button onPress={() => DeletePackItem({ packItemId, packId })} accessibilityRole="link">
-              Delete Item
+              Remove gear from pack
             </Button>
           )}
         </YStack>

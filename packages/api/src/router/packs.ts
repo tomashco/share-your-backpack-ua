@@ -294,6 +294,8 @@ export const packsRouter = createTRPCRouter({
         packId: z.string(),
         packItem: z.object({
           name: z.string().min(1).max(200),
+          brand: z.string().optional(),
+          model: z.string().optional(),
           category: z.string().optional(),
           location: z.string().optional(),
           quantity: z.number().optional(),
@@ -316,10 +318,6 @@ export const packsRouter = createTRPCRouter({
         })
         const userHasItem = userItems?.item.find((item) => item.name === input.packItem.name)
 
-        const itemAlreadyPresent = await ctx.prisma.item.findMany({
-          where: { name: input.packItem.name },
-        })
-
         await ctx.prisma.pack.update({
           where: { packId: input.packId },
           data: {
@@ -334,8 +332,9 @@ export const packsRouter = createTRPCRouter({
                       where: { itemId: userHasItem?.itemId || '' },
                       create: {
                         name: input.packItem.name,
+                        brand: input.packItem.brand,
+                        model: input.packItem.model,
                         itemAuthorId: authorId,
-                        isDuplicate: itemAlreadyPresent?.length > 0,
                       },
                     },
                   },

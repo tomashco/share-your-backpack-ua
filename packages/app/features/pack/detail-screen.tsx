@@ -56,11 +56,13 @@ export function UserDetailScreen() {
 
   const tableHeaders = [
     { key: 'name', label: 'Name' },
+    { key: 'model', label: 'Model' },
     { key: 'brand', label: 'Brand' },
     { key: 'weight', label: `Weight (${localUnit})`, width: 100, textAlign: 'center' },
+    { key: 'quantity', label: 'Quantity' },
   ]
 
-  const ExpandedItemView = ({ item, onLayout }) => {
+  const ExpandedItemView = ({ item, quantity, onLayout }) => {
     return (
       <YStack
         // onLayout={onLayout}
@@ -91,12 +93,14 @@ export function UserDetailScreen() {
                 item.name
               )}
             </Paragraph>
+            {item.model && <Paragraph>{item.model}</Paragraph>}
             {item.brand && <Paragraph>{item.brand}</Paragraph>}
             {item.weight > 0 && (
               <Paragraph>
                 {convertWeight(item.weight, localUnit)} {localUnit}
               </Paragraph>
             )}
+            {quantity && <Paragraph>Quantity: {quantity}</Paragraph>}
           </YStack>
         </XStack>
       </YStack>
@@ -207,11 +211,13 @@ export function UserDetailScreen() {
                     ...packItem.item,
                     id: packItem.packItemId,
                     weight: convertWeight(packItem.item.weight, localUnit),
+                    quantity: packItem.quantity,
                     detailedView: (props) => (
                       <ExpandedItemView
                         onLayout={props.onLayout}
                         key={packItem.packItemId}
                         item={packItem.item}
+                        quantity={packItem.quantity}
                       />
                     ),
                   }
@@ -220,7 +226,10 @@ export function UserDetailScreen() {
               <Paragraph ta={'right'} mr={'$8'} my="$3">
                 {sortName} weight:{' '}
                 {convertWeight(
-                  categoryItems?.reduce((acc, item) => acc + (item.item.weight || 0), 0),
+                  categoryItems?.reduce(
+                    (acc, item) => acc + (item.item.weight || 0) * item.quantity,
+                    0
+                  ),
                   localUnit
                 )}{' '}
                 {localUnit}
@@ -269,7 +278,10 @@ export function UserDetailScreen() {
           </XStack>
         )}
       </XStack>
-      <YStack w="100%" $gtSm={{ width: '35rem' }}>
+      <YStack
+        w="100%"
+        // $gtSm={{ width: '35rem' }}
+      >
         {isLoading ? (
           <Paragraph>Loading...</Paragraph>
         ) : error ? (

@@ -57,7 +57,10 @@ export function EditPackScreen() {
   }
 
   const tableHeaders = [
-    { key: 'name', label: 'Name' },
+    { key: 'name', label: 'Gear Name', width: 250 },
+    { key: 'brand', label: 'Brand' },
+    { key: 'model', label: 'Model' },
+
     { key: 'category', label: 'Category' },
     // { key: 'location', label: 'Location' },
     { key: 'quantity', label: 'Quantity', width: 80, textAlign: 'center' },
@@ -101,7 +104,7 @@ export function EditPackScreen() {
           {'Close Edit'}
         </Button>
         <Button onPress={() => toggleNewItemForm(!newItemForm)} theme={'active'}>
-          {newItemForm ? 'Close Edit' : 'New Item'}
+          {newItemForm ? 'Close Edit' : 'Add Item'}
         </Button>
       </XStack>
       <CheckboxWithLabel

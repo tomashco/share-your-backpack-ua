@@ -48,7 +48,7 @@ export function MyGearScreen() {
           authorInfo={authorInfo}
           itemId={item.itemId}
           itemName={item.name}
-          itemModel={item.model}
+          itemModel={item.model || ''}
           itemBrand={item.brand || ''}
           itemUrl={item.itemUrl || ''}
           imageUrl={item.imageUrl || ''}

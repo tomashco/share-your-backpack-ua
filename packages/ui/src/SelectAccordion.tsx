@@ -1,30 +1,21 @@
-import { useState, useEffect } from 'react'
-import { ScrollView, Input, XStack, YStack, Accordion, Paragraph, Square, Label } from 'tamagui'
+import { useState } from 'react'
+import { ScrollView, XStack, YStack, Accordion, Paragraph, Square, Label } from 'tamagui'
 import { ChevronDown } from '@tamagui/lucide-icons'
 import { useController } from 'react-hook-form'
 
-export const FilterInputAccordionItem = ({
-  accordionId,
-  items,
-  setAccordionOpen,
-  headerPlaceholder,
-  inputPlaceholder,
-  label,
-  name,
-  control,
-}) => {
+export const SelectAccordion = ({ accordionId, items, setAccordionOpen, label, name, control }) => {
   const { field } = useController({
     name: name,
     control: control,
   })
-  const [filterList, setFilterList] = useState(items)
+  const [filterList, setFilterList] = useState<{ name: string }[]>(items)
 
   const filterItems = (value) => {
     field.onChange(value)
     field.value = value
     let filterData =
       items && items?.length > 0
-        ? items?.filter((data) => data?.[name]?.toLowerCase()?.includes(value?.toLowerCase()))
+        ? items?.filter((data) => data?.name?.toLowerCase()?.includes(value?.toLowerCase()))
         : []
     setFilterList([...filterData])
   }
@@ -55,10 +46,7 @@ export const FilterInputAccordionItem = ({
         >
           {({ open }) => (
             <>
-              <Paragraph>
-                {/* color={field.value ? '$black1' : '$gray'} */}
-                {field.value || headerPlaceholder}
-              </Paragraph>
+              <Paragraph>{field.value}</Paragraph>
               <Square animation="quick" rotate={open ? '180deg' : '0deg'}>
                 <ChevronDown color={'gray'} size="$1" />
               </Square>
@@ -67,7 +55,7 @@ export const FilterInputAccordionItem = ({
         </Accordion.Trigger>
         <Accordion.Content>
           <XStack alignItems="center" justifyContent="space-between" space>
-            <Input
+            {/* <Input
               placeholder={inputPlaceholder}
               flexGrow={1}
               size="$4"
@@ -75,22 +63,14 @@ export const FilterInputAccordionItem = ({
               onChangeText={filterItems}
               ref={field.ref}
               onBlur={field.onBlur}
-            />
+            /> */}
           </XStack>
           <YStack h={filterList?.length > 0 ? '$15' : '$0'}>
             <ScrollView>
               {filterList?.map((item, index) => (
-                <XStack key={item?.[name] + index} borderBottomWidth={1} borderColor="lightgray">
-                  <Paragraph
-                    p="$2"
-                    w="100%"
-                    onPressIn={() => {
-                      console.log('selected: ', item?.[name])
-
-                      onSelected(item?.[name])
-                    }}
-                  >
-                    {item?.[name] || ''}
+                <XStack key={item.name + index} borderBottomWidth={1} borderColor="lightgray">
+                  <Paragraph p="$2" w="100%" onPress={() => onSelected(item?.name)}>
+                    {item?.name || ''}
                   </Paragraph>
                 </XStack>
               ))}

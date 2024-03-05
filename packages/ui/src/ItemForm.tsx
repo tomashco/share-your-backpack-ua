@@ -119,7 +119,6 @@ const ItemForm = ({
   })
 
   function onSubmit(values: z.infer<typeof itemSchema>) {
-    console.log('🚀 ~ onSubmit ~ values:', values)
     // const findItemId = itemId || userItems.find((el) => el.name === values.name)?.itemId || ''
     if (itemId) {
       editItem({ itemId, ...values }) //itemId

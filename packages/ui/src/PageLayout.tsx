@@ -28,8 +28,7 @@ export const PageLayout = ({
             w={'100%'}
             ai="center"
             alignSelf="center"
-            $gtMd={{ width: '45rem' }}
-            // space
+            $gtMd={{ width: '70rem' }}
           >
             <Header />
           </YStack>
@@ -41,7 +40,7 @@ export const PageLayout = ({
           w={'100%'}
           alignSelf="center"
           ai="center"
-          $gtSm={{ width: '35rem' }}
+          $gtMd={{ width: '60rem' }}
           space
           onLayout={(event) => {
             const { x, y, height, width } = event.nativeEvent.layout

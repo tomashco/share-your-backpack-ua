@@ -179,6 +179,7 @@ export function HomeScreen() {
                       item.name
                     )}
                   </Paragraph>
+                  {item.model && <Paragraph>{item.model}</Paragraph>}
                   {item.brand && <Paragraph>{item.brand}</Paragraph>}
                 </XStack>
               </YStack>

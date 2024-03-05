@@ -3,7 +3,7 @@ export const getSelectItems = (array, keyValue) => {
   return array.reduce((arr, el) => {
     if (el[keyValue] && !supportList.includes(el[keyValue])) {
       supportList.push(el[keyValue]) // prevent duplicated values
-      arr.push({ name: el[keyValue] })
+      arr.push({ [keyValue]: el[keyValue] })
       return arr
     }
     return arr
