@@ -85,8 +85,6 @@ export const FilterInputAccordionItem = ({
                     p="$2"
                     w="100%"
                     onPressIn={() => {
-                      console.log('selected: ', item?.[name])
-
                       onSelected(item?.[name])
                     }}
                   >
