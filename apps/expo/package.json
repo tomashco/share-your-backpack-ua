@@ -9,7 +9,8 @@
     "pod-install": "npx pod-install",
     "ios": "npx expo run:ios",
     "prebuild": "npx expo prebuild --clean",
-    "release:android": "eas build --local --platform android --profile production --clear-cache",
+    "release:android:dev": "eas build --local --platform android --profile development --clear-cache",
+    "release:android:prod": "eas build --local --platform android --profile production --clear-cache",
     "adb": "adb install $BUILD",
     "eject": "npx expo eject"
   },

@@ -1,11 +1,21 @@
 {
   "build": {
+    "base": {
+      "env": {
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_YWJsZS1zbHVnLTE0LmNsZXJrLmFjY291bnRzLmRldiQ",
+        "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL": "/",
+        "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL": "/",
+        "NEXT_PUBLIC_CLERK_SIGN_UP_URL": "/signup",
+        "NEXT_PUBLIC_CLERK_SIGN_IN_URL": "/signin",
+        "VERCEL_URL": "share-your-backpack-ua-next.vercel.app"
+      }
+    },
     "development": {
+      "extends": "base",
       "distribution": "internal",
-      "developmentClient": true,
+      "developmentClient": false,
       "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "buildType": "apk"
       },
       "ios": {
         "simulator": true,
@@ -13,19 +23,11 @@
       }
     },
     "production": {
+      "extends": "base",
       "distribution": "store",
       "developmentClient": false,
-            "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      },
-      "env":{
-        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY":"pk_test_YWJsZS1zbHVnLTE0LmNsZXJrLmFjY291bnRzLmRldiQ",
-        "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL":"/",
-        "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL":"/",
-        "NEXT_PUBLIC_CLERK_SIGN_UP_URL":"/signup",
-        "NEXT_PUBLIC_CLERK_SIGN_IN_URL":"/signin",
-        "VERCEL_URL":"share-your-backpack-ua-next.vercel.app"
+      "android": {
+        "buildType": "app-bundle"
       }
     }
   }

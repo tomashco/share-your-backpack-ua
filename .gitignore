@@ -13,6 +13,8 @@
 
 # android and ios
 apps/expo/android/*
+apps/expo/credentials/*
+apps/expo/credentials.json
 apps/expo/ios/*
 
 # next.js
