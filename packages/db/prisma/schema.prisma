@@ -3,35 +3,37 @@ generator client {
   previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
+// prisma/schema.prisma
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // uncomment next line if you use Prisma <5.10
+  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model Author {
-  authorId     String  @id @unique @default(cuid())
-  
-  packs        Pack[]
-  item         Item[]
-  
+  authorId String @id @unique @default(cuid())
+
+  packs Pack[]
+  item  Item[]
+
   unit         String? @default("g")
   isSubscribed Boolean @default(false)
 }
 
 model Pack {
-  packId       String     @id @unique @default(cuid())
+  packId String @id @unique @default(cuid())
 
-  author       Author[]
-  packItems    PackItem[]
-  
-  createdAt    DateTime   @default(now())
-  name         String     @db.VarChar(255)
-  description  String?    @db.Text
-  activityType String?    @db.VarChar(255)
-  isPublic     Boolean    @default(false)
+  author    Author[]
+  packItems PackItem[]
 
-  @@fulltext([name, description])
+  createdAt    DateTime @default(now())
+  name         String   @db.VarChar(255)
+  description  String?  @db.Text
+  activityType String?  @db.VarChar(255)
+  isPublic     Boolean  @default(false)
+
+  // @@fulltext([name, description])
 }
 
 model Item {
@@ -50,9 +52,9 @@ model Item {
   itemAuthorId String
   isDuplicate  Boolean  @default(false) // when item is added to the pack, it can be marked as duplicate, to check every time item is created or edited
   // when searching for items, hide duplicates!
+  // @@fulltext([name, brand])
 
   @@index([itemAuthorId])
-  @@fulltext([name, brand])
 }
 
 model PackItem {
